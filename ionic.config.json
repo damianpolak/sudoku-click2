@@ -1,0 +1,7 @@
+{
+  "name": "sudoku-click2",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
