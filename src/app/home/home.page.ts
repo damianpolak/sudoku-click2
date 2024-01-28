@@ -35,4 +35,9 @@ export class HomePage {
   setBoardSize(size: number): void {
     document.documentElement.style.setProperty('--boardSize', size.toString());
   }
+
+  toggleMode(): void {
+    this.isValueMode = !this.isValueMode;
+    console.log(`Mode is ${this.isValueMode}`);
+  }
 }
