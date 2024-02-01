@@ -24,23 +24,25 @@
   flex-wrap: wrap;
   $vheight: 90vh;
   $vwidth: 90vw;
+  $vhDiff: 20vh;
+  $vwDiff: 20vw;
 
-  @media (min-aspect-ratio: '1.33/1') and (max-aspect-ratio: '1.5/1') {
-    .board {
-      background: chartreuse;
-      // width: calc($vwidth - 100vw);
-      // height: calc($vheight - 100vh);
-    }
-  }
+  // @media (min-aspect-ratio: '1.33/1') and (max-aspect-ratio: '1.5/1') {
+  //   .board {
+  //     background: chartreuse;
+  //     // width: calc($vwidth - 100vw);
+  //     // height: calc($vheight - 100vh);
+  //   }
+  // }
 
-  @media (min-aspect-ratio: '1.51/1') {
-    .board {
-      background-color: blue;
-    }
-  }
+  // @media (min-aspect-ratio: '1.51/1') {
+  //   .board {
+  //     background-color: blue;
+  //   }
+  // }
 
 
-  @media (orientation: landscape) {
+  @media (orientation: landscape) and (min-aspect-ratio: 1.51/1) {
     .board {
       width: $vheight;
       height: $vheight;
@@ -54,6 +56,24 @@
     .controls {
       height: $vheight;
       width: calc($vwidth - $vheight);
+    }
+  }
+
+  @media (orientation: landscape) and (min-aspect-ratio: '1.33/1') and (max-aspect-ratio: '1.5/1') {
+    .board {
+      background: chartreuse;
+      width: calc($vheight - $vhDiff);
+      height: calc($vheight - $vhDiff);
+      font-size: clamp(0em, 4vh, 3em);
+
+      & * > .notes-grid-field {
+        font-size: 0.5em;
+      }
+    }
+
+    .controls {
+      height: calc($vheight - $vhDiff);
+      width: calc($vwidth - $vheight + $vhDiff);
     }
   }
 
