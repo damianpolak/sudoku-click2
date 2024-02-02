@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { GameStateService } from '../../services/game-state.service';
 
@@ -23,7 +22,7 @@ export class HeaderComponent implements OnInit {
   @Input() isPaused: boolean = false;
   isOptionsMenuVisible: boolean = false;
 
-  constructor(private router: Router, private gameStateServ: GameStateService) { }
+  constructor(private navCtrl: NavController, private gameStateServ: GameStateService) { }
   ngOnInit(): void {
     console.log('Header on init');
   }
@@ -31,7 +30,7 @@ export class HeaderComponent implements OnInit {
   onBack(): void {
     if(this.showBack && this.backPath !== '') {
       console.log('back', this.backPath);
-      this.router.navigate(['/home']);
+      this.navCtrl.navigateBack(this.backPath);
     }
   }
 
