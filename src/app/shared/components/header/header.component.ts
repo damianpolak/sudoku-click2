@@ -1,0 +1,47 @@
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
+import { GameStateService } from '../../services/game-state.service';
+
+@Component({
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss'],
+})
+export class HeaderComponent implements OnInit {
+
+  @Input() showOptions: boolean = true;
+  @Input() showPause: boolean = false;
+  @Input() showBack: boolean = false;
+  @Input() backPath: string = '';
+  @Input() title: string = '';
+
+  @Output() pauseClickEvent = new EventEmitter<boolean>();
+  @Output() optionsClickEvent = new EventEmitter<boolean>();
+  @Output() backClickEvent = new EventEmitter<boolean>();
+
+  @Input() isPaused: boolean = false;
+  isOptionsMenuVisible: boolean = false;
+
+  constructor(private router: Router, private gameStateServ: GameStateService) { }
+  ngOnInit(): void {
+    console.log('Header on init');
+  }
+
+  onBack(): void {
+    if(this.showBack && this.backPath !== '') {
+      console.log('back', this.backPath);
+      this.router.navigate(['/home']);
+    }
+  }
+
+  onPause(): void {
+    this.isPaused = !this.isPaused;
+    this.pauseClickEvent.emit(this.isPaused);
+  }
+
+  onOptions(): void {
+    this.isOptionsMenuVisible = !this.isOptionsMenuVisible;
+    this.optionsClickEvent.emit(this.isOptionsMenuVisible);
+  }
+}

@@ -1,23 +1,5 @@
-<ion-content [fullscreen]="true">
-  <div class="container">
-    <div class="board">
-      @for (field of board.flat(); track field) {
-      <div class="field">
-        @if(isValueMode) {
-        <div class="notes-value">{{ field }}</div>
-        } @else {
-        <div class="notes-grid">
-          @for (fieldNotes of notesGrid.flat(); track fieldNotes) {
-          <div class="notes-grid-field">{{ fieldNotes }}</div>
-          } @empty {}
-        </div>
+<app-header></app-header>
 
-        }
-      </div>
-      } @empty { Empty }
-    </div>
-    <div class="controls">
-      <ion-button (click)="toggleMode()"> {{ isValueMode ? 'Toggle notes' : 'Toggle value' }} </ion-button>
-    </div>
-  </div>
+<ion-content>
+  <ion-button (click)="go()">Go!</ion-button>
 </ion-content>
