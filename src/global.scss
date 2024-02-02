@@ -29,6 +29,18 @@
   --boardSize: 9;
 }
 
+@media (orientation: portrait) {
+  html {
+    font-size: calc(12px + 1vw);
+  }
+}
+
+@media (orientation: landscape) {
+  html {
+    font-size: calc(12px + 1vh);
+  }
+}
+
 ion-content {
   --overflow: hidden;
 }
