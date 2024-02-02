@@ -24,8 +24,8 @@
   flex-wrap: wrap;
   $vheight: 90vh;
   $vwidth: 90vw;
-  $vhDiff: 20vh;
-  $vwDiff: 20vw;
+  $vhDiff: 24.3vh;
+  $vwDiff: 10vw;
 
   // @media (min-aspect-ratio: '1.33/1') and (max-aspect-ratio: '1.5/1') {
   //   .board {
@@ -77,8 +77,10 @@
     }
   }
 
-  @media (orientation: portrait) {
+  @media (orientation: portrait) and (max-aspect-ratio: '0.67/1') {
     .board {
+      background-color: blue;
+
       width: $vwidth;
       height: $vwidth;
       font-size: clamp(0em, 5.5vw, 3em);
@@ -91,6 +93,24 @@
     .controls {
       width: $vwidth;
       height: calc($vheight - $vwidth);
+    }
+  }
+
+  @media (orientation: portrait) and (min-aspect-ratio: '0.68/1')  and (max-aspect-ratio: '1/1') {
+    .board {
+      background-color: chartreuse;
+      width: calc($vwidth - $vwDiff);
+      height: calc($vwidth - $vwDiff);
+      font-size: clamp(0em, 4vw, 3em);
+
+      & * > .notes-grid-field {
+        font-size: 0.5em;
+      }
+    }
+
+    .controls {
+      width: $vwidth;
+      height: calc($vheight - $vwidth + $vwDiff);
     }
   }
 
