@@ -11,7 +11,7 @@ export class GamePage implements OnInit {
   isValueMode: boolean = false;
 
   board: number[][] = [];
-  notesGrid: number[][] = [];
+  notesGrid: number[][] = []
   constructor() {
     for (let row = 0; row < this.squareRoot; row++) {
       this.board.push([]);
@@ -31,6 +31,7 @@ export class GamePage implements OnInit {
 
     this.setBoardSize(this.squareRoot);
   }
+
   ngOnInit(): void {
     console.log();
   }
