@@ -22,32 +22,17 @@
 
 .container {
   flex-wrap: wrap;
-  $vheight: 90vh;
-  $vwidth: 90vw;
-  $vhDiff: 24.3vh;
-  $vwDiff: 10vw;
   $header: 44px;
-
-  // @media (min-aspect-ratio: '1.33/1') and (max-aspect-ratio: '1.5/1') {
-  //   .board {
-  //     background: chartreuse;
-  //     // width: calc($vwidth - 100vw);
-  //     // height: calc($vheight - 100vh);
-  //   }
-  // }
-
-  // @media (min-aspect-ratio: '1.51/1') {
-  //   .board {
-  //     background-color: blue;
-  //   }
-  // }
-
+  $vheight: calc(95vh - $header);
+  $vwidth: calc(95vw - $header);
+  $vhDiff: 20.3vh;
+  $vwDiff: 10vw;
 
   @media (orientation: landscape) and (min-aspect-ratio: 1.51/1) {
     .board {
       width: $vheight;
       height: $vheight;
-      font-size: clamp(0em, 5.5vh, 3em);
+      font-size: clamp(0em, 5.3vh, 3em);
 
       & * > .notes-grid-field {
         font-size: 0.5em;
@@ -57,7 +42,7 @@
     .controls {
       height: $vheight;
       width: calc($vwidth - $vheight);
-    }
+          }
   }
 
   @media (orientation: landscape) and (min-aspect-ratio: '1.33/1') and (max-aspect-ratio: '1.5/1') {
@@ -65,7 +50,7 @@
       background: chartreuse;
       width: calc($vheight - $vhDiff);
       height: calc($vheight - $vhDiff);
-      font-size: clamp(0em, 4vh, 3em);
+      font-size: clamp(0em, 3.7vh, 3em);
 
       & * > .notes-grid-field {
         font-size: 0.5em;
@@ -84,7 +69,7 @@
 
       width: $vwidth;
       height: $vwidth;
-      font-size: clamp(0em, 5.5vw, 3em);
+      font-size: clamp(0em, 5vw, 3em);
 
       & * > .notes-grid-field {
         font-size: 0.5em;
