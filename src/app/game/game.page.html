@@ -2,24 +2,32 @@
 
 <ion-content [fullscreen]="true">
   <div class="container">
-    <div class="board">
-      @for (field of board.flat(); track field) {
-      <div class="field">
-        @if(isValueMode) {
-        <div class="notes-value">{{ field }}</div>
-        } @else {
-        <div class="notes-grid">
-          @for (fieldNotes of notesGrid.flat(); track fieldNotes) {
-          <div class="notes-grid-field">{{ fieldNotes }}</div>
-          } @empty {}
-        </div>
+    @if((orientation | async) === 'portrait') {
+      <div class="scorebar">Scorebar<br>Test</div>
+    }
+    <div class="container-wrap">
+      <div class="board">
+        @for (field of board.flat(); track field) {
+        <div class="field">
+          @if(isValueMode) {
+          <div class="notes-value">{{ field }}</div>
+          } @else {
+          <div class="notes-grid">
+            @for (fieldNotes of notesGrid.flat(); track fieldNotes) {
+            <div class="notes-grid-field">{{ fieldNotes }}</div>
+            } @empty {}
+          </div>
 
-        }
+          }
+        </div>
+        } @empty { Empty }
       </div>
-      } @empty { Empty }
-    </div>
-    <div class="controls">
-      <ion-button (click)="toggleMode()"> {{ isValueMode ? 'Toggle notes' : 'Toggle value' }} </ion-button>
+      <div class="controls">
+        @if((orientation | async) === 'landscape') {
+          <div class="scorebar">Scorebar<br>Test</div>
+        }
+        <ion-button (click)="toggleMode()"> {{ isValueMode ? 'Toggle notes' : 'Toggle value' }} </ion-button>
+      </div>
     </div>
   </div>
 </ion-content>
