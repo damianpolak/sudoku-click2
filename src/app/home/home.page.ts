@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController } from '@ionic/angular';
+import { GameStateService } from '../shared/services/game-state.service';
 
 @Component({
   selector: 'app-home',
@@ -7,8 +8,15 @@ import { NavController } from '@ionic/angular';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  constructor(private navCtrl: NavController) {}
-  go(): void {
+
+  canContinue = this.gameStateServ.getContinueState$();
+  constructor(private navCtrl: NavController, private gameStateServ: GameStateService) {}
+
+  onContinue(): void {
+    console.log('continue');
+  }
+
+  onNewGame(): void {
     this.navCtrl.navigateForward('game');
   }
 }

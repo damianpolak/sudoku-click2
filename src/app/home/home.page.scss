@@ -1,0 +1,31 @@
+@mixin button($width, $maxWidth) {
+  ion-button {
+    width: $width;
+    max-width: $maxWidth;
+  }
+}
+
+ion-content {
+  .container,
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .container {
+    justify-content: space-evenly;
+    height: 100%;
+
+    .buttons {
+      width: 100%;
+
+      @media (orientation: portrait) {
+        @include button(80%, 30vh);
+      }
+
+      @media (orientation: landscape) {
+        @include button(80%, 30vw);
+      }
+    }
+  }
+}

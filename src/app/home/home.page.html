@@ -1,5 +1,12 @@
 <app-header></app-header>
 
 <ion-content>
-  <ion-button (click)="go()">Go!</ion-button>
+  <div class="container">
+    <div class="buttons">
+      <ion-button expand="block" (click)="onContinue()" [disabled]="(canContinue | async)"
+        >Continue</ion-button
+      >
+      <ion-button expand="block" (click)="onNewGame()">New game</ion-button>
+    </div>
+  </div>
 </ion-content>
