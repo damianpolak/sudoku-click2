@@ -37,6 +37,18 @@ $vwDiff: 10vw;
   }
 }
 
+@mixin board($boardWidth, $boardHeight, $boardFontSize) {
+  .board {
+    width: $boardWidth;
+    height: $boardHeight;
+    font-size: clamp(0em, $boardFontSize, 3em);
+
+    & * > .notes-grid-field {
+      font-size: 0.5em;
+    }
+  }
+}
+
 .container,
 .container-wrap,
 .field,
@@ -74,62 +86,22 @@ $vwDiff: 10vw;
     flex-wrap: wrap;
 
     @media (orientation: landscape) and (min-aspect-ratio: 1.51/1) {
-      .board {
-        width: $vheight;
-        height: $vheight;
-        font-size: clamp(0em, 4vh, 3em);
-
-        & * > .notes-grid-field {
-          font-size: 0.5em;
-        }
-      }
-
+      @include board($vheight, $vheight, 4vh);
       @include controls($vheight, calc($vwidth - $vheight));
     }
 
     @media (orientation: landscape) and (min-aspect-ratio: '1.33/1') and (max-aspect-ratio: '1.5/1') {
-      .board {
-        background: chartreuse;
-        width: calc($vheight - $vhDiff);
-        height: calc($vheight - $vhDiff);
-        font-size: clamp(0em, 3.7vh, 3em);
-
-        & * > .notes-grid-field {
-          font-size: 0.5em;
-        }
-      }
-
+      @include board(calc($vheight - $vhDiff), calc($vheight - $vhDiff), 3.7vh);
       @include controls(calc($vheight - $vhDiff), calc($vwidth - $vheight + $vhDiff));
     }
 
     @media (orientation: portrait) and (max-aspect-ratio: '0.67/1') {
-      .board {
-        background-color: blue;
-
-        width: $vwidth;
-        height: $vwidth;
-        font-size: clamp(0em, 5vw, 3em);
-
-        & * > .notes-grid-field {
-          font-size: 0.5em;
-        }
-      }
-
+      @include board($vwidth, $vwidth, 5vw);
       @include controls(calc($vheight - $vwidth), $vwidth);
     }
 
     @media (orientation: portrait) and (min-aspect-ratio: '0.68/1') and (max-aspect-ratio: '1/1') {
-      .board {
-        background-color: chartreuse;
-        width: calc($vwidth - $vwDiff);
-        height: calc($vwidth - $vwDiff);
-        font-size: clamp(0em, 4vw, 3em);
-
-        & * > .notes-grid-field {
-          font-size: 0.5em;
-        }
-      }
-
+      @include board(calc($vwidth - $vwDiff), calc($vwidth - $vwDiff), 4vw);
       @include controls(calc($vheight - $vwidth + $vwDiff), $vwidth);
     }
 
