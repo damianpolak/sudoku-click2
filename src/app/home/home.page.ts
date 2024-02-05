@@ -9,7 +9,33 @@ import { GameStateService } from '../shared/services/game-state.service';
 })
 export class HomePage {
 
+  isMenuLevelOpen = false;
   canContinue = this.gameStateServ.getContinueState$();
+
+  menuLevelTitle = 'Choose difficulty level';
+  menuLevelButtons = [
+    {
+      text: 'Delete',
+      role: 'destructive',
+      data: {
+        action: 'delete',
+      },
+    },
+    {
+      text: 'Share',
+      data: {
+        action: 'share',
+      },
+    },
+    {
+      text: 'Cancel',
+      role: 'cancel',
+      data: {
+        action: 'cancel',
+      },
+    },
+  ];
+
   constructor(private navCtrl: NavController, private gameStateServ: GameStateService) {}
 
   onContinue(): void {
@@ -18,5 +44,9 @@ export class HomePage {
 
   onNewGame(): void {
     this.navCtrl.navigateForward('game');
+  }
+
+  openMenuLevel(isOpen: boolean): void {
+    this.isMenuLevelOpen = isOpen;
   }
 }

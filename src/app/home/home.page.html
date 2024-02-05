@@ -6,7 +6,14 @@
       <ion-button expand="block" (click)="onContinue()" [disabled]="(canContinue | async)"
         >Continue</ion-button
       >
-      <ion-button expand="block" (click)="onNewGame()">New game</ion-button>
+      <ion-button expand="block" (click)="openMenuLevel(true)">New game</ion-button>
     </div>
   </div>
 </ion-content>
+
+<ion-action-sheet
+  [isOpen]="isMenuLevelOpen"
+  [header]="menuLevelTitle"
+  [buttons]="menuLevelButtons"
+  (didDismiss)="openMenuLevel(false)"
+></ion-action-sheet>
