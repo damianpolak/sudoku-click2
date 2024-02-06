@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { NavController } from '@ionic/angular';
-import { GameStateService } from '../shared/services/game-state.service';
+import { ActionSheetButton, ActionSheetOptions, NavController } from '@ionic/angular';
+import { GameStateService, Levels } from '../shared/services/game-state.service';
 
 @Component({
   selector: 'app-home',
@@ -8,38 +8,16 @@ import { GameStateService } from '../shared/services/game-state.service';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-
   isMenuLevelOpen = false;
   canContinue = this.gameStateServ.getContinueState$();
 
   menuLevelTitle = 'Choose difficulty level';
-  menuLevelButtons = [
-    {
-      text: 'Delete',
-      role: 'destructive',
-      data: {
-        action: 'delete',
-      },
-    },
-    {
-      text: 'Share',
-      data: {
-        action: 'share',
-      },
-    },
-    {
-      text: 'Cancel',
-      role: 'cancel',
-      data: {
-        action: 'cancel',
-      },
-    },
-  ];
+  menuLevelButtons = this.createActionSheetMenu();
 
   constructor(private navCtrl: NavController, private gameStateServ: GameStateService) {}
 
   onContinue(): void {
-    console.log('continue');
+    this.navCtrl.navigateForward('game');
   }
 
   onNewGame(): void {
@@ -48,5 +26,25 @@ export class HomePage {
 
   openMenuLevel(isOpen: boolean): void {
     this.isMenuLevelOpen = isOpen;
+  }
+
+  onMenuLevelDismiss(event: CustomEvent): void {
+    const eventDetail = event.detail.data;
+    if (eventDetail) {
+      this.gameStateServ.setLevel(eventDetail.selectedLevel);
+      this.onNewGame();
+    }
+    this.openMenuLevel(false);
+  }
+
+  createActionSheetMenu(): ActionSheetButton[] {
+    return Object.keys(Levels).map((item) => {
+      return {
+        text: item,
+        data: {
+          selectedLevel: item,
+        },
+      };
+    });
   }
 }

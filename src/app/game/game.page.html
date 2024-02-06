@@ -3,7 +3,20 @@
 <ion-content [fullscreen]="true">
   <div class="container">
     @if((orientation | async) === 'portrait') {
-      <div class="scorebar">Scorebar<br>Test</div>
+      <div class="scorebar">
+        <div class="score-object">
+          <strong>Difficulty</strong>
+          <strong>{{ level.name }}</strong>
+        </div>
+        <div class="score-object">
+          <strong>Time</strong>
+          <strong>00:00</strong>
+        </div>
+        <div class="score-object">
+          <strong>Mistakes</strong>
+          <strong>0/3</strong>
+        </div>
+      </div>
     }
     <div class="container-wrap">
       <div class="board">

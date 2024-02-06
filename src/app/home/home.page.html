@@ -15,5 +15,5 @@
   [isOpen]="isMenuLevelOpen"
   [header]="menuLevelTitle"
   [buttons]="menuLevelButtons"
-  (didDismiss)="openMenuLevel(false)"
+  (didDismiss)="onMenuLevelDismiss($event)"
 ></ion-action-sheet>
