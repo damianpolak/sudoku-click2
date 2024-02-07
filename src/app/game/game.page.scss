@@ -14,7 +14,7 @@ $vwDiff: 10vw;
 @mixin controls($height, $width) {
   .controls {
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
     align-items: center;
     flex-direction: column;
     background-color: brown;
@@ -102,4 +102,17 @@ $vwDiff: 10vw;
       @include controls(calc($vheight - $vwidth + $vwDiff), $vwidth);
     }
   }
+}
+
+.debug {
+  display: flex;
+  
+  div.dbgbtn {
+    margin: 1px;
+    font-size: 0.65em;
+    background-color: lightgreen;
+    color: black;
+    padding: 5px;
+  }
+
 }

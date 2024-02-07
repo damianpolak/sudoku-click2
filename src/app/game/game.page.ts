@@ -11,7 +11,7 @@ import { TimerService } from '../shared/services/timer.service';
 })
 export class GamePage implements OnInit, OnDestroy {
   orientation = this.appStateServ.getScreenOrientation$();
-  isValueMode: boolean = false;
+  isValueMode: boolean = true;
 
   level!: GameLevel;
   constructor(
@@ -24,12 +24,11 @@ export class GamePage implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.timerServ.start();
-    console.log('game page init');
+    console.log('GamePage Init');
   }
 
   ngOnDestroy(): void {
-    console.log('game page destroy');
-    // this.timerServ.stop();
+    console.log('GamePage Destroy');
     this.timerServ.restart();
   }
 

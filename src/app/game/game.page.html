@@ -17,10 +17,12 @@
             <app-status-bar [level]="level"></app-status-bar>
           </div>
         }
-        <ion-button (click)="toggleMode()"> {{ isValueMode ? 'Toggle notes' : 'Toggle value' }} </ion-button>
-        <ion-button (click)="timerStart()">Start</ion-button>
-        <ion-button (click)="timerStop()">Stop</ion-button>
-        <ion-button (click)="timerRestart()">Restart</ion-button>
+        <div class="debug">
+          <div class="dbgbtn" (click)="toggleMode()"> {{ isValueMode ? 'Toggle notes' : 'Toggle value' }} </div>
+          <div class="dbgbtn" (click)="timerStart()">Start</div>
+          <div class="dbgbtn" (click)="timerStop()">Stop</div>
+          <div class="dbgbtn" (click)="timerRestart()">Restart</div>
+        </div>
       </div>
     </div>
   </div>
