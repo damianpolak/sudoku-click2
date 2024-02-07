@@ -51,7 +51,6 @@ $vwDiff: 10vw;
 }
 
 .container,
-.scorebar,
 .container-wrap,
 .field,
 .notes-grid-field {
@@ -70,21 +69,20 @@ $vwDiff: 10vw;
 .container {
   flex-direction: column;
   
-  .scorebar {
-    background-color: burlywood;
-    color: black;
-    justify-content:space-between;
-
-    .score-object {
-      display: flex;
-      flex-direction: column;
-    }
-
-    @media (orientation: portrait) {
+  @media (orientation: portrait) and (max-aspect-ratio: '0.67/1') {
+    .status-bar-wrapper {
       width: $vwidth;
     }
+  }
 
-    @media (orientation: landscape) {
+  @media (orientation: portrait) and (min-aspect-ratio: '0.68/1') and (max-aspect-ratio: '1/1') {
+    .status-bar-wrapper {
+      width: calc($vwidth - $vwDiff);
+    }
+  }
+
+  @media (orientation: landscape) {
+    .status-bar-wrapper {
       width: 100%;
     }
   }

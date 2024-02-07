@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { ResizeObservableService } from '../shared/services/resize-observable.service';
 import { AppStateService } from '../shared/services/app-state.service';
 import { Observable, lastValueFrom } from 'rxjs';
 import { GameLevel, GameStateService } from '../shared/services/game-state.service';
@@ -7,8 +6,7 @@ import { GameLevel, GameStateService } from '../shared/services/game-state.servi
 @Component({
   selector: 'app-game',
   templateUrl: './game.page.html',
-  styleUrls: ['./game.page.scss'],
-  providers: [ResizeObservableService],
+  styleUrls: ['./game.page.scss']
 })
 export class GamePage implements OnInit, OnDestroy {
   orientation = this.appStateServ.getScreenOrientation$();
@@ -21,7 +19,6 @@ export class GamePage implements OnInit, OnDestroy {
   board: number[][] = [];
   notesGrid: number[][] = [];
   constructor(
-    private resizeServ: ResizeObservableService,
     private appStateServ: AppStateService,
     private gameStateServ: GameStateService
   ) {}

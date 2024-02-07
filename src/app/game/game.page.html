@@ -3,41 +3,32 @@
 <ion-content [fullscreen]="true">
   <div class="container">
     @if((orientation | async) === 'portrait') {
-      <div class="scorebar">
-        <div class="score-object">
-          <strong>Difficulty</strong>
-          <strong>{{ level.name }}</strong>
-        </div>
-        <div class="score-object">
-          <strong>Time</strong>
-          <strong>00:00</strong>
-        </div>
-        <div class="score-object">
-          <strong>Mistakes</strong>
-          <strong>0/3</strong>
-        </div>
+      <div class="status-bar-wrapper">
+        <app-status-bar [level]="level"></app-status-bar>
       </div>
     }
     <div class="container-wrap">
       <div class="board">
         @for (field of board.flat(); track field) {
-        <div class="field">
-          @if(isValueMode) {
-          <div class="notes-value">{{ field }}</div>
-          } @else {
-          <div class="notes-grid">
-            @for (fieldNotes of notesGrid.flat(); track fieldNotes) {
-            <div class="notes-grid-field">{{ fieldNotes }}</div>
-            } @empty {}
+          <div class="field">
+            @if(isValueMode) {
+              <div class="notes-value">{{ field }}</div>
+            } @else {
+              <div class="notes-grid">
+                @for (fieldNotes of notesGrid.flat(); track fieldNotes) {
+                  <div class="notes-grid-field">{{ fieldNotes }}</div>
+                } @empty {}
+              </div>
+              
+            }
           </div>
-
-          }
-        </div>
         } @empty { Empty }
       </div>
       <div class="controls">
         @if((orientation | async) === 'landscape') {
-          <div class="scorebar">Scorebar<br>Test</div>
+          <div class="status-bar-wrapper">
+            <app-status-bar [level]="level"></app-status-bar>
+          </div>
         }
         <ion-button (click)="toggleMode()"> {{ isValueMode ? 'Toggle notes' : 'Toggle value' }} </ion-button>
       </div>
