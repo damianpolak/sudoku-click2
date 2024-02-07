@@ -9,20 +9,7 @@
     }
     <div class="container-wrap">
       <div class="board">
-        @for (field of board.flat(); track field) {
-          <div class="field">
-            @if(isValueMode) {
-              <div class="notes-value">{{ field }}</div>
-            } @else {
-              <div class="notes-grid">
-                @for (fieldNotes of notesGrid.flat(); track fieldNotes) {
-                  <div class="notes-grid-field">{{ fieldNotes }}</div>
-                } @empty {}
-              </div>
-              
-            }
-          </div>
-        } @empty { Empty }
+        <app-board [mode]="isValueMode"></app-board>
       </div>
       <div class="controls">
         @if((orientation | async) === 'landscape') {
@@ -31,6 +18,9 @@
           </div>
         }
         <ion-button (click)="toggleMode()"> {{ isValueMode ? 'Toggle notes' : 'Toggle value' }} </ion-button>
+        <ion-button (click)="timerStart()">Start</ion-button>
+        <ion-button (click)="timerStop()">Stop</ion-button>
+        <ion-button (click)="timerRestart()">Restart</ion-button>
       </div>
     </div>
   </div>

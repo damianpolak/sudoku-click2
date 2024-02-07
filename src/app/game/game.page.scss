@@ -43,25 +43,17 @@ $vwDiff: 10vw;
     width: $boardWidth;
     height: $boardHeight;
     font-size: clamp(0em, $boardFontSize, 3em);
-
-    & * > .notes-grid-field {
-      font-size: 0.5em;
-    }
   }
 }
 
 .container,
-.container-wrap,
-.field,
-.notes-grid-field {
+.container-wrap {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.container,
-.field,
-.notes-grid {
+.container {
   height: 100%;
   width: 100%;
 }
@@ -108,25 +100,6 @@ $vwDiff: 10vw;
     @media (orientation: portrait) and (min-aspect-ratio: '0.68/1') and (max-aspect-ratio: '1/1') {
       @include board(calc($vwidth - $vwDiff), calc($vwidth - $vwDiff), 4vw);
       @include controls(calc($vheight - $vwidth + $vwDiff), $vwidth);
-    }
-
-    .board {
-      @include grid(var(--board-size), 1fr);
-      border-left: 1px solid var(--ion-color-secondary);
-      border-top: 1px solid var(--ion-color-secondary);
-
-      & .field {
-        color: #aaa;
-        border-right: 1px solid var(--ion-color-secondary);
-        border-bottom: 1px solid var(--ion-color-secondary);
-
-        & .notes-grid {
-          @include grid(3, 1fr);
-
-          & .notes-grid-field {
-          }
-        }
-      }
     }
   }
 }

@@ -9,6 +9,7 @@ import { GamePageRoutingModule } from './game-routing.module';
 import { GamePage } from './game.page';
 import { SharedModule } from '../shared/shared.module';
 import { StatusBarComponent } from './status-bar/status-bar.component';
+import { BoardComponent } from './board/board.component';
 
 @NgModule({
   imports: [
@@ -18,6 +19,6 @@ import { StatusBarComponent } from './status-bar/status-bar.component';
     SharedModule,
     GamePageRoutingModule
   ],
-  declarations: [GamePage, StatusBarComponent]
+  declarations: [GamePage, StatusBarComponent, BoardComponent]
 })
 export class GamePageModule {}
