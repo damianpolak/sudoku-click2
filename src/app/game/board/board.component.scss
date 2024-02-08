@@ -3,14 +3,10 @@
   width: 100%;
 }
 
-@mixin grid($size, $unit) {
-  display: grid;
-  grid-template-rows: repeat($size, $unit);
-  grid-template-columns: repeat($size, $unit);
-}
-
 :host {
-  @include grid(var(--board-size), 1fr);
+  display: grid;
+  grid-template-rows: repeat(var(--board-size), 1fr);
+  grid-template-columns: repeat(var(--board-size), 1fr);
   border-left: 1px solid var(--ion-color-secondary);
   border-top: 1px solid var(--ion-color-secondary);
 

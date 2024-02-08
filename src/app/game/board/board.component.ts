@@ -8,12 +8,10 @@ import { GameLevel, GameStateService } from 'src/app/shared/services/game-state.
 })
 export class BoardComponent implements OnInit {
   squareRoot!: number;
-  // notesGridSquareRoot: number = 3;
   @Input() mode: boolean = false;
 
   level!: GameLevel;
   board: number[][] = [];
-  // notesGrid: number[][] = [];
   constructor(private gameStateServ: GameStateService) {}
 
   ngOnInit() {
@@ -25,8 +23,6 @@ export class BoardComponent implements OnInit {
         this.board[row][col] = Math.round(Math.random() * 9);
       }
     }
-
-
   }
 
   loadLevelProperties(): void {

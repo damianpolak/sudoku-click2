@@ -3,9 +3,9 @@
 <ion-content [fullscreen]="true">
   <div class="container">
     @if((orientation | async) === 'portrait') {
-      <div class="status-bar-wrapper">
-        <app-status-bar [level]="level"></app-status-bar>
-      </div>
+    <div class="status-bar-wrapper">
+      <app-status-bar [level]="level"></app-status-bar>
+    </div>
     }
     <div class="container-wrap">
       <div class="board">
@@ -13,12 +13,12 @@
       </div>
       <div class="controls">
         @if((orientation | async) === 'landscape') {
-          <div class="status-bar-wrapper">
-            <app-status-bar [level]="level"></app-status-bar>
-          </div>
+        <div class="status-bar-wrapper">
+          <app-status-bar [level]="level"></app-status-bar>
+        </div>
         }
         <div class="debug">
-          <div class="dbgbtn" (click)="toggleMode()"> {{ fieldMode === 'notes' ? 'Toggle notes' : 'Toggle value' }} </div>
+          <div class="dbgbtn" (click)="toggleMode()">{{ fieldMode === 'notes' ? 'Toggle notes' : 'Toggle value' }}</div>
           <div class="dbgbtn" (click)="timerStart()">Start</div>
           <div class="dbgbtn" (click)="timerStop()">Stop</div>
           <div class="dbgbtn" (click)="timerRestart()">Restart</div>

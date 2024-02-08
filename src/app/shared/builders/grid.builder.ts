@@ -1,4 +1,3 @@
-
 export class GridBuilder<TGrid> {
   protected rows!: number;
   protected cols!: number;
