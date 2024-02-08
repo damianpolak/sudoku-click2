@@ -20,7 +20,7 @@ export class BoardComponent implements OnInit {
     for (let row = 0; row < this.squareRoot; row++) {
       this.board.push([]);
       for (let col = 0; col < this.squareRoot; col++) {
-        this.board[row][col] = Math.round(Math.random() * 9);
+        this.board[row][col] = Math.round(Math.random() * 2) === 2 ? 0 : Math.floor(Math.random() * 9) + 1;
       }
     }
   }

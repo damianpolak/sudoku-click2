@@ -1,5 +1,5 @@
 @if((fieldMode | async) === 'value') {
-  <div class="notes-value">{{ value }}</div>
+  <div class="notes-value">{{ value === 0 ? '' : value }}</div>
   } @else {
   <div class="notes-grid">
     @for (fieldNotesValue of notesGrid; track fieldNotesValue) {

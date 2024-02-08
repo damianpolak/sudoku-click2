@@ -54,7 +54,7 @@ export class GameLevel implements Level {
 export class GameStateService {
   private readonly continueAvailable = new BehaviorSubject<boolean>(false);
   private readonly pauseState = new BehaviorSubject<boolean>(false);
-  private readonly fieldMode = new BehaviorSubject<FieldMode>('notes');
+  private readonly fieldMode = new BehaviorSubject<FieldMode>('value');
 
   private _selectedLevel: GameLevel;
 
