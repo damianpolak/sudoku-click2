@@ -25,7 +25,7 @@ export class FieldComponent implements OnInit {
 
   setNotesValues(values: number[], overwrite: boolean = true): void {
     if(!values.every(x => x >= 1 && x <= 9)) {
-      throw new TypeError('The numbers must be in the range 1 to 9');
+      throw new RangeError('The numbers must be in the range 1 to 9');
     }
 
     values = Array.from(new Set(values.sort()));
