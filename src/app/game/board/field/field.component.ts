@@ -11,27 +11,28 @@ export class FieldComponent implements OnInit {
   @Input() value: unknown;
   fieldMode = this.gameStateServ.getFieldMode$();
   notesGridSquareRoot: number = 3;
-  // notesGrid: number[][] = [];
   notesGrid!: number[];
 
   constructor(private gameStateServ: GameStateService) {
-
-
   }
 
   ngOnInit() {
     this.notesGrid = new GridBuilder(this.notesGridSquareRoot, this.notesGridSquareRoot, 0).getGrid().flat();
     this.notesGrid = this.notesGrid.map((_, index) => ++index);
-    this.notesGrid[4] = 0;
-    console.log(this.notesGrid);
-    // console.log(this.notesGrid);
 
-    // for (let row = 0; row < this.notesGridSquareRoot; row++) {
-    //   this.notesGrid.push([]);
-    //   for (let col = 0; col < this.notesGridSquareRoot; col++) {
-    //     this.notesGrid[row][col] = count;
-    //     count++;
-    //   }
-    // }
+    this.setNotesValues([5,2,1,2]);
+  }
+
+  setNotesValues(values: number[], overwrite: boolean = true): void {
+    if(!values.every(x => x >= 1 && x <= 9)) {
+      throw new TypeError('The numbers must be in the range 1 to 9');
+    }
+
+    values = Array.from(new Set(values.sort()));
+    this.notesGrid.forEach((i, index) => {
+      this.notesGrid[index] = values.includes(i) ? i : (overwrite ? i : 0);
+    });
+
+    console.log(Array.from(new Set(values.sort())));
   }
 }
