@@ -9,6 +9,28 @@ export class ControlsComponent  implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log();
+  }
+
+  onBackClick(): void {
+
+  }
+
+  onEraseClick(): void {
+
+  }
+
+  onNotesToggle(): void {
+
+  }
+
+  onTipClick(): void {
+
+  }
+
+  onNumberClick(): void {
+    
+  }
 
 }
