@@ -1,13 +1,4 @@
-.field,
-.notes-grid-field {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-:host,
-.field,
-.notes-grid {
+:host {
   height: 100%;
   width: 100%;
 }
@@ -23,18 +14,8 @@
   border-left: 1px solid var(--ion-color-secondary);
   border-top: 1px solid var(--ion-color-secondary);
 
-  & .field {
-    color: #aaa;
+  & app-field {
     border-right: 1px solid var(--ion-color-secondary);
     border-bottom: 1px solid var(--ion-color-secondary);
-
-    & .notes-value {
-      font-size: 1.2em;
-    }
-
-    & .notes-grid {
-      @include grid(3, 1fr);
-      font-size: 0.5em;
-    }
   }
 }

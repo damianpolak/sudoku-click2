@@ -8,12 +8,12 @@ import { GameLevel, GameStateService } from 'src/app/shared/services/game-state.
 })
 export class BoardComponent implements OnInit {
   squareRoot!: number;
-  notesGridSquareRoot: number = 3;
+  // notesGridSquareRoot: number = 3;
   @Input() mode: boolean = false;
 
   level!: GameLevel;
   board: number[][] = [];
-  notesGrid: number[][] = [];
+  // notesGrid: number[][] = [];
   constructor(private gameStateServ: GameStateService) {}
 
   ngOnInit() {
@@ -26,14 +26,7 @@ export class BoardComponent implements OnInit {
       }
     }
 
-    let count = 1;
-    for (let row = 0; row < this.notesGridSquareRoot; row++) {
-      this.notesGrid.push([]);
-      for (let col = 0; col < this.notesGridSquareRoot; col++) {
-        this.notesGrid[row][col] = count;
-        count++;
-      }
-    }
+
   }
 
   loadLevelProperties(): void {

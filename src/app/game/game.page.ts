@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { AppStateService } from '../shared/services/app-state.service';
-import { Observable, lastValueFrom } from 'rxjs';
+import { Observable, Subscription, lastValueFrom } from 'rxjs';
 import { GameLevel, GameStateService } from '../shared/services/game-state.service';
 import { TimerService } from '../shared/services/timer.service';
+import { FieldMode } from '../shared/services/game-state.types';
 
 @Component({
   selector: 'app-game',
@@ -11,7 +12,8 @@ import { TimerService } from '../shared/services/timer.service';
 })
 export class GamePage implements OnInit, OnDestroy {
   orientation = this.appStateServ.getScreenOrientation$();
-  isValueMode: boolean = true;
+  fieldMode!: FieldMode;
+  private fieldModeSubs$: Subscription;
 
   level!: GameLevel;
   constructor(
@@ -19,6 +21,9 @@ export class GamePage implements OnInit, OnDestroy {
     private gameStateServ: GameStateService,
     private timerServ: TimerService
   ) {
+    this.fieldModeSubs$ = this.gameStateServ.getFieldMode$().subscribe((x) => {
+      this.fieldMode = x;
+    });
     this.level = this.gameStateServ.selectedLevel;
   }
 
@@ -29,19 +34,23 @@ export class GamePage implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     console.log('GamePage Destroy');
+    this.fieldModeSubs$.unsubscribe();
     this.timerServ.restart();
   }
 
   toggleMode(): void {
-    this.isValueMode = !this.isValueMode;
-    console.log(`Mode is ${this.isValueMode}`);
+    if (this.fieldMode === 'value') {
+      this.gameStateServ.setFieldMode('notes');
+    } else {
+      this.gameStateServ.setFieldMode('value');
+    }
   }
 
   // Timers toogle test
   timerStart(): void {
     this.timerServ.start();
   }
-  
+
   timerStop(): void {
     this.timerServ.stop();
   }

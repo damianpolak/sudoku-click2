@@ -1,6 +1,7 @@
 <!-- <div class="board"> -->
   @for (field of board.flat(); track field) {
-  <div class="field">
+    <app-field [value]="field"></app-field>
+  <!-- <div class="field">
     @if(mode) {
     <div class="notes-value">{{ field }}</div>
     } @else {
@@ -9,8 +10,7 @@
       <div class="notes-grid-field">{{ fieldNotes }}</div>
       } @empty {}
     </div>
-
     }
-  </div>
+  </div> -->
   } @empty { Empty }
 <!-- </div> -->

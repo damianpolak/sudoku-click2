@@ -9,7 +9,7 @@
     }
     <div class="container-wrap">
       <div class="board">
-        <app-board [mode]="isValueMode"></app-board>
+        <app-board></app-board>
       </div>
       <div class="controls">
         @if((orientation | async) === 'landscape') {
@@ -18,7 +18,7 @@
           </div>
         }
         <div class="debug">
-          <div class="dbgbtn" (click)="toggleMode()"> {{ isValueMode ? 'Toggle notes' : 'Toggle value' }} </div>
+          <div class="dbgbtn" (click)="toggleMode()"> {{ fieldMode === 'notes' ? 'Toggle notes' : 'Toggle value' }} </div>
           <div class="dbgbtn" (click)="timerStart()">Start</div>
           <div class="dbgbtn" (click)="timerStop()">Stop</div>
           <div class="dbgbtn" (click)="timerRestart()">Restart</div>
