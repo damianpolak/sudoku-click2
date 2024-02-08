@@ -1,0 +1,17 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+
+  button {
+    padding: min(2vh, 2vw);
+    font-size: min(2vh, 2vw);
+  }
+
+  & div {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 5px;
+    margin: 0.5rem;
+  }
+}

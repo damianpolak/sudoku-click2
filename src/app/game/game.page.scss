@@ -62,19 +62,19 @@ $vwDiff: 10vw;
   flex-direction: column;
   
   @media (orientation: portrait) and (max-aspect-ratio: '0.67/1') {
-    .status-bar-wrapper {
+    app-status-bar {
       width: $vwidth;
     }
   }
 
   @media (orientation: portrait) and (min-aspect-ratio: '0.68/1') and (max-aspect-ratio: '1/1') {
-    .status-bar-wrapper {
+      app-status-bar {
       width: calc($vwidth - $vwDiff);
     }
   }
 
   @media (orientation: landscape) {
-    .status-bar-wrapper {
+      app-status-bar {
       width: 100%;
     }
   }

@@ -13,10 +13,9 @@
       </div>
       <div class="controls">
         @if((orientation | async) === 'landscape') {
-        <div class="status-bar-wrapper">
           <app-status-bar [level]="level"></app-status-bar>
-        </div>
         }
+        <app-controls></app-controls>
         <div class="debug">
           <div class="dbgbtn" (click)="toggleMode()">{{ fieldMode === 'notes' ? 'Toggle notes' : 'Toggle value' }}</div>
           <div class="dbgbtn" (click)="timerStart()">Start</div>
