@@ -7,7 +7,6 @@ export class SudokuUtil {
         return false;
       }
     }
-
     for (let r = 0; r < board.length; r++) {
       if (board[r][col] == num) {
         return false;

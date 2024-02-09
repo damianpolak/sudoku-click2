@@ -48,6 +48,7 @@ export class BoardComponent implements OnInit {
     for (let row = 0; row <= this.squareRoot - 1; row++) {
       for (let col = 0; col <= this.squareRoot - 1; col++) {
         fieldGrid[row][col].value = sudokuGrids.initial[row][col];
+        fieldGrid[row][col].address = { row: row, col: col }
       }
     }
 
