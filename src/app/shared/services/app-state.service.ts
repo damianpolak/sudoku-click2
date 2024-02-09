@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, ReplaySubject, map } from 'rxjs';
 import { BasicOrientationType } from './app-state.types';
-import { ConversionHelper } from '../helpers/conversion.helper';
+import { ConversionUtil } from '../utils/conversion.util';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +16,7 @@ export class AppStateService {
   getScreenOrientation$(): Observable<BasicOrientationType> {
     return this.screenOrientation$.pipe(
       map((i) => {
-        return ConversionHelper.basicOrientationType(i);
+        return ConversionUtil.basicOrientationType(i);
       })
     );
   }

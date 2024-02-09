@@ -1,6 +1,6 @@
 import { BasicOrientationType } from "../services/app-state.types";
 
-export class ConversionHelper {
+export class ConversionUtil {
   private constructor() {}
 
   static basicOrientationType(orientation: OrientationType): BasicOrientationType {
