@@ -74,4 +74,27 @@ export class SudokuUtil {
     }
     return array;
   }
+
+  static eraseSome(grid: number[][], percent: number): number[][] {
+    const amount = Math.floor(grid.length ** 2 * percent);
+    const randomize = (max: number, sqrt: number, addr: string[] = []): string[] => {
+      if (addr.length < max) {
+        const rand = `${Math.floor(Math.random() * sqrt)},${Math.floor(Math.random() * sqrt)}`;
+        if (!addr.includes(rand)) {
+          addr.push(rand);
+        }
+        return randomize(max, sqrt, addr);
+      } else {
+        return addr;
+      }
+    };
+    const addresses = randomize(amount, grid.length);
+
+    console.log(`addresses`, addresses);
+    return grid.map((row, rowIndex) => {
+      return row.map((col, colIndex) => {
+        return addresses.includes(`${rowIndex},${colIndex}`) ? 0 : col;
+      });
+    });
+  }
 }
