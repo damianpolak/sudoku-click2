@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NotesBuilder } from 'src/app/shared/builders/notes.builder';
 import { GameLevel, GameStateService } from 'src/app/shared/services/game-state.service';
 import { Field } from './field/field.types';
@@ -42,20 +42,20 @@ export class BoardComponent implements OnInit {
       notes: new NotesBuilder().get(),
       address: { row: 0, col: 0 },
       selected: false,
-      crossed: false,
+      highlight: false,
     }).getGrid();
 
     for (let row = 0; row <= this.squareRoot - 1; row++) {
       for (let col = 0; col <= this.squareRoot - 1; col++) {
         fieldGrid[row][col].value = sudokuGrids.initial[row][col];
-        fieldGrid[row][col].address = { row: row, col: col }
+        fieldGrid[row][col].address = { row: row, col: col };
       }
     }
 
     return {
       initial: fieldGrid,
-      final: sudokuGrids.final
-    }
+      final: sudokuGrids.final,
+    };
   }
 
   loadLevelProperties(): void {

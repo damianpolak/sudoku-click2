@@ -1,3 +1,8 @@
 @for (field of board.flat(); track field) {
-<app-field [value]="field.value"></app-field>
+<app-field
+  [value]="field.value"
+  [address]="field.address"
+  [highlight]="field.highlight"
+  [selected]="field.selected"
+></app-field>
 } @empty { Empty }

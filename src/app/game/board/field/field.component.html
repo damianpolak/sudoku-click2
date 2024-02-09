@@ -2,7 +2,7 @@
   <div class="notes-value">{{ value }}</div>
 } @else if(value === 0) {
   <div class="notes-grid">
-    @for (item of notes.get(); track item) {
+    @for (item of notes; track item) {
     <div class="notes-grid-field">{{ item.active ? item.value : '' }}</div>
     } @empty {}
   </div>

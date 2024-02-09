@@ -5,7 +5,7 @@ export type Field = {
   notes: Notes;
   address: Address;
   selected: boolean;
-  crossed: boolean;
+  highlight: boolean;
 };
 
 export type Address = {
