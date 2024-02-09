@@ -1,6 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { GridBuilder } from 'src/app/shared/builders/grid.builder';
+import { Notes, NotesBuilder } from 'src/app/shared/builders/notes.builder';
 import { GameStateService } from 'src/app/shared/services/game-state.service';
+import { InputMode } from 'src/app/shared/services/game-state.types';
 
 @Component({
   selector: 'app-field',
@@ -9,30 +12,15 @@ import { GameStateService } from 'src/app/shared/services/game-state.service';
 })
 export class FieldComponent implements OnInit {
   @Input() value: unknown;
-  fieldMode = this.gameStateServ.getFieldMode$();
-  notesGridSquareRoot: number = 3;
-  notesGrid!: number[];
+  inputMode: Observable<InputMode> = this.gameStateServ.getInputMode$();
+  isSelected: boolean = false;
+  notes: NotesBuilder = new NotesBuilder();
 
   constructor(private gameStateServ: GameStateService) {
+    this.notes.update([2,5,9])
   }
 
   ngOnInit() {
-    this.notesGrid = new GridBuilder(this.notesGridSquareRoot, this.notesGridSquareRoot, 0).getGrid().flat();
-    this.notesGrid = this.notesGrid.map((_, index) => ++index);
-
-    this.setNotesValues([5,2,1,2]);
-  }
-
-  setNotesValues(values: number[], overwrite: boolean = true): void {
-    if(!values.every(x => x >= 1 && x <= 9)) {
-      throw new RangeError('The numbers must be in the range 1 to 9');
-    }
-
-    values = Array.from(new Set(values.sort()));
-    this.notesGrid.forEach((i, index) => {
-      this.notesGrid[index] = values.includes(i) ? i : (overwrite ? i : 0);
-    });
-
-    console.log(Array.from(new Set(values.sort())));
+    {}
   }
 }

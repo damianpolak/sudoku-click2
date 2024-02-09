@@ -1,36 +1,46 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ControlsService } from './controls.service';
+import { GameStateService } from 'src/app/shared/services/game-state.service';
+import { Subscription } from 'rxjs';
+import { InputMode } from 'src/app/shared/services/game-state.types';
 
 @Component({
   selector: 'app-controls',
   templateUrl: './controls.component.html',
   styleUrls: ['./controls.component.scss'],
 })
-export class ControlsComponent  implements OnInit {
-
-  constructor() { }
+export class ControlsComponent implements OnInit, OnDestroy {
+  inputMode!: InputMode;
+  private inputModeSubs$!: Subscription;
+  constructor(private controlsServ: ControlsService, private gameStateServ: GameStateService) {}
 
   ngOnInit() {
-    console.log();
+    this.inputModeSubs$ = this.gameStateServ.getInputMode$().subscribe((mode) => {
+      this.inputMode = mode;
+    });
   }
 
-  onBackClick(): void {
-
+  ngOnDestroy(): void {
+    this.inputModeSubs$.unsubscribe();
   }
 
-  onEraseClick(): void {
+  onBackClick(): void {}
 
-  }
+  onEraseClick(): void {}
 
   onNotesToggle(): void {
-
+    if (this.inputMode === 'value') {
+      this.gameStateServ.setInputMode('notes');
+    } else {
+      this.gameStateServ.setInputMode('value');
+    }
   }
 
-  onTipClick(): void {
+  onTipClick(): void {}
 
+  onNumberClick(value: number): void {
+    if(this.inputMode === 'notes') {
+      this.controlsServ.onNumberClick(value);
+    }
   }
-
-  onNumberClick(): void {
-    
-  }
-
 }

@@ -1,1 +1,1 @@
-export type FieldMode = 'value' | 'notes';
+export type InputMode = 'value' | 'notes';

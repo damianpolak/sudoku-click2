@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { FieldMode } from './game-state.types';
+import { InputMode } from './game-state.types';
 
 export enum Levels {
   EASY = 'EASY',
@@ -54,7 +54,7 @@ export class GameLevel implements Level {
 export class GameStateService {
   private readonly continueAvailable = new BehaviorSubject<boolean>(false);
   private readonly pauseState = new BehaviorSubject<boolean>(false);
-  private readonly fieldMode = new BehaviorSubject<FieldMode>('value');
+  private readonly inputMode = new BehaviorSubject<InputMode>('value');
 
   private _selectedLevel: GameLevel;
 
@@ -75,7 +75,7 @@ export class GameStateService {
     console.log(`Set Lev`, value);
     this._selectedLevel = new GameLevel(value);
   }
-  
+
   get selectedLevel() {
     return this._selectedLevel;
   }
@@ -84,12 +84,12 @@ export class GameStateService {
     return this.continueAvailable.asObservable();
   }
 
-  setFieldMode(mode: FieldMode): void {
-    this.fieldMode.next(mode);
+  setInputMode(mode: InputMode): void {
+    this.inputMode.next(mode);
   }
 
-  getFieldMode$(): Observable<FieldMode> {
-    return this.fieldMode.asObservable();
+  getInputMode$(): Observable<InputMode> {
+    return this.inputMode.asObservable();
   }
 
 }
