@@ -1,8 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { GridBuilder } from 'src/app/shared/builders/grid.builder';
 import { NotesBuilder } from 'src/app/shared/builders/notes.builder';
 import { GameLevel, GameStateService } from 'src/app/shared/services/game-state.service';
 import { Field } from './field/field.types';
+import { SudokuBuilder } from 'src/app/shared/builders/sudoku.builder';
+import { GridBuilder } from 'src/app/shared/builders/grid.builder';
+import { Board, BoardSet } from './board.types';
+import { SudokuUtil } from 'src/app/shared/utils/sudoku.util';
 
 @Component({
   selector: 'app-board',
@@ -14,27 +17,43 @@ export class BoardComponent implements OnInit {
   @Input() mode: boolean = false;
 
   level!: GameLevel;
-  board: number[][] = [];
+  board: Board = [];
   constructor(private gameStateServ: GameStateService) {}
 
   ngOnInit() {
-    const testGrid = new GridBuilder(3, 3, {
+    this.loadLevelProperties();
+    this.board = this.createBoardSet().initial;
+    console.log(this.board);
+  }
+
+  private createSudokuGrids(erasePercentage: number): { initial: number[][]; final: number[][] } {
+    const grid: number[][] = new SudokuBuilder(this.level.cols).randomizeDiagonal().solveSudoku().getGrid();
+    return {
+      initial: SudokuUtil.eraseSome(grid, erasePercentage),
+      final: grid,
+    };
+  }
+
+  private createBoardSet(): BoardSet {
+    const sudokuGrids = this.createSudokuGrids(0.6);
+    console.log(sudokuGrids);
+    let fieldGrid: Board = new GridBuilder<Field>(this.level.rows, this.level.cols, {
       value: 0,
       notes: new NotesBuilder().get(),
       address: { row: 0, col: 0 },
       selected: false,
       crossed: false,
-    } as Field).getGrid();
+    }).getGrid();
 
-    console.log(testGrid)
-
-    this.loadLevelProperties();
-
-    for (let row = 0; row < this.squareRoot; row++) {
-      this.board.push([]);
-      for (let col = 0; col < this.squareRoot; col++) {
-        this.board[row][col] = Math.round(Math.random() * 2) === 2 ? 0 : Math.floor(Math.random() * 9) + 1;
+    for (let row = 0; row <= this.squareRoot - 1; row++) {
+      for (let col = 0; col <= this.squareRoot - 1; col++) {
+        fieldGrid[row][col].value = sudokuGrids.initial[row][col];
       }
+    }
+
+    return {
+      initial: fieldGrid,
+      final: sudokuGrids.final
     }
   }
 

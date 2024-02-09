@@ -19,7 +19,6 @@ export class SudokuBuilder extends Grid<number> {
   private getBoardSquares(board: number[][] | string[][]): number[][][] {
     const squares: number[][][] = [];
     const sqrt = Math.sqrt(board.length);
-    console.log(`=== sqrt=${sqrt}`);
     if (sqrt % 1 !== 0) {
       throw Error('Sqrt is not an integer.');
     }
@@ -71,6 +70,11 @@ export class SudokuBuilder extends Grid<number> {
     });
 
     this.grid = newGrid;
+    return this;
+  }
+
+  eraseSome(percentage: number): this {
+    this.grid = SudokuUtil.eraseSome(this.grid, percentage);
     return this;
   }
 

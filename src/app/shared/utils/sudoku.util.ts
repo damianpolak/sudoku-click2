@@ -90,7 +90,6 @@ export class SudokuUtil {
     };
     const addresses = randomize(amount, grid.length);
 
-    console.log(`addresses`, addresses);
     return grid.map((row, rowIndex) => {
       return row.map((col, colIndex) => {
         return addresses.includes(`${rowIndex},${colIndex}`) ? 0 : col;

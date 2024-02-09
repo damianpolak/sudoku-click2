@@ -16,11 +16,10 @@ export class FieldComponent implements OnInit {
   isSelected: boolean = false;
   notes: NotesBuilder = new NotesBuilder();
 
-  constructor(private gameStateServ: GameStateService) {
-    this.notes.update([2,5,9])
-  }
+  constructor(private gameStateServ: GameStateService) {}
 
   ngOnInit() {
-    {}
+    {
+    }
   }
 }

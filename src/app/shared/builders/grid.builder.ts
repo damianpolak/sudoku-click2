@@ -7,13 +7,20 @@ export abstract class Grid<TGrid> {
 export class GridBuilder<TGrid> extends Grid<TGrid> {
   constructor(rows: number, cols: number, value: TGrid) {
     super();
+    this.create(rows, cols, value);
+    return this;
+  }
+
+  private create(rows: number, cols: number, value: TGrid) {
+    const grid: TGrid[][] = [];
     for (let row = 0; row < rows; row++) {
-      this.grid.push([]);
+      grid.push([]);
       for (let col = 0; col < cols; col++) {
-        this.grid[row][col] = value;
+        grid[row][col] = structuredClone(value);
       }
     }
-    return this;
+
+    this.grid = structuredClone(grid);
   }
 
   getGrid(): TGrid[][] {
