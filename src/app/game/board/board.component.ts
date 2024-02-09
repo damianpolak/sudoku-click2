@@ -1,5 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { GridBuilder } from 'src/app/shared/builders/grid.builder';
+import { NotesBuilder } from 'src/app/shared/builders/notes.builder';
 import { GameLevel, GameStateService } from 'src/app/shared/services/game-state.service';
+import { Field } from './field/field.types';
 
 @Component({
   selector: 'app-board',
@@ -15,6 +18,16 @@ export class BoardComponent implements OnInit {
   constructor(private gameStateServ: GameStateService) {}
 
   ngOnInit() {
+    const testGrid = new GridBuilder(3, 3, {
+      value: 0,
+      notes: new NotesBuilder().get(),
+      address: { row: 0, col: 0 },
+      selected: false,
+      crossed: false,
+    } as Field).getGrid();
+
+    console.log(testGrid)
+
     this.loadLevelProperties();
 
     for (let row = 0; row < this.squareRoot; row++) {

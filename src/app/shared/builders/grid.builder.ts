@@ -1,10 +1,12 @@
-export class GridBuilder<TGrid> {
+export abstract class Grid<TGrid> {
   protected rows!: number;
   protected cols!: number;
-
   protected grid: TGrid[][] = [];
+}
 
+export class GridBuilder<TGrid> extends Grid<TGrid> {
   constructor(rows: number, cols: number, value: TGrid) {
+    super();
     for (let row = 0; row < rows; row++) {
       this.grid.push([]);
       for (let col = 0; col < cols; col++) {
