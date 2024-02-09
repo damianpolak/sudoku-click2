@@ -11,7 +11,7 @@ import { InputMode } from '../shared/services/game-state.types';
   styleUrls: ['./game.page.scss'],
 })
 export class GamePage implements OnInit, OnDestroy {
-  orientation = this.appStateServ.getScreenOrientation$();
+  orientation$ = this.appStateServ.getScreenOrientation$();
   inputMode!: InputMode;
   private inputModeSubs$: Subscription;
 

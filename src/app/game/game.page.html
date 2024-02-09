@@ -2,7 +2,7 @@
 
 <ion-content [fullscreen]="true">
   <div class="container">
-    @if((orientation | async) === 'portrait') {
+    @if((orientation$ | async) === 'portrait') {
     <div class="status-bar-wrapper">
       <app-status-bar [level]="level"></app-status-bar>
     </div>
@@ -12,7 +12,7 @@
         <app-board></app-board>
       </div>
       <div class="controls">
-        @if((orientation | async) === 'landscape') {
+        @if((orientation$ | async) === 'landscape') {
           <app-status-bar [level]="level"></app-status-bar>
         }
         <app-controls></app-controls>

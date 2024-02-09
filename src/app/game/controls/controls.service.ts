@@ -5,15 +5,15 @@ import { Observable, Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class ControlsService {
-  private numberClick = new Subject<number>();
+  private numberClick$ = new Subject<number>();
 
-  onNumberClick(value: number) {
+  onNumberClick(value: number): void {
     console.log(`Number click ${value}`);
-    this.numberClick.next(value);
+    this.numberClick$.next(value);
   }
 
   getNumberClick$(): Observable<number> {
-    return this.numberClick.asObservable();
+    return this.numberClick$.asObservable();
   }
 
   constructor() {}

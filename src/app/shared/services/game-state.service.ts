@@ -52,9 +52,9 @@ export class GameLevel implements Level {
   providedIn: 'root',
 })
 export class GameStateService {
-  private readonly continueAvailable = new BehaviorSubject<boolean>(false);
-  private readonly pauseState = new BehaviorSubject<boolean>(false);
-  private readonly inputMode = new BehaviorSubject<InputMode>('value');
+  private readonly continueAvailable$ = new BehaviorSubject<boolean>(false);
+  private readonly pauseState$ = new BehaviorSubject<boolean>(false);
+  private readonly inputMode$ = new BehaviorSubject<InputMode>('value');
 
   private _selectedLevel: GameLevel;
 
@@ -63,12 +63,12 @@ export class GameStateService {
   }
 
   setPauseState(pause: boolean): void {
-    this.continueAvailable.next(pause);
-    this.pauseState.next(pause);
+    this.continueAvailable$.next(pause);
+    this.pauseState$.next(pause);
   }
 
   getPauseState$(): Observable<boolean> {
-    return this.pauseState.asObservable();
+    return this.pauseState$.asObservable();
   }
 
   setLevel(value?: Levels): void {
@@ -81,15 +81,15 @@ export class GameStateService {
   }
 
   getContinueState$(): Observable<boolean> {
-    return this.continueAvailable.asObservable();
+    return this.continueAvailable$.asObservable();
   }
 
   setInputMode(mode: InputMode): void {
-    this.inputMode.next(mode);
+    this.inputMode$.next(mode);
   }
 
   getInputMode$(): Observable<InputMode> {
-    return this.inputMode.asObservable();
+    return this.inputMode$.asObservable();
   }
 
 }

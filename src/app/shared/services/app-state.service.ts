@@ -7,14 +7,14 @@ import { ConversionHelper } from '../helpers/conversion.helper';
   providedIn: 'root',
 })
 export class AppStateService {
-  private readonly screenOrientation = new ReplaySubject<OrientationType>(5);
+  private readonly screenOrientation$ = new ReplaySubject<OrientationType>(5);
 
   setScreenOrientation(orientation: OrientationType): void {
-    this.screenOrientation.next(orientation);
+    this.screenOrientation$.next(orientation);
   }
 
   getScreenOrientation$(): Observable<BasicOrientationType> {
-    return this.screenOrientation.pipe(
+    return this.screenOrientation$.pipe(
       map((i) => {
         return ConversionHelper.basicOrientationType(i);
       })

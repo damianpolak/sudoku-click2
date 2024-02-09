@@ -12,7 +12,7 @@ import { InputMode } from 'src/app/shared/services/game-state.types';
 })
 export class FieldComponent implements OnInit {
   @Input() value: unknown;
-  inputMode: Observable<InputMode> = this.gameStateServ.getInputMode$();
+  inputMode$: Observable<InputMode> = this.gameStateServ.getInputMode$();
   isSelected: boolean = false;
   notes: NotesBuilder = new NotesBuilder();
 

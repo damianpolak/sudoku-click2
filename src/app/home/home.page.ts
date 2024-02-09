@@ -9,7 +9,7 @@ import { GameStateService, Levels } from '../shared/services/game-state.service'
 })
 export class HomePage {
   isMenuLevelOpen = false;
-  canContinue = this.gameStateServ.getContinueState$();
+  canContinue$ = this.gameStateServ.getContinueState$();
 
   menuLevelTitle = 'Choose difficulty level';
   menuLevelButtons = this.createActionSheetMenu();
