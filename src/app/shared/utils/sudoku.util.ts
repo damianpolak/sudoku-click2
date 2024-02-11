@@ -95,4 +95,25 @@ export class SudokuUtil {
       });
     });
   }
+
+  static getBoardSquares(board: number[][]): number[][][] {
+    const squares: number[][][] = [];
+    const sqrt = Math.sqrt(board.length);
+    if (sqrt % 1 !== 0) {
+      throw Error('Sqrt is not an integer.');
+    }
+
+    for (let row = 0; row < board.length; row += sqrt) {
+      for (let col = 0; col < board.length; col += sqrt) {
+        const square: number[][] = [];
+        for (let k = row; k < row + sqrt; k++) {
+          for (let l = col; l < col + sqrt; l++) {
+            square.push([k, l]);
+          }
+        }
+        squares.push(square);
+      }
+    }
+    return squares;
+  }
 }
