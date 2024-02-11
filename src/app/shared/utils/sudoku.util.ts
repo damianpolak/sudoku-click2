@@ -116,4 +116,12 @@ export class SudokuUtil {
     }
     return squares;
   }
+
+  static toNumericBoard<T extends object>(board: T[][], property: string): number[][] {
+    return board.map(row => row.map(field => {
+      if(field.hasOwnProperty(property)) {
+        return (field as object | any)[property];
+      }
+    }));
+  }
 }
