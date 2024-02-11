@@ -53,3 +53,15 @@ ion-button {
 .action-sheet-button.sc-ion-action-sheet-ios {
   font-size: 0.8rem;
 }
+
+app-field {
+
+  &.selected {
+    background-color: var(--ion-field-selected);
+  }
+
+  &.highlight {
+    background-color: var(--ion-field-highlight);
+  }
+}
+

@@ -74,6 +74,9 @@ body.light {
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
+
+  --ion-field-selected: #0000ff;
+  --ion-field-highlight: #48b5fd;
 }
 
 /*
@@ -144,6 +147,9 @@ body.dark {
   --ion-color-light-contrast-rgb: 255, 255, 255;
   --ion-color-light-shade: #1e2023;
   --ion-color-light-tint: #383a3e;
+
+  --ion-field-selected: #1b3d25;
+  --ion-field-highlight: #357949;
 }
 
 /*
@@ -233,7 +239,7 @@ body.dark {
 }
 
 html {
-  /* 
+  /*
    * For more information on dynamic font scaling, visit the documentation:
    * https://ionicframework.com/docs/layout/dynamic-font-scaling
    */

@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { InputMode } from './game-state.types';
+import { Board } from 'src/app/game/board/board.types';
+import { Field } from 'src/app/game/board/field/field.types';
 
 export enum Levels {
   EASY = 'EASY',
@@ -90,6 +92,25 @@ export class GameStateService {
 
   getInputMode$(): Observable<InputMode> {
     return this.inputMode$.asObservable();
+  }
+
+  private testBoard$ = new Subject<Board>();
+
+  getTestBoard$(): Observable<Board> {
+    return this.testBoard$.asObservable();
+  }
+
+  updateBoard(board: Board): void {
+    this.testBoard$.next(board);
+  }
+
+  private testField$ = new Subject<Field>();
+  updateFieldBoard(field: Field): void {
+    this.testField$.next(field);
+  }
+
+  getFieldBoard$(): Observable<Field> {
+    return this.testField$.asObservable();
   }
 
 }
