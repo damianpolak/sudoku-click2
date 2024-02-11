@@ -39,8 +39,9 @@ export class ControlsComponent implements OnInit, OnDestroy {
   onTipClick(): void {}
 
   onNumberClick(value: number): void {
-    if(this.inputMode === 'notes') {
-      this.controlsServ.onNumberClick(value);
-    }
+    this.controlsServ.onNumberClick({
+      mode: this.inputMode,
+      number: value,
+    });
   }
 }

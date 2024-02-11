@@ -1,18 +1,24 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
+import { InputMode } from 'src/app/shared/services/game-state.types';
+
+type NumberClickEvent = {
+  mode: InputMode,
+  number: number;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class ControlsService {
-  private numberClick$ = new Subject<number>();
+  private numberClick$ = new Subject<NumberClickEvent>();
 
-  onNumberClick(value: number): void {
-    console.log(`Number click ${value}`);
+  onNumberClick(value: NumberClickEvent): void {
+    console.log(`Number click event: `, value);
     this.numberClick$.next(value);
   }
 
-  getNumberClick$(): Observable<number> {
+  getNumberClick$(): Observable<NumberClickEvent> {
     return this.numberClick$.asObservable();
   }
 
