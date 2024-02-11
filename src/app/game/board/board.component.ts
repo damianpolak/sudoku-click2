@@ -75,9 +75,16 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   private highlightFields(selected: Address): void {
+    const boardSquares = SudokuUtil.getBoardSquares(SudokuUtil.toNumericBoard(this.board, 'value'));
+    const selectedSquareAddr = boardSquares.filter(f => {
+      return f.some(x => x[0] === selected.row && x[1] === selected.col);
+    })[0];
+
     this.board = this.board.map((row) => {
       return row.map((field) => {
-        field.highlight = selected.row === field.address.row || selected.col === field.address.col ? true : false;
+        const crossed = selected.row === field.address.row || selected.col === field.address.col;
+        const square = selectedSquareAddr.some(addr => addr[0] === field.address.row && addr[1] === field.address.col);
+        field.highlight = crossed || square ? true : false;
         return field;
       });
     });
