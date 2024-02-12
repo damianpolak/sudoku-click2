@@ -12,6 +12,7 @@
 }
 
 :host {
+  transition: 0.3s;
   & .notes-value {
     font-size: 1.2em;
   }
