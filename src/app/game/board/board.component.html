@@ -1,6 +1,7 @@
-@for (field of board.flat(); track field) {
+@for (field of board.flat(); track trackFieldByAddress) {
 <app-field
   [value]="field.value"
+  [notes]="field.notes"
   [address]="field.address"
   [highlight]="field.highlight"
   [selected]="field.selected"

@@ -9,11 +9,13 @@ import { SudokuUtil } from 'src/app/shared/utils/sudoku.util';
 import { BehaviorSubject, Observable, Subscription, tap } from 'rxjs';
 import { ControlsService } from '../controls/controls.service';
 import { InputMode } from 'src/app/shared/services/game-state.types';
+import { BoardService } from './board.service';
 
 @Component({
   selector: 'app-board',
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss'],
+  providers: [BoardService],
 })
 export class BoardComponent implements OnInit, OnDestroy {
   squareRoot!: number;
@@ -22,63 +24,49 @@ export class BoardComponent implements OnInit, OnDestroy {
   inputMode: InputMode = 'value';
   level!: GameLevel;
   board: Board = [];
-  currentSelectedField!: Address;
 
-  private inputModeSubs$: Subscription = this.gameStateServ.getInputMode$().subscribe(x => this.inputMode);
+  private selectedField!: Field;
+  private inputModeSubs$: Subscription = this.gameStateServ.getInputMode$().subscribe((x) => (this.inputMode = x));
   private numberClickSubs$!: Subscription;
   private testBoardSubs$!: Subscription;
   private testFieldSubs$!: Subscription;
-  testBoard: Board = [];
 
-  constructor(private gameStateServ: GameStateService, private controlsServ: ControlsService) {}
+  constructor(
+    private gameStateServ: GameStateService,
+    private controlsServ: ControlsService,
+    private boardServ: BoardService
+  ) {}
 
   ngOnInit() {
     this.loadLevelProperties();
-    this.board = this.createBoardSet().initial;
+    this.board = this.boardServ.createBoardSet(0.6, this.level).initial;
 
-    this.numberClickSubs$ = this.controlsServ.getNumberClick$().subscribe({
-      next: (v) => {
-        console.log(`Click subs`, v);
-        if(this.inputMode === 'value') {
-
-          // Początek wprowadzania VALUE - dorobić dedykowane metody update, clear etc.
-          this.board = this.board.map(row => row.map(field => {
-            if(field.address === this.currentSelectedField) {
-              field.value = v.number;
-            }
-            return field;
-          }))
-        }
-      },
+    this.numberClickSubs$ = this.controlsServ.getNumberClick$().subscribe((click) => {
+      const updateBoard = (board: Board) => {
+        this.board = this.selectedField.value === 0 ? board : this.board;
+      };
+      switch (this.inputMode) {
+        case 'value':
+          updateBoard(this.updateNumberValue(this.board, click.number, this.selectedField.address));
+          break;
+        case 'notes':
+          updateBoard(this.updateNotesValue(this.board, click.number, this.selectedField.address));
+          break;
+      }
     });
 
     this.testFieldSubs$ = this.gameStateServ
       .getFieldBoard$()
       .pipe(
         tap((_) => {
-          this.unselectAllFields();
+          this.board = this.unselectAllFields(this.board);
         })
       )
-      .subscribe({
-        next: (v) => {
-          this.highlightFields(v.address);
-          this.board[v.address.row][v.address.col].selected = v.selected;
-          this.currentSelectedField = v.address;
-          this.gameStateServ.updateBoard(this.board);
-        },
+      .subscribe((field) => {
+        this.board = this.highlightFields(this.board, field.address);
+        this.board[field.address.row][field.address.col].selected = field.selected;
+        this.selectedField = field;
       });
-
-    this.testBoardSubs$ = this.gameStateServ.getTestBoard$().subscribe({
-      next: (v) => {
-        this.testBoard = v;
-      },
-      complete: () => {
-        console.log('Complete');
-      },
-    });
-
-    this.gameStateServ.updateBoard(this.createBoardSet().initial);
-    console.log(this.board);
   }
 
   ngOnDestroy(): void {
@@ -88,8 +76,45 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.testFieldSubs$.unsubscribe();
   }
 
-  private unselectAllFields(): void {
-    this.board = this.board.map((row) => {
+  trackFieldByAddress(index: number, item: Field): string {
+    return `${item.address.row}${item.address.col}`;
+  }
+
+  private updateNumberValue(board: Board, value: number, selectedField: Address): Board {
+    return structuredClone(board).map((row) =>
+      row.map((field) => {
+        field.value = this.boardServ.isAddressEqual(field.address, selectedField) ? value : field.value;
+        return field;
+      })
+    );
+  }
+
+  private updateNotesValue(board: Board, value: number, selectedAddress: Address): Board {
+    return structuredClone(board).map((row) =>
+      row.map((field) => {
+        if (this.boardServ.isAddressEqual(field.address, selectedAddress)) {
+          const currentNotesValues: number[] = field.notes.filter((f) => f.active).map((i) => i.value);
+          if (currentNotesValues.includes(value)) {
+            field.notes = new NotesBuilder([
+              ...field.notes
+                .filter((f) => f.active)
+                .map((i) => i.value)
+                .filter((f) => f !== value),
+            ]).get();
+          } else {
+            field.notes = new NotesBuilder([
+              ...field.notes.filter((f) => f.active).map((i) => i.value),
+              ...[value],
+            ]).get();
+          }
+        }
+        return field;
+      })
+    );
+  }
+
+  private unselectAllFields(board: Board): Board {
+    return structuredClone(board).map((row) => {
       return row.map((field) => {
         field.selected = false;
         field.highlight = false;
@@ -98,13 +123,13 @@ export class BoardComponent implements OnInit, OnDestroy {
     });
   }
 
-  private highlightFields(selected: Address): void {
-    const boardSquares = SudokuUtil.getBoardSquares(SudokuUtil.toNumericBoard(this.board, 'value'));
+  private highlightFields(board: Board, selected: Address): Board {
+    const boardSquares = SudokuUtil.getBoardSquares(SudokuUtil.toNumericBoard(structuredClone(board), 'value'));
     const selectedSquareAddr = boardSquares.filter((f) => {
       return f.some((x) => x[0] === selected.row && x[1] === selected.col);
     })[0];
 
-    this.board = this.board.map((row) => {
+    return structuredClone(board).map((row) => {
       return row.map((field) => {
         const crossed = selected.row === field.address.row || selected.col === field.address.col;
         const square = selectedSquareAddr.some(
@@ -116,45 +141,13 @@ export class BoardComponent implements OnInit, OnDestroy {
     });
   }
 
-  private createSudokuGrids(erasePercentage: number): { initial: number[][]; final: number[][] } {
-    const grid: number[][] = new SudokuBuilder(this.level.cols).randomizeDiagonal().solveSudoku().getGrid();
-    return {
-      initial: SudokuUtil.eraseSome(grid, erasePercentage),
-      final: grid,
-    };
-  }
-
-  private createBoardSet(): BoardSet {
-    const sudokuGrids = this.createSudokuGrids(0.6);
-    // console.log(sudokuGrids);
-    let fieldGrid: Board = new GridBuilder<Field>(this.level.rows, this.level.cols, {
-      value: 0,
-      notes: new NotesBuilder().get(),
-      address: { row: 0, col: 0 },
-      selected: false,
-      highlight: false,
-    }).getGrid();
-
-    for (let row = 0; row <= this.squareRoot - 1; row++) {
-      for (let col = 0; col <= this.squareRoot - 1; col++) {
-        fieldGrid[row][col].value = sudokuGrids.initial[row][col];
-        fieldGrid[row][col].address = { row: row, col: col };
-      }
-    }
-
-    return {
-      initial: fieldGrid,
-      final: sudokuGrids.final,
-    };
-  }
-
   loadLevelProperties(): void {
     this.level = this.gameStateServ.selectedLevel;
     this.squareRoot = this.level.cols;
     this.setBoardSize(this.squareRoot);
   }
 
-  setBoardSize(size: number): void {
+  private setBoardSize(size: number): void {
     document.documentElement.style.setProperty('--board-size', size.toString());
   }
 }
