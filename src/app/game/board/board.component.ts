@@ -80,6 +80,10 @@ export class BoardComponent implements OnInit, OnDestroy {
     return `${item.address.row}${item.address.col}`;
   }
 
+  private getAllFieldsWithNumber(board: Board, value: number): Field[] {
+    return structuredClone(board).flat().filter(x => x.value === value);
+  }
+
   private updateNumberValue(board: Board, value: number, selectedField: Address): Board {
     return structuredClone(board).map((row) =>
       row.map((field) => {
