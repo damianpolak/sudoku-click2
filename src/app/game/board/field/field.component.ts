@@ -1,6 +1,11 @@
-import { Component, EventEmitter, HostBinding, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  HostBinding,
+  HostListener,
+  Input,
+  OnInit,
+} from '@angular/core';
 import { Observable } from 'rxjs';
-import { GridBuilder } from 'src/app/shared/builders/grid.builder';
 import { Notes, NotesBuilder } from 'src/app/shared/builders/notes.builder';
 import { GameStateService } from 'src/app/shared/services/game-state.service';
 import { InputMode } from 'src/app/shared/services/game-state.types';
@@ -33,15 +38,14 @@ export class FieldComponent implements OnInit {
       address: this.address,
       highlight: this.highlight,
       selected: true,
-      notes: this.notes
-    })
+      notes: this.notes,
+    });
   }
 
   constructor(private gameStateServ: GameStateService) {}
 
   ngOnInit() {
-    {}
+    {
+    }
   }
-
-
 }
