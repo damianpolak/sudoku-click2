@@ -28,8 +28,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   private selectedField!: Field;
   private inputModeSubs$: Subscription = this.gameStateServ.getInputMode$().subscribe((x) => (this.inputMode = x));
   private numberClickSubs$!: Subscription;
-  private testBoardSubs$!: Subscription;
-  private testFieldSubs$!: Subscription;
+  private fieldClickSubs$!: Subscription;
 
   constructor(
     private gameStateServ: GameStateService,
@@ -55,8 +54,8 @@ export class BoardComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.testFieldSubs$ = this.gameStateServ
-      .getFieldBoard$()
+    this.fieldClickSubs$ = this.gameStateServ
+      .getBoardFieldClick$()
       .pipe(
         tap((_) => {
           this.board = this.unselectAllFields(this.board);
@@ -64,16 +63,21 @@ export class BoardComponent implements OnInit, OnDestroy {
       )
       .subscribe((field) => {
         this.board = this.highlightFields(this.board, field.address);
-        this.board[field.address.row][field.address.col].selected = field.selected;
-        this.selectedField = field;
+        if (field.value !== 0) {
+          const fields = this.getAllFieldsWithNumber(this.board, field.value).map((i) => i.address);
+          this.board = this.selectFieldsByAddress(this.board, fields);
+          this.selectedField = field;
+        } else {
+          this.board[field.address.row][field.address.col].selected = field.selected;
+          this.selectedField = field;
+        }
       });
   }
 
   ngOnDestroy(): void {
     this.inputModeSubs$.unsubscribe();
     this.numberClickSubs$.unsubscribe();
-    this.testBoardSubs$.unsubscribe();
-    this.testFieldSubs$.unsubscribe();
+    this.fieldClickSubs$.unsubscribe();
   }
 
   trackFieldByAddress(index: number, item: Field): string {
@@ -81,7 +85,21 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   private getAllFieldsWithNumber(board: Board, value: number): Field[] {
-    return structuredClone(board).flat().filter(x => x.value === value);
+    return structuredClone(board)
+      .flat()
+      .filter((x) => x.value === value);
+  }
+
+  private selectFieldsByAddress(board: Board, address: Address[]): Board {
+    return structuredClone(board).map((row) => {
+      return row.map((field) => {
+        if (address.some((x) => this.boardServ.isAddressEqual(field.address, x))) {
+          field.selected = true;
+          console.log('Is equal: ', field.address);
+        }
+        return field;
+      });
+    });
   }
 
   private updateNumberValue(board: Board, value: number, selectedField: Address): Board {

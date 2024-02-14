@@ -28,7 +28,7 @@ export class FieldComponent implements OnInit {
   }
 
   @HostListener('click') onClick() {
-    this.gameStateServ.updateFieldBoard({
+    this.gameStateServ.onBoardFieldClick({
       value: this.value,
       address: this.address,
       highlight: this.highlight,

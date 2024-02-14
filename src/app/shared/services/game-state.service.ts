@@ -94,13 +94,13 @@ export class GameStateService {
     return this.inputMode$.asObservable();
   }
 
-  private testField$ = new Subject<Field>();
-  updateFieldBoard(field: Field): void {
-    this.testField$.next(field);
+  private fieldClick$ = new Subject<Field>();
+  onBoardFieldClick(field: Field): void {
+    this.fieldClick$.next(field);
   }
 
-  getFieldBoard$(): Observable<Field> {
-    return this.testField$.asObservable();
+  getBoardFieldClick$(): Observable<Field> {
+    return this.fieldClick$.asObservable();
   }
 
 }
