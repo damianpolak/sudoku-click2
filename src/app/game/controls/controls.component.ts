@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ControlsService } from './controls.service';
+import { ControlsService, FeatureClickEvent, Features } from './controls.service';
 import { GameStateService } from 'src/app/shared/services/game-state.service';
 import { Subscription } from 'rxjs';
 import { InputMode } from 'src/app/shared/services/game-state.types';
@@ -24,19 +24,9 @@ export class ControlsComponent implements OnInit, OnDestroy {
     this.inputModeSubs$.unsubscribe();
   }
 
-  onBackClick(): void {}
-
-  onEraseClick(): void {}
-
-  onNotesToggle(): void {
-    if (this.inputMode === 'value') {
-      this.gameStateServ.setInputMode('notes');
-    } else {
-      this.gameStateServ.setInputMode('value');
-    }
+  onFeatureClick(value: FeatureClickEvent): void {
+    this.controlsServ.onFeatureClick(value);
   }
-
-  onTipClick(): void {}
 
   onNumberClick(value: number): void {
     this.controlsServ.onNumberClick({

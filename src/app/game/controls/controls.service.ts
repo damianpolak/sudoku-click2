@@ -1,17 +1,29 @@
-import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { Observable, Subject, Subscription } from 'rxjs';
+import { GameStateService } from 'src/app/shared/services/game-state.service';
 import { InputMode } from 'src/app/shared/services/game-state.types';
 
 type NumberClickEvent = {
-  mode: InputMode,
+  mode: InputMode;
   number: number;
-}
+};
+
+export type FeatureClickEvent = {
+  type: FeatureClickType;
+  feature: Features;
+  toggle?: boolean;
+};
+
+type FeatureClickType = 'click' | 'toggle';
+
+export type Features = 'back' | 'erase' | 'notes' | 'tip';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ControlsService {
-  private numberClick$ = new Subject<NumberClickEvent>();
+  private readonly numberClick$ = new Subject<NumberClickEvent>();
+  private readonly featureClick$ = new Subject<FeatureClickEvent>();
 
   onNumberClick(value: NumberClickEvent): void {
     console.log(`Number click event: `, value);
@@ -22,5 +34,11 @@ export class ControlsService {
     return this.numberClick$.asObservable();
   }
 
-  constructor() {}
+  onFeatureClick(value: FeatureClickEvent): void {
+    this.featureClick$.next(value);
+  }
+
+  getFeatureClick$(): Observable<FeatureClickEvent> {
+    return this.featureClick$.asObservable();
+  }
 }

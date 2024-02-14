@@ -38,14 +38,6 @@ export class GamePage implements OnInit, OnDestroy {
     this.timerServ.restart();
   }
 
-  toggleMode(): void {
-    if (this.inputMode === 'value') {
-      this.gameStateServ.setInputMode('notes');
-    } else {
-      this.gameStateServ.setInputMode('value');
-    }
-  }
-
   // Timers toogle test
   timerStart(): void {
     this.timerServ.start();

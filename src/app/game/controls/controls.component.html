@@ -1,7 +1,13 @@
 <div class="function-buttons">
   <button type="button">Back</button>
-  <button type="button">Erase</button>
-  <button type="button" (click)="onNotesToggle()">Notes</button>
+  <button type="button" (click)="onFeatureClick({ type: 'click', feature: 'erase'})">Erase</button>
+  <button type="button" (click)="onFeatureClick({ type: 'toggle', feature: 'notes'})">Notes
+    @if(inputMode === 'notes') {
+      <small>ON</small>
+    } @else {
+      <small>OFF</small>
+    }
+  </button>
   <button type="button">Tip</button>
 </div>
 <div class="numbers-buttons">

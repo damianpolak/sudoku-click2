@@ -29,6 +29,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   private inputModeSubs$: Subscription = this.gameStateServ.getInputMode$().subscribe((x) => (this.inputMode = x));
   private numberClickSubs$!: Subscription;
   private fieldClickSubs$!: Subscription;
+  private featureClickSubs$!: Subscription;
 
   constructor(
     private gameStateServ: GameStateService,
@@ -39,6 +40,19 @@ export class BoardComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadLevelProperties();
     this.board = this.boardServ.createBoardSet(0.6, this.level).initial;
+
+    this.featureClickSubs$ = this.controlsServ.getFeatureClick$().subscribe((click) => {
+      if (click.feature === 'notes') {
+        this.gameStateServ.setInputMode(this.inputMode === 'value' ? 'notes' : 'value');
+      }
+
+      if (click.feature === 'erase') {
+        if (this.board[this.selectedField.address.row][this.selectedField.address.col].value !== 0 &&
+          this.board[this.selectedField.address.row][this.selectedField.address.col].initialValue === false) {
+          this.board[this.selectedField.address.row][this.selectedField.address.col].value = 0;
+        }
+      }
+    });
 
     this.numberClickSubs$ = this.controlsServ.getNumberClick$().subscribe((click) => {
       const updateBoard = (board: Board) => {
@@ -72,16 +86,35 @@ export class BoardComponent implements OnInit, OnDestroy {
           this.selectedField = field;
         }
       });
+
+    this.setDefaultSelectedField();
   }
 
   ngOnDestroy(): void {
     this.inputModeSubs$.unsubscribe();
     this.numberClickSubs$.unsubscribe();
     this.fieldClickSubs$.unsubscribe();
+    this.featureClickSubs$.unsubscribe();
   }
 
   trackFieldByAddress(index: number, item: Field): string {
     return `${item.address.row}${item.address.col}`;
+  }
+
+  private setDefaultSelectedField(): void {
+    const random = this.getRandomEmptyFieldAddress();
+    this.board = this.highlightFields(this.board, this.board[random.row][random.col].address);
+    this.board[random.row][random.col].selected = true;
+    this.selectedField = this.board[random.row][random.col];
+  }
+
+  private getRandomEmptyFieldAddress(): Address {
+    const address = {
+      row: Math.floor(Math.random() * (this.level.rows + 1)),
+      col: Math.floor(Math.random() * (this.level.cols + 1)),
+    };
+
+    return this.board[address.row][address.col].value === 0 ? address : this.getRandomEmptyFieldAddress();
   }
 
   private getAllFieldsWithNumber(board: Board, value: number): Field[] {

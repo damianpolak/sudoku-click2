@@ -6,6 +6,7 @@ export type Field = {
   address: Address;
   selected: boolean;
   highlight: boolean;
+  initialValue: boolean;
 };
 
 export type Address = {

@@ -29,11 +29,14 @@ export class BoardService {
       address: { row: 0, col: 0 },
       selected: false,
       highlight: false,
+      initialValue: false,
     }).getGrid();
 
     for (let row = 0; row <= level.rows - 1; row++) {
       for (let col = 0; col <= level.cols - 1; col++) {
-        fieldGrid[row][col].value = sudokuGrids.initial[row][col];
+        const sudokuValue = sudokuGrids.initial[row][col];
+        fieldGrid[row][col].value = sudokuValue;
+        fieldGrid[row][col].initialValue = sudokuValue === 0 ? false : true;
         fieldGrid[row][col].address = { row: row, col: col };
       }
     }

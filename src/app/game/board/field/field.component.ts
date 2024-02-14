@@ -22,6 +22,7 @@ export class FieldComponent implements OnInit {
   @Input() highlight = false;
   @Input() selected: boolean = false;
   @Input() notes!: Notes;
+  @Input() initialValue!: boolean;
   inputMode$: Observable<InputMode> = this.gameStateServ.getInputMode$();
 
   @HostBinding('class.selected') get isSelected() {
@@ -39,6 +40,7 @@ export class FieldComponent implements OnInit {
       highlight: this.highlight,
       selected: true,
       notes: this.notes,
+      initialValue: this.initialValue,
     });
   }
 
