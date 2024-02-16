@@ -29,7 +29,6 @@ export class HeaderComponent implements OnInit {
 
   onBack(): void {
     if(this.showBack && this.backPath !== '') {
-      console.log('back', this.backPath);
       this.navCtrl.navigateBack(this.backPath);
     }
   }

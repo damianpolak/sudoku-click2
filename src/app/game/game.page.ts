@@ -29,11 +29,9 @@ export class GamePage implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.timerServ.start();
-    console.log('GamePage Init');
   }
 
   ngOnDestroy(): void {
-    console.log('GamePage Destroy');
     this.inputModeSubs$.unsubscribe();
     this.timerServ.restart();
   }

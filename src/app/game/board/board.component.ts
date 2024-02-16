@@ -128,7 +128,6 @@ export class BoardComponent implements OnInit, OnDestroy {
       return row.map((field) => {
         if (address.some((x) => this.boardServ.isAddressEqual(field.address, x))) {
           field.selected = true;
-          console.log('Is equal: ', field.address);
         }
         return field;
       });

@@ -23,10 +23,10 @@ export class StatusBarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log('bar init');
+    // console.log('bar init');
   }
 
   ngOnDestroy(): void {
-    console.log('bar dest');
+    // console.log('bar dest');
   }
 }

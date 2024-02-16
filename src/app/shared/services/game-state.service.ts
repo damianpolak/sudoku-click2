@@ -74,7 +74,6 @@ export class GameStateService {
   }
 
   setLevel(value?: Levels): void {
-    console.log(`Set Lev`, value);
     this._selectedLevel = new GameLevel(value);
   }
 
