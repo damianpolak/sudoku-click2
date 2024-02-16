@@ -20,11 +20,11 @@ interface Level {
 }
 
 const levelList: Level[] = [
-  { rows: 9, cols: 9, name: Levels.EASY, difficulty: 0 },
-  { rows: 9, cols: 9, name: Levels.MEDIUM, difficulty: 0 },
-  { rows: 9, cols: 9, name: Levels.HARD, difficulty: 0 },
-  { rows: 9, cols: 9, name: Levels.EXPERT, difficulty: 0 },
-  { rows: 9, cols: 9, name: Levels.MASTER, difficulty: 0 },
+  { rows: 9, cols: 9, name: Levels.EASY, difficulty: 0.6 },
+  { rows: 9, cols: 9, name: Levels.MEDIUM, difficulty: 0.6 },
+  { rows: 9, cols: 9, name: Levels.HARD, difficulty: 0.6 },
+  { rows: 9, cols: 9, name: Levels.EXPERT, difficulty: 0.6 },
+  { rows: 9, cols: 9, name: Levels.MASTER, difficulty: 0.6 },
 ];
 
 export class GameLevel implements Level {

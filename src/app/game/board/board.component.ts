@@ -22,7 +22,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   @Input() mode: boolean = false;
 
   inputMode: InputMode = 'value';
-  level!: GameLevel;
+  // level!: GameLevel;
   board: Board = [];
 
   private selectedField!: Field;
@@ -31,6 +31,9 @@ export class BoardComponent implements OnInit, OnDestroy {
   private fieldClickSubs$!: Subscription;
   private featureClickSubs$!: Subscription;
 
+  get level(): GameLevel {
+    return this.boardServ.level;
+  }
   constructor(
     private gameStateServ: GameStateService,
     private controlsServ: ControlsService,
@@ -39,8 +42,8 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadLevelProperties();
-    this.board = this.boardServ.createBoardSet(0.6, this.level).initial;
-
+    // this.board = this.boardServ.createBoardSet(this.level).initial;
+    this.board = this.boardServ.board;
     this.featureClickSubs$ = this.controlsServ.getFeatureClick$().subscribe((click) => {
       if (click.feature === 'notes') {
         this.gameStateServ.setInputMode(this.inputMode === 'value' ? 'notes' : 'value');
@@ -68,26 +71,26 @@ export class BoardComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.fieldClickSubs$ = this.gameStateServ
-      .getBoardFieldClick$()
-      .pipe(
-        tap((_) => {
-          this.board = this.unselectAllFields(this.board);
-        })
-      )
-      .subscribe((field) => {
-        this.board = this.highlightFields(this.board, field.address);
-        if (field.value !== 0) {
-          const fields = this.getAllFieldsWithNumber(this.board, field.value).map((i) => i.address);
-          this.board = this.selectFieldsByAddress(this.board, fields);
-          this.selectedField = field;
-        } else {
-          this.board[field.address.row][field.address.col].selected = field.selected;
-          this.selectedField = field;
-        }
-      });
+    // this.fieldClickSubs$ = this.gameStateServ
+    //   .getBoardFieldClick$()
+    //   .pipe(
+    //     tap((_) => {
+    //       this.board = this.unselectAllFields(this.board);
+    //     })
+    //   )
+    //   .subscribe((field) => {
+    //     this.board = this.highlightFields(this.board, field.address);
+    //     if (field.value !== 0) {
+    //       const fields = this.getAllFieldsWithNumber(this.board, field.value).map((i) => i.address);
+    //       this.board = this.selectFieldsByAddress(this.board, fields);
+    //       this.selectedField = field;
+    //     } else {
+    //       this.board[field.address.row][field.address.col].selected = field.selected;
+    //       this.selectedField = field;
+    //     }
+    //   });
 
-    this.setDefaultSelectedField();
+    // this.setDefaultSelectedField();
   }
 
   ngOnDestroy(): void {
@@ -110,8 +113,8 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   private getRandomEmptyFieldAddress(): Address {
     const address = {
-      row: Math.floor(Math.random() * (this.level.rows + 1)),
-      col: Math.floor(Math.random() * (this.level.cols + 1)),
+      row: Math.floor(Math.random() * (this.level.rows)),
+      col: Math.floor(Math.random() * (this.level.cols)),
     };
 
     return this.board[address.row][address.col].value === 0 ? address : this.getRandomEmptyFieldAddress();
@@ -196,7 +199,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   loadLevelProperties(): void {
-    this.level = this.gameStateServ.selectedLevel;
+    // this.level = this.gameStateServ.selectedLevel;
     this.squareRoot = this.level.cols;
     this.setBoardSize(this.squareRoot);
   }

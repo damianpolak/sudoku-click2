@@ -47,6 +47,7 @@ export class FieldComponent implements OnInit {
   constructor(private gameStateServ: GameStateService) {}
 
   ngOnInit() {
+    console.log('Field addr is selected?', this.address, this.selected);
     {
     }
   }
