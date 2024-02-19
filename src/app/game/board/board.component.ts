@@ -7,7 +7,7 @@ import { GridBuilder } from 'src/app/shared/builders/grid.builder';
 import { Board, BoardSet } from './board.types';
 import { SudokuUtil } from 'src/app/shared/utils/sudoku.util';
 import { BehaviorSubject, Observable, Subscription, tap } from 'rxjs';
-import { ControlsService } from '../controls/controls.service';
+import { ControlsService, FeatureClickEvent, NumberClickEvent } from '../controls/controls.service';
 import { InputMode } from 'src/app/shared/services/game-state.types';
 import { BoardService } from './board.service';
 
@@ -19,7 +19,6 @@ import { BoardService } from './board.service';
 })
 export class BoardComponent implements OnInit, OnDestroy {
   squareRoot!: number;
-  @Input() mode: boolean = false;
 
   inputMode: InputMode = 'value';
   level!: GameLevel;
@@ -27,9 +26,18 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   private selectedField!: Field;
   private inputModeSubs$: Subscription = this.gameStateServ.getInputMode$().subscribe((x) => (this.inputMode = x));
-  private numberClickSubs$!: Subscription;
-  private fieldClickSubs$!: Subscription;
-  private featureClickSubs$!: Subscription;
+  private fieldClickSub$: Subscription = this.gameStateServ
+    .getBoardFieldClick$()
+    .pipe(
+      tap((_) => {
+        this.board = this.unselectAllFields(this.board);
+      })
+    )
+    .subscribe((v) => this.onFieldClick(v));
+  private numberClickSub$: Subscription = this.controlsServ.getNumberClick$().subscribe((v) => this.onNumberClick(v));
+  private featureClickSub$: Subscription = this.controlsServ
+    .getFeatureClick$()
+    .subscribe((v) => this.onFeatureClick(v));
 
   constructor(
     private gameStateServ: GameStateService,
@@ -40,65 +48,66 @@ export class BoardComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadLevelProperties();
     this.board = this.boardServ.createBoardSet(0.6, this.level).initial;
-
-    this.featureClickSubs$ = this.controlsServ.getFeatureClick$().subscribe((click) => {
-      if (click.feature === 'notes') {
-        this.gameStateServ.setInputMode(this.inputMode === 'value' ? 'notes' : 'value');
-      }
-
-      if (click.feature === 'erase') {
-        if (this.board[this.selectedField.address.row][this.selectedField.address.col].value !== 0 &&
-          this.board[this.selectedField.address.row][this.selectedField.address.col].initialValue === false) {
-          this.board[this.selectedField.address.row][this.selectedField.address.col].value = 0;
-        }
-      }
-    });
-
-    this.numberClickSubs$ = this.controlsServ.getNumberClick$().subscribe((click) => {
-      const updateBoard = (board: Board) => {
-        this.board = this.selectedField.value === 0 ? board : this.board;
-      };
-      switch (this.inputMode) {
-        case 'value':
-          updateBoard(this.updateNumberValue(this.board, click.number, this.selectedField.address));
-          break;
-        case 'notes':
-          updateBoard(this.updateNotesValue(this.board, click.number, this.selectedField.address));
-          break;
-      }
-    });
-
-    this.fieldClickSubs$ = this.gameStateServ
-      .getBoardFieldClick$()
-      .pipe(
-        tap((_) => {
-          this.board = this.unselectAllFields(this.board);
-        })
-      )
-      .subscribe((field) => {
-        this.board = this.highlightFields(this.board, field.address);
-        if (field.value !== 0) {
-          const fields = this.getAllFieldsWithNumber(this.board, field.value).map((i) => i.address);
-          this.board = this.selectFieldsByAddress(this.board, fields);
-          this.selectedField = field;
-        } else {
-          this.board[field.address.row][field.address.col].selected = field.selected;
-          this.selectedField = field;
-        }
-      });
-
     this.setDefaultSelectedField();
   }
 
   ngOnDestroy(): void {
     this.inputModeSubs$.unsubscribe();
-    this.numberClickSubs$.unsubscribe();
-    this.fieldClickSubs$.unsubscribe();
-    this.featureClickSubs$.unsubscribe();
+    this.numberClickSub$.unsubscribe();
+    this.fieldClickSub$.unsubscribe();
+    this.featureClickSub$.unsubscribe();
   }
 
   trackFieldByAddress(index: number, item: Field): string {
     return `${item.address.row}${item.address.col}`;
+  }
+
+  private onFeatureClick(featureClickEvent: FeatureClickEvent): void {
+    if (featureClickEvent.feature === 'notes') {
+      this.gameStateServ.setInputMode(this.inputMode === 'value' ? 'notes' : 'value');
+    }
+
+    if (featureClickEvent.feature === 'erase') {
+      const addr: Address = {
+        row: this.selectedField.address.row,
+        col: this.selectedField.address.col,
+      };
+
+      const isUserValue =
+        this.board[addr.row][addr.col].value !== 0 && this.board[addr.row][addr.col].initialValue === false;
+      if (isUserValue) {
+        this.board[addr.row][addr.col] = {
+          ...this.board[addr.row][addr.col],
+          ...{ value: 0, notes: new NotesBuilder().get() },
+        };
+      }
+    }
+  }
+
+  private onNumberClick(numberClickEvent: NumberClickEvent): void {
+    const updateBoard = (board: Board) => {
+      this.board = this.selectedField.value === 0 ? board : this.board;
+    };
+    switch (this.inputMode) {
+      case 'value':
+        updateBoard(this.updateNumberValue(this.board, numberClickEvent.number, this.selectedField.address));
+        break;
+      case 'notes':
+        updateBoard(this.updateNotesValue(this.board, numberClickEvent.number, this.selectedField.address));
+        break;
+    }
+  }
+
+  private onFieldClick(field: Field): void {
+    this.board = this.highlightFields(this.board, field.address);
+    if (field.value !== 0) {
+      const fields = this.getAllFieldsWithNumber(this.board, field.value).map((i) => i.address);
+      this.board = this.selectFieldsByAddress(this.board, fields);
+      this.selectedField = field;
+    } else {
+      this.board[field.address.row][field.address.col].selected = field.selected;
+      this.selectedField = field;
+    }
   }
 
   private setDefaultSelectedField(): void {
@@ -110,10 +119,9 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   private getRandomEmptyFieldAddress(): Address {
     const address = {
-      row: Math.floor(Math.random() * (this.level.rows + 1)),
-      col: Math.floor(Math.random() * (this.level.cols + 1)),
+      row: Math.floor(Math.random() * this.level.rows),
+      col: Math.floor(Math.random() * this.level.cols),
     };
-
     return this.board[address.row][address.col].value === 0 ? address : this.getRandomEmptyFieldAddress();
   }
 

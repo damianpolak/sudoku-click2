@@ -3,7 +3,7 @@ import { Observable, Subject, Subscription } from 'rxjs';
 import { GameStateService } from 'src/app/shared/services/game-state.service';
 import { InputMode } from 'src/app/shared/services/game-state.types';
 
-type NumberClickEvent = {
+export type NumberClickEvent = {
   mode: InputMode;
   number: number;
 };
