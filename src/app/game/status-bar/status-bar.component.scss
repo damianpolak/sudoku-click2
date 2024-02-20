@@ -2,13 +2,22 @@
   display: flex;
   justify-content:space-between;
   align-items: center;
-  background-color: burlywood;
-  color: black;
+  background-color: transparent;
   width: 100%;
 
   .score-object {
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-size: 0.9rem;
+
+    & span:nth-child(1) {
+      color: var(--ion-color-primary);
+    }
+
+    & span:nth-child(2) {
+      color: var(--ion-color-primary-shade);
+      font-weight: bold;
+    }
   }
 }
