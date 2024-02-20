@@ -66,37 +66,31 @@ export class BoardComponent implements OnInit, OnDestroy {
 
     squares.forEach((row, rowIndex) => {
       row.forEach((col, colIndex) => {
-        if(colIndex !== 0 && colIndex % sqrt === 0) {
-          obj.push({left: `${rowIndex},${colIndex}`});
+        if (colIndex !== 0 && colIndex % sqrt === 0) {
+          obj.push({ left: `${rowIndex},${colIndex}` });
         }
 
-        if(rowIndex !== 0 && rowIndex % sqrt === 0) {
-          obj.push({top: `${rowIndex},${colIndex}`});
+        if (rowIndex !== 0 && rowIndex % sqrt === 0) {
+          obj.push({ top: `${rowIndex},${colIndex}` });
         }
 
-        if(rowIndex % sqrt !== 0) {
-          obj.push({internalTop: `${rowIndex},${colIndex}`});
+        if (rowIndex % sqrt !== 0) {
+          obj.push({ internalTop: `${rowIndex},${colIndex}` });
         }
 
-        if(colIndex % sqrt !== 0) {
-          obj.push({internalLeft: `${rowIndex},${colIndex}`});
+        if (colIndex % sqrt !== 0) {
+          obj.push({ internalLeft: `${rowIndex},${colIndex}` });
         }
-      })
-    })
+      });
+    });
 
     return obj;
   }
 
   getBorderSquareForAddr(address: Address): string[] {
-    return this.borderSquares.filter(f => {
-      if(Object.values(f).includes(`${address.row},${address.col}`)) {
-        return true;
-      } else {
-        return undefined;
-      }
-    }).map(i => {
-      return Object.keys(i).toString()
-    })
+    return this.borderSquares
+      .filter((f) => Object.values(f).includes(`${address.row},${address.col}`))
+      .map((i) => Object.keys(i).toString());
   }
 
   trackFieldByAddress(index: number, item: Field): string {
