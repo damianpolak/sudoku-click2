@@ -120,7 +120,8 @@ export class SudokuUtil {
   static toNumericBoard<T extends object>(board: T[][], property: string): number[][] {
     return board.map(row => row.map(field => {
       if(field.hasOwnProperty(property)) {
-        return (field as object | any)[property];
+        const prop = (field as object | any)[property];
+        return typeof prop === 'object' ? Object.values(prop).join(',') : prop;
       }
     }));
   }

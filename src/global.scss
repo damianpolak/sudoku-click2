@@ -10,20 +10,20 @@
  */
 
 /* Core CSS required for Ionic components to work properly */
-@import "@ionic/angular/css/core.css";
+@import '@ionic/angular/css/core.css';
 
 /* Basic CSS for apps built with Ionic */
-@import "@ionic/angular/css/normalize.css";
-@import "@ionic/angular/css/structure.css";
-@import "@ionic/angular/css/typography.css";
-@import "@ionic/angular/css/display.css";
+@import '@ionic/angular/css/normalize.css';
+@import '@ionic/angular/css/structure.css';
+@import '@ionic/angular/css/typography.css';
+@import '@ionic/angular/css/display.css';
 
 /* Optional CSS utils that can be commented out */
-@import "@ionic/angular/css/padding.css";
-@import "@ionic/angular/css/float-elements.css";
-@import "@ionic/angular/css/text-alignment.css";
-@import "@ionic/angular/css/text-transformation.css";
-@import "@ionic/angular/css/flex-utils.css";
+@import '@ionic/angular/css/padding.css';
+@import '@ionic/angular/css/float-elements.css';
+@import '@ionic/angular/css/text-alignment.css';
+@import '@ionic/angular/css/text-transformation.css';
+@import '@ionic/angular/css/flex-utils.css';
 
 :root {
   --board-size: 9;
@@ -53,8 +53,9 @@ ion-button {
 .action-sheet-button.sc-ion-action-sheet-ios {
   font-size: 0.8rem;
 }
-
 app-field {
+  $borderSquare: 2px solid var(--ion-board-border-square);
+  $borderInternal: 1px solid var(--ion-board-border-internal);
 
   &.selected {
     background-color: var(--ion-field-selected);
@@ -63,5 +64,20 @@ app-field {
   &.highlight {
     background-color: var(--ion-field-highlight);
   }
-}
 
+  &.border-left {
+    border-left: $borderSquare;
+  }
+
+  &.border-top {
+    border-top: $borderSquare;
+  }
+
+  &.border-internal-top {
+    border-top: $borderInternal;
+  }
+
+  &.border-internal-left {
+    border-left: $borderInternal;
+  }
+}

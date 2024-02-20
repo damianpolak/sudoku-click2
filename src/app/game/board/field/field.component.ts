@@ -1,10 +1,4 @@
-import {
-  Component,
-  HostBinding,
-  HostListener,
-  Input,
-  OnInit,
-} from '@angular/core';
+import { Component, HostBinding, HostListener, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Notes, NotesBuilder } from 'src/app/shared/builders/notes.builder';
 import { GameStateService } from 'src/app/shared/services/game-state.service';
@@ -17,30 +11,38 @@ import { Address, Field } from './field.types';
   styleUrls: ['./field.component.scss'],
 })
 export class FieldComponent implements OnInit {
-  @Input() value!: number;
-  @Input() address!: Address;
-  @Input() highlight = false;
-  @Input() selected: boolean = false;
-  @Input() notes!: Notes;
-  @Input() initialValue!: boolean;
+  @Input() field!: Field;
+  @Input() border!: string[];
   inputMode$: Observable<InputMode> = this.gameStateServ.getInputMode$();
 
   @HostBinding('class.selected') get isSelected() {
-    return this.selected;
+    return this.field.selected;
   }
 
   @HostBinding('class.highlight') get isHighlight() {
-    return this.selected ? false : this.highlight;
+    return this.field.selected ? false : this.field.highlight;
+  }
+
+  @HostBinding('class.border-left') get isBorderLeft() {
+    return this.border.includes('left');
+  }
+
+  @HostBinding('class.border-top') get isBorderTop() {
+    return this.border.includes('top');
+  }
+
+  @HostBinding('class.border-internal-top') get isBorderInternalTop() {
+    return this.border.includes('internalTop');
+  }
+
+  @HostBinding('class.border-internal-left') get isBorderInternalLeft() {
+    return this.border.includes('internalLeft');
   }
 
   @HostListener('click') onClick() {
     this.gameStateServ.onBoardFieldClick({
-      value: this.value,
-      address: this.address,
-      highlight: this.highlight,
-      selected: true,
-      notes: this.notes,
-      initialValue: this.initialValue,
+      ...this.field,
+      ...{ selected: true },
     });
   }
 

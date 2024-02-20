@@ -23,7 +23,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   inputMode: InputMode = 'value';
   level!: GameLevel;
   board: Board = [];
-
+  borderSquares: Array<Record<string, string>> = [];
   private selectedField!: Field;
   private inputModeSubs$: Subscription = this.gameStateServ.getInputMode$().subscribe((x) => (this.inputMode = x));
   private fieldClickSub$: Subscription = this.gameStateServ
@@ -48,6 +48,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadLevelProperties();
     this.board = this.boardServ.createBoardSet(0.6, this.level).initial;
+    this.borderSquares = this.countBorderSquares(this.board);
     this.setDefaultSelectedField();
   }
 
@@ -56,6 +57,46 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.numberClickSub$.unsubscribe();
     this.fieldClickSub$.unsubscribe();
     this.featureClickSub$.unsubscribe();
+  }
+
+  private countBorderSquares(board: Board): Array<Record<string, string>> {
+    const obj: Array<Record<string, string>> = [];
+    const squares = SudokuUtil.getBoardSquares(SudokuUtil.toNumericBoard(board, 'value'));
+    const sqrt = Math.sqrt(squares.length);
+
+    squares.forEach((row, rowIndex) => {
+      row.forEach((col, colIndex) => {
+        if(colIndex !== 0 && colIndex % sqrt === 0) {
+          obj.push({left: `${rowIndex},${colIndex}`});
+        }
+
+        if(rowIndex !== 0 && rowIndex % sqrt === 0) {
+          obj.push({top: `${rowIndex},${colIndex}`});
+        }
+
+        if(rowIndex % sqrt !== 0) {
+          obj.push({internalTop: `${rowIndex},${colIndex}`});
+        }
+
+        if(colIndex % sqrt !== 0) {
+          obj.push({internalLeft: `${rowIndex},${colIndex}`});
+        }
+      })
+    })
+
+    return obj;
+  }
+
+  getBorderSquareForAddr(address: Address): string[] {
+    return this.borderSquares.filter(f => {
+      if(Object.values(f).includes(`${address.row},${address.col}`)) {
+        return true;
+      } else {
+        return undefined;
+      }
+    }).map(i => {
+      return Object.keys(i).toString()
+    })
   }
 
   trackFieldByAddress(index: number, item: Field): string {

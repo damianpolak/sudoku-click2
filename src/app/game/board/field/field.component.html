@@ -1,9 +1,9 @@
-@if(value !== 0) {
-  <div class="notes-value">{{ value }}</div>
-} @else if(value === 0) {
-  <div class="notes-grid">
-    @for (item of notes; track item) {
-    <div class="notes-grid-field">{{ item.active ? item.value : '' }}</div>
-    } @empty {}
-  </div>
+@if(field.value !== 0) {
+<div class="notes-value">{{ field.value }}</div>
+} @else if(field.value === 0) {
+<div class="notes-grid">
+  @for (item of field.notes; track item) {
+  <div class="notes-grid-field">{{ item.active ? item.value : '' }}</div>
+  } @empty {}
+</div>
 }
