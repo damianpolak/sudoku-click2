@@ -21,8 +21,7 @@ export class PauseComponent implements AfterViewInit {
   @Output() actionEvent = new EventEmitter<PauseModalActionType>();
   @ViewChild('pauseModal') pauseModal!: IonModal;
 
-  buttonsSize: 'small' | 'default' | 'large' = 'small';
-  // constructor() {}
+  buttonsSize: 'small' | 'default' | 'large' = 'default';
 
   ngAfterViewInit(): void {
     this.pauseModal.willDismiss.subscribe((result) => {
@@ -32,7 +31,6 @@ export class PauseComponent implements AfterViewInit {
           ? 'DISMISS'
           : result.detail.data
       );
-      // console.log(`=== window is dismissed!`, result);
     });
 
     this.pauseModal.didPresent.subscribe(() => {
