@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-number-button',
@@ -6,9 +6,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./number-button.component.scss'],
 })
 export class NumberButtonComponent  implements OnInit {
-
+  @Input() value: string = '';
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log();
+  }
 
 }

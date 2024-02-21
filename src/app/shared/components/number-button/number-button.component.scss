@@ -1,0 +1,16 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
+  font-size: min(10vh, 10vw);
+  border-radius: 0.5rem;
+
+  @media (orientation: portrait) {
+    padding-right: min(1.3vh, 1.3vw);
+    padding-left: min(1.3vh, 1.3vw);
+    padding-top: calc(min(3vh, 3vw) + 5px);
+    padding-bottom: calc(min(3vh, 3vw) + 5px);
+  }
+}
