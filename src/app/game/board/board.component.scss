@@ -8,4 +8,5 @@
   grid-template-rows: repeat(var(--board-size), 1fr);
   grid-template-columns: repeat(var(--board-size), 1fr);
   border: 2px solid var(--ion-board-border-square);
+  border-radius: 3px;
 }
