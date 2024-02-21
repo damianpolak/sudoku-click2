@@ -1,42 +1,41 @@
-import {
-  AfterViewInit,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { IonModal } from '@ionic/angular/common';
 import { PauseModalActionType } from './pause.types';
+import { GameStateService } from 'src/app/shared/services/game-state.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-pause',
   templateUrl: './pause.component.html',
   styleUrls: ['./pause.component.scss'],
 })
-export class PauseComponent implements AfterViewInit {
+export class PauseComponent implements AfterViewInit, OnDestroy {
   @Input() isOpen: boolean = false;
   @Output() actionEvent = new EventEmitter<PauseModalActionType>();
   @ViewChild('pauseModal') pauseModal!: IonModal;
 
+  private pauseModalWillDismissSub$!: Subscription;
+  private pasueModalDidPresentSub$!: Subscription;
+
   buttonsSize: 'small' | 'default' | 'large' = 'default';
 
+  constructor(private gameStateServ: GameStateService) {}
+
   ngAfterViewInit(): void {
-    this.pauseModal.willDismiss.subscribe((result) => {
+    this.pauseModalWillDismissSub$ = this.pauseModal.willDismiss.subscribe((result) => {
       this.isOpen = false;
-      this.actionEvent.emit(
-        typeof result.detail.data === 'undefined'
-          ? 'DISMISS'
-          : result.detail.data
-      );
+      this.actionEvent.emit(typeof result.detail.data === 'undefined' ? 'DISMISS' : result.detail.data);
     });
 
-    this.pauseModal.didPresent.subscribe(() => {
+    this.pasueModalDidPresentSub$ = this.pauseModal.didPresent.subscribe(() => {
       this.isOpen = true;
-      console.log(`=== windows is opened`);
     });
+  }
+
+  ngOnDestroy(): void {
+    this.pauseModalWillDismissSub$.unsubscribe();
+    this.pasueModalDidPresentSub$.unsubscribe();
   }
 
   async action(action: PauseModalActionType): Promise<void> {
