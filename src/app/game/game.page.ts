@@ -4,6 +4,7 @@ import { Observable, Subscription, lastValueFrom } from 'rxjs';
 import { GameLevel, GameStateService } from '../shared/services/game-state.service';
 import { TimerService } from '../shared/services/timer.service';
 import { InputMode } from '../shared/services/game-state.types';
+import { PauseModalActionType } from './pause/pause.types';
 
 @Component({
   selector: 'app-game',
@@ -15,6 +16,7 @@ export class GamePage implements OnInit, OnDestroy {
   inputMode!: InputMode;
   private inputModeSubs$: Subscription;
 
+  isPaused: boolean = true;
   level!: GameLevel;
   constructor(
     private appStateServ: AppStateService,
@@ -47,5 +49,13 @@ export class GamePage implements OnInit, OnDestroy {
 
   timerRestart(): void {
     this.timerServ.restart();
+  }
+
+  pause(event: boolean): void {
+    this.isPaused = event;
+  }
+
+  onPauseModalDismiss(event: PauseModalActionType): void {
+    this.isPaused = false;
   }
 }

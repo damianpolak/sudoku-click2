@@ -2,7 +2,7 @@ import { AfterViewInit, Component, HostBinding, Input, OnDestroy, OnInit } from 
 import { Subscription } from 'rxjs';
 import { AppStateService } from 'src/app/shared/services/app-state.service';
 import { BasicOrientationType } from 'src/app/shared/services/app-state.types';
-import { GameLevel } from 'src/app/shared/services/game-state.service';
+import { GameLevel, GameStateService } from 'src/app/shared/services/game-state.service';
 import { ResizeObservableService } from 'src/app/shared/services/resize-observable.service';
 import { TimerService } from 'src/app/shared/services/timer.service';
 import { ConversionUtil } from 'src/app/shared/utils/conversion.util';
@@ -12,26 +12,17 @@ import { ConversionUtil } from 'src/app/shared/utils/conversion.util';
   templateUrl: './status-bar.component.html',
   styleUrls: ['./status-bar.component.scss'],
 })
-export class StatusBarComponent implements OnInit, OnDestroy {
-  @Input() level!: GameLevel;
+export class StatusBarComponent {
 
   get levelName() {
-    return ConversionUtil.firstUpper(this.level.name);
+    return ConversionUtil.firstUpper(this.gameStateServ.selectedLevel.name);
   }
 
   get timestring() {
     return this.timerServ.getTimestring();
   }
 
-  constructor(private appStateServ: AppStateService, private timerServ: TimerService) {
+  constructor(private gameStateServ: GameStateService, private timerServ: TimerService) {
     // this.time = this.timerServ.timestring;
-  }
-
-  ngOnInit() {
-    // console.log('bar init');
-  }
-
-  ngOnDestroy(): void {
-    // console.log('bar dest');
   }
 }

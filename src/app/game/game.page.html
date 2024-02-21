@@ -1,10 +1,16 @@
-<app-header [showBack]="true" backPath="home"></app-header>
+<app-header
+  [showPause]="true"
+  [showBack]="true"
+  [isPaused]="isPaused"
+  backPath="home"
+  (pauseClickEvent)="pause($event)"
+></app-header>
 
 <ion-content [fullscreen]="true">
   <div class="container">
     @if((orientation$ | async) === 'portrait') {
     <div class="status-bar-wrapper">
-      <app-status-bar [level]="level"></app-status-bar>
+      <app-status-bar></app-status-bar>
     </div>
     }
     <div class="container-wrap">
@@ -13,7 +19,7 @@
       </div>
       <div class="controls">
         @if((orientation$ | async) === 'landscape') {
-          <app-status-bar [level]="level"></app-status-bar>
+          <app-status-bar></app-status-bar>
         }
         <app-controls></app-controls>
         <div class="debug">
@@ -25,3 +31,7 @@
     </div>
   </div>
 </ion-content>
+<app-pause
+  [isOpen]="isPaused"
+  (actionEvent)="onPauseModalDismiss($event)"
+></app-pause>

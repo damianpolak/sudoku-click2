@@ -1,0 +1,20 @@
+<ion-content class="ion-padding">
+  <ion-modal #pauseModal [isOpen]="isOpen" [initialBreakpoint]="1" [breakpoints]="[0, 1]">
+    <ng-template>
+      <div class="block">
+        <h1>Pause</h1>
+        <app-status-bar [style.width]="'50%'"></app-status-bar>
+
+        <div class="pause-buttons">
+          <ion-button [size]="buttonsSize" expand="block" (click)="onContinueClick()">Continue</ion-button>
+          <ion-button [size]="buttonsSize" fill="outline" expand="block" (click)="onRestartClick()"
+            >Restart game</ion-button
+          >
+          <ion-button [size]="buttonsSize" fill="outline" expand="block" (click)="onCancelClick()"
+            >Cancel game</ion-button
+          >
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
+</ion-content>

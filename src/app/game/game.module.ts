@@ -12,6 +12,7 @@ import { StatusBarComponent } from './status-bar/status-bar.component';
 import { BoardComponent } from './board/board.component';
 import { FieldComponent } from './board/field/field.component';
 import { ControlsComponent } from './controls/controls.component';
+import { PauseComponent } from './pause/pause.component';
 
 @NgModule({
   imports: [
@@ -21,6 +22,6 @@ import { ControlsComponent } from './controls/controls.component';
     SharedModule,
     GamePageRoutingModule
   ],
-  declarations: [GamePage, StatusBarComponent, BoardComponent, FieldComponent, ControlsComponent]
+  declarations: [GamePage, StatusBarComponent, BoardComponent, FieldComponent, ControlsComponent, PauseComponent]
 })
 export class GamePageModule {}
