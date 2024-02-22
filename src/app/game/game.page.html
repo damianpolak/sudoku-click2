@@ -7,7 +7,7 @@
 ></app-header>
 
 <ion-content [fullscreen]="true">
-  <div class="container">
+  <div class="container" [ngStyle]="{'filter':isPaused ? 'blur(10px)' : 'blur(0px)' }">
     @if((orientation$ | async) === 'portrait') {
     <div class="status-bar-wrapper">
       <app-status-bar></app-status-bar>
