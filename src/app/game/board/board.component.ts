@@ -15,6 +15,7 @@ import { BoardService } from './board.service';
   selector: 'app-board',
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [BoardService],
 })
 export class BoardComponent implements OnInit, OnDestroy {
@@ -42,7 +43,8 @@ export class BoardComponent implements OnInit, OnDestroy {
   constructor(
     private gameStateServ: GameStateService,
     private controlsServ: ControlsService,
-    private boardServ: BoardService
+    private boardServ: BoardService,
+    private ref: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -117,6 +119,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         };
       }
     }
+    this.ref.detectChanges();
   }
 
   private onNumberClick(numberClickEvent: NumberClickEvent): void {
@@ -131,6 +134,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         updateBoard(this.updateNotesValue(this.board, numberClickEvent.number, this.selectedField.address));
         break;
     }
+    this.ref.detectChanges();
   }
 
   private onFieldClick(field: Field): void {

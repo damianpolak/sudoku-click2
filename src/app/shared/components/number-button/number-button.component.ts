@@ -12,7 +12,7 @@ export class NumberButtonComponent implements OnInit {
   @HostListener('click', ['$event'])
   mouseclick(event: PointerEvent) {
     this.style = this.sanitizer.bypassSecurityTrustStyle(
-      'transform: scale(1.1); z-index: 10; border: 1px solid black; box-sizing: border-box;'
+      'transform: scale(1.15); z-index: 10; border: 1px solid black; box-sizing: border-box;'
     );
     setTimeout(() => {
       this.mouseleave(event);

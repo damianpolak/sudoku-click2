@@ -1,4 +1,5 @@
 :host,
+.notes-value,
 .notes-grid-field {
   display: flex;
   justify-content: center;
@@ -6,6 +7,7 @@
 }
 
 .field,
+.notes-value,
 .notes-grid {
   height: 100%;
   width: 100%;
