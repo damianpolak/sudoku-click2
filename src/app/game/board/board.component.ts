@@ -109,7 +109,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       };
 
       const isUserValue =
-        this.board[addr.row][addr.col].value !== 0 && this.board[addr.row][addr.col].initialValue === false;
+        this.board[addr.row][addr.col].initialValue === false;
       if (isUserValue) {
         this.board[addr.row][addr.col] = {
           ...this.board[addr.row][addr.col],
