@@ -35,7 +35,7 @@ $vwDiff: 10vw;
 
   @media (orientation: landscape) {
     .controls {
-      height: $height;
+      height: auto;
       width: $width;
       padding-top: 1vw;
       padding-left: 2vw;
