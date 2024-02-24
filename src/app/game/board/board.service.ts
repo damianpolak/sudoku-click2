@@ -47,6 +47,15 @@ export class BoardService {
     };
   }
 
+  getMissingNumbers(board: number[][], max: number = 9): number[] {
+    const b = structuredClone(board).flat();
+    const missingArr: number[] = [];
+    for(let i = 1; i <= max; i++) {
+      missingArr.push((max - b.filter(f => f === i).length))
+    }
+    return missingArr;
+  }
+
   isAddressEqual(sourceAddress: Address, destAddress: Address): boolean {
     return sourceAddress.row === destAddress.row && sourceAddress.col === destAddress.col;
   }
