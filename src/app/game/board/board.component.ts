@@ -22,7 +22,15 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   inputMode: InputMode = 'value';
   level!: GameLevel;
-  board: Board = [];
+  private _board: Board = [];
+  private boardSub$: Subscription = this.boardServ.getBoard().subscribe(board => {
+    this._board = board;
+  });
+
+  get board() {
+    return this._board;
+  }
+
   borderSquares: Array<Record<string, string>> = [];
   private selectedField!: Field;
   private inputModeSubs$: Subscription = this.gameStateServ.getInputMode$().subscribe((x) => (this.inputMode = x));
@@ -30,7 +38,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     .getBoardFieldClick$()
     .pipe(
       tap((_) => {
-        this.board = this.unselectAllFields(this.board);
+        this.boardServ.setBoard(this.unselectAllFields(this.board));
       })
     )
     .subscribe((v) => this.onFieldClick(v));
@@ -47,7 +55,6 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadLevelProperties();
-    this.board = this.boardServ.createBoardSet(this.level.givenNumbers, this.level).initial;
     this.borderSquares = this.countBorderSquares(this.board);
     this.setDefaultSelectedField();
   }
@@ -121,7 +128,7 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   private onNumberClick(numberClickEvent: NumberClickEvent): void {
     const updateBoard = (board: Board) => {
-      this.board = this.selectedField.value === 0 ? board : this.board;
+      this.boardServ.setBoard(this.selectedField.value === 0 ? board : this.board);
     };
     switch (this.inputMode) {
       case 'value':
@@ -134,10 +141,10 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   private onFieldClick(field: Field): void {
-    this.board = this.highlightFields(this.board, field.address);
+    this.boardServ.setBoard(this.highlightFields(this.board, field.address));
     if (field.value !== 0) {
       const fields = this.getAllFieldsWithNumber(this.board, field.value).map((i) => i.address);
-      this.board = this.selectFieldsByAddress(this.board, fields);
+      this.boardServ.setBoard(this.selectFieldsByAddress(this.board, fields));
       this.selectedField = field;
     } else {
       this.board[field.address.row][field.address.col].selected = field.selected;
@@ -147,7 +154,7 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   private setDefaultSelectedField(): void {
     const random = this.getRandomEmptyFieldAddress();
-    this.board = this.highlightFields(this.board, this.board[random.row][random.col].address);
+    this.boardServ.setBoard(this.highlightFields(this.board, this.board[random.row][random.col].address));
     this.board[random.row][random.col].selected = true;
     this.selectedField = this.board[random.row][random.col];
   }

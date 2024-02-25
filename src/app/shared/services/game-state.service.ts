@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { InputMode } from './game-state.types';
-import { Board } from 'src/app/game/board/board.types';
+import { Board, MissingNumber } from 'src/app/game/board/board.types';
 import { Field } from 'src/app/game/board/field/field.types';
 
 export enum Levels {
@@ -57,6 +57,8 @@ export class GameStateService {
   private readonly continueAvailable$ = new BehaviorSubject<boolean>(false);
   private readonly pauseState$ = new BehaviorSubject<boolean>(false);
   private readonly inputMode$ = new BehaviorSubject<InputMode>('value');
+  private readonly missingNumbers$ = new Subject<MissingNumber[]>();
+  private fieldClick$ = new Subject<Field>();
 
   private _selectedLevel: GameLevel;
 
@@ -93,13 +95,20 @@ export class GameStateService {
     return this.inputMode$.asObservable();
   }
 
-  private fieldClick$ = new Subject<Field>();
   onBoardFieldClick(field: Field): void {
     this.fieldClick$.next(field);
   }
 
   getBoardFieldClick$(): Observable<Field> {
     return this.fieldClick$.asObservable();
+  }
+
+  getMissingNumbers$(): Observable<MissingNumber[]> {
+    return this.missingNumbers$.asObservable();
+  }
+
+  setMissingNumbers(value: MissingNumber[]): void {
+    this.missingNumbers$.next(value);
   }
 
 }

@@ -1,21 +1,50 @@
 import { Injectable } from '@angular/core';
 import { SudokuBuilder } from 'src/app/shared/builders/sudoku.builder';
 import { SudokuUtil } from 'src/app/shared/utils/sudoku.util';
-import { Board, BoardSet, SudokuGridSet } from './board.types';
+import { Board, BoardSet, MissingNumber, SudokuGridSet } from './board.types';
 import { GameLevel, GameStateService } from 'src/app/shared/services/game-state.service';
 import { GridBuilder } from 'src/app/shared/builders/grid.builder';
 import { NotesBuilder } from 'src/app/shared/builders/notes.builder';
 import { Address, Field } from './field/field.types';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription, map, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BoardService {
-  // private readonly boardSet$ = new BehaviorSubject<BoardSet>(this.createBoardSet(0.2, this.gameStateServ.selectedLevel));
+  private readonly newBoardSet$ = new BehaviorSubject<BoardSet>(
+    this.createBoardSet(this.gameStateServ.selectedLevel.givenNumbers, this.gameStateServ.selectedLevel)
+  );
 
-  // trzeba przeniesc board z boardComponent do service!
-  // getBoar
+  getBoard(): Observable<Board> {
+    return this.newBoardSet$
+      .asObservable()
+      .pipe(
+        tap((_) => {
+          this.gameStateServ.setMissingNumbers(
+            this.getMissingNumbers(SudokuUtil.toNumericBoard(_.initial, 'value')).map((i, index) => {
+              return {
+                id: index + 1,
+                value: i,
+              };
+            })
+          );
+        })
+      )
+      .pipe(map((x) => x.initial));
+  }
+
+  getBoardFinal$(): Observable<number[][]> {
+    return this.newBoardSet$.asObservable().pipe(map((x) => x.final));
+  }
+
+  setBoard(board: Board): void {
+    this.newBoardSet$.next({
+      final: this.newBoardSet$.value.final,
+      initial: board,
+    });
+  }
+
   constructor(private gameStateServ: GameStateService) {}
 
   private createSudokuGridSet(givenNumbers: number, size: number): SudokuGridSet {
@@ -46,8 +75,18 @@ export class BoardService {
       }
     }
 
-    console.log('Empty: ', SudokuUtil.toNumericBoard(fieldGrid, 'value').flat().filter(i => i == 0).length);
-    console.log('Given number: ', SudokuUtil.toNumericBoard(fieldGrid, 'value').flat().filter(i => i != 0).length);
+    console.log(
+      'Empty: ',
+      SudokuUtil.toNumericBoard(fieldGrid, 'value')
+        .flat()
+        .filter((i) => i == 0).length
+    );
+    console.log(
+      'Given number: ',
+      SudokuUtil.toNumericBoard(fieldGrid, 'value')
+        .flat()
+        .filter((i) => i != 0).length
+    );
 
     return {
       initial: fieldGrid,
@@ -58,8 +97,8 @@ export class BoardService {
   getMissingNumbers(board: number[][], max: number = 9): number[] {
     const b = structuredClone(board).flat();
     const missingArr: number[] = [];
-    for(let i = 1; i <= max; i++) {
-      missingArr.push((max - b.filter(f => f === i).length))
+    for (let i = 1; i <= max; i++) {
+      missingArr.push(max - b.filter((f) => f === i).length);
     }
     return missingArr;
   }

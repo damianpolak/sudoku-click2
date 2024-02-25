@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ControlsService, FeatureClickEvent, Features } from './controls.service';
 import { GameStateService } from 'src/app/shared/services/game-state.service';
-import { Subscription, tap } from 'rxjs';
+import { Subscription, map, tap } from 'rxjs';
 import { InputMode } from 'src/app/shared/services/game-state.types';
 
 type NumberControl = {
@@ -23,17 +23,22 @@ type FeatureControl = FeatureClickEvent & {
 export class ControlsComponent implements OnInit, OnDestroy {
   inputMode!: InputMode;
   private inputModeSubs$!: Subscription;
-  numbers: NumberControl[] = [
-    { value: 1, missingValue: Math.round(Math.random() * 8) + 1 },
-    { value: 2, missingValue: Math.round(Math.random() * 8) + 1 },
-    { value: 3, missingValue: Math.round(Math.random() * 8) + 1 },
-    { value: 4, missingValue: Math.round(Math.random() * 8) + 1 },
-    { value: 5, missingValue: Math.round(Math.random() * 8) + 1 },
-    { value: 6, missingValue: Math.round(Math.random() * 8) + 1 },
-    { value: 7, missingValue: Math.round(Math.random() * 8) + 1 },
-    { value: 8, missingValue: Math.round(Math.random() * 8) + 1 },
-    { value: 9, missingValue: Math.round(Math.random() * 8) + 1 },
-  ];
+  private numberSub$: Subscription = this.gameStateServ.getMissingNumbers$().pipe(map(x => {
+    return x.map(i => {
+      return {
+        value: i.id,
+        missingValue: i.value
+      }
+    })
+  })).subscribe(v => {
+    this._numbers = v;
+  });
+
+  private _numbers: NumberControl[] = [];
+
+  get numbers() {
+    return this._numbers;
+  }
 
   features!: FeatureControl[]
   constructor(private controlsServ: ControlsService, private gameStateServ: GameStateService) {}
@@ -47,6 +52,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.inputModeSubs$.unsubscribe();
+    this.numberSub$.unsubscribe();
   }
 
   onFeatureClick(value: FeatureClickEvent): void {

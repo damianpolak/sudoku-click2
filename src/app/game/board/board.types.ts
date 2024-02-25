@@ -11,3 +11,8 @@ export type SudokuGridSet = {
   initial: number[][];
   final: number[][];
 }
+
+export type MissingNumber = {
+  id: number,
+  value: number,
+}
