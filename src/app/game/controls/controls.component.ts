@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ControlsService, FeatureClickEvent, Features } from './controls.service';
 import { GameStateService } from 'src/app/shared/services/game-state.service';
-import { Subscription } from 'rxjs';
+import { Subscription, tap } from 'rxjs';
 import { InputMode } from 'src/app/shared/services/game-state.types';
 
 type NumberControl = {
@@ -11,8 +11,8 @@ type NumberControl = {
 
 type FeatureControl = FeatureClickEvent & {
   name: string;
-  iconDefault: string;
-  iconToggle?: string;
+  icon: string;
+  toggle?: boolean;
 };
 
 @Component({
@@ -35,23 +35,13 @@ export class ControlsComponent implements OnInit, OnDestroy {
     { value: 9, missingValue: Math.round(Math.random() * 8) + 1 },
   ];
 
-  features: FeatureControl[] = [
-    { name: 'Back', type: 'click', feature: 'back', iconDefault: 'arrow-back-circle-outline' },
-    { name: 'Erase', type: 'click', feature: 'erase', iconDefault: 'close-circle-outline' },
-    {
-      name: 'Notes',
-      type: 'toggle',
-      feature: 'notes',
-      iconDefault: 'document-outline',
-      iconToggle: 'document-text-outline',
-    },
-    { name: 'Tip', type: 'click', feature: 'tip', iconDefault: 'bulb-outline' },
-  ];
+  features!: FeatureControl[]
   constructor(private controlsServ: ControlsService, private gameStateServ: GameStateService) {}
 
   ngOnInit() {
     this.inputModeSubs$ = this.gameStateServ.getInputMode$().subscribe((mode) => {
       this.inputMode = mode;
+      this.features = this.featuresCreate();
     });
   }
 
@@ -60,7 +50,6 @@ export class ControlsComponent implements OnInit, OnDestroy {
   }
 
   onFeatureClick(value: FeatureClickEvent): void {
-    console.log('feature', value);
     this.controlsServ.onFeatureClick(value);
   }
 
@@ -69,5 +58,29 @@ export class ControlsComponent implements OnInit, OnDestroy {
       mode: this.inputMode,
       number: value,
     });
+  }
+
+  private featuresCreate(): FeatureControl[] {
+    return [
+      { name: 'Back', type: 'click', feature: 'back', icon: 'arrow-back-circle-outline' },
+      { name: 'Erase', type: 'click', feature: 'erase', icon: 'close-circle-outline' },
+      {
+        name: 'Notes',
+        type: 'toggle',
+        feature: 'notes',
+        icon: this.inputMode === 'value' ? 'document-outline' : 'document-text-outline',
+        toggle: this.inputMode === 'notes',
+      },
+      { name: 'Tip', type: 'click', feature: 'tip', icon: 'bulb-outline' },
+    ];
+  }
+
+  getFeatureToggleStyle(toggle: boolean | undefined) {
+    if(typeof toggle === 'undefined') {
+      return {
+        color: 'inherit',
+      }
+    }
+    return {'color':toggle === true ? 'var(--ion-color-primary)' : 'inherit' }
   }
 }
