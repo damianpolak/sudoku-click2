@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActionSheetButton, ActionSheetOptions, NavController } from '@ionic/angular';
 import { GameStateService, Levels } from '../shared/services/game-state.service';
+import { ConversionUtil } from '../shared/utils/conversion.util';
 
 @Component({
   selector: 'app-home',
@@ -40,7 +41,7 @@ export class HomePage {
   createActionSheetMenu(): ActionSheetButton[] {
     return Object.keys(Levels).map((item) => {
       return {
-        text: item,
+        text: ConversionUtil.firstUpper(item),
         data: {
           selectedLevel: item,
         },
