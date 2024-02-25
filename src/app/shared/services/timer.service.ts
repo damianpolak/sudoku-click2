@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable, Subscription, interval, skipWhile } from '
 export class TimerService {
   private timer = interval(1000);
   private timerSubs$: Subscription | undefined;
-  private timestring = new BehaviorSubject<string>('00:00:00');
+  private timestring = new BehaviorSubject<string>('00:00');
 
   private _seconds: number = 0;
   private _minutes: number = 0;
@@ -38,7 +38,7 @@ export class TimerService {
   }
 
   private setTimestring(): void {
-    const timestring = `${this._hours.toString().padStart(2, '0')}:${this._minutes
+    const timestring = `${this._hours === 0 ? '' : this._hours.toString().padStart(2, '0') + ':'}${this._minutes
       .toString()
       .padStart(2, '0')}:${this.seconds.toString().padStart(2, '0')}`;
     this.timestring.next(timestring);
