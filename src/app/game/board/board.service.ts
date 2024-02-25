@@ -2,16 +2,21 @@ import { Injectable } from '@angular/core';
 import { SudokuBuilder } from 'src/app/shared/builders/sudoku.builder';
 import { SudokuUtil } from 'src/app/shared/utils/sudoku.util';
 import { Board, BoardSet, SudokuGridSet } from './board.types';
-import { GameLevel } from 'src/app/shared/services/game-state.service';
+import { GameLevel, GameStateService } from 'src/app/shared/services/game-state.service';
 import { GridBuilder } from 'src/app/shared/builders/grid.builder';
 import { NotesBuilder } from 'src/app/shared/builders/notes.builder';
 import { Address, Field } from './field/field.types';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BoardService {
-  constructor() {}
+  private readonly boardSet$ = new BehaviorSubject<BoardSet>(this.createBoardSet(0.6, this.gameStateServ.selectedLevel));
+
+  // trzeba przeniesc board z boardComponent do service!
+  // getBoar
+  constructor(private gameStateServ: GameStateService) {}
 
   private createSudokuGridSet(erasePercentage: number, size: number): SudokuGridSet {
     const grid: number[][] = new SudokuBuilder(size).randomizeDiagonal().solveSudoku().getGrid();

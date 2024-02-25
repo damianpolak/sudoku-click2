@@ -1,23 +1,15 @@
 <div class="function-buttons">
-  <button type="button">Back</button>
-  <button type="button" (click)="onFeatureClick({ type: 'click', feature: 'erase' })">Erase</button>
-  <button type="button" (click)="onFeatureClick({ type: 'toggle', feature: 'notes' })">
-    Notes @if(inputMode === 'notes') {
-    <small>ON</small>
-    } @else {
-    <small>OFF</small>
-    }
-  </button>
-  <button type="button">Tip</button>
+  @for (feature of features; track feature.feature) {
+    <ion-button fill="clear" (click)="onFeatureClick({ type: feature.type, feature: feature.feature })">
+      <div class="bcon" style="display: flex; flex-direction: column; gap: 0.5rem; padding: 0.7rem 0.7rem; justify-content: center; align-items: center;">
+        <ion-icon slot="icon-only" [name]="feature.iconDefault" style="font-size: 1.7rem;"></ion-icon>
+        <span class="btxt">{{ feature.name }}</span>
+      </div>
+    </ion-button>
+  }
 </div>
 <div class="numbers-buttons">
-  <app-number-button [value]="'1'" (click)="onNumberClick(1)"></app-number-button>
-  <app-number-button [value]="'2'" (click)="onNumberClick(2)"></app-number-button>
-  <app-number-button [value]="'3'" (click)="onNumberClick(3)"></app-number-button>
-  <app-number-button [value]="'4'" (click)="onNumberClick(4)"></app-number-button>
-  <app-number-button [value]="'5'" (click)="onNumberClick(5)"></app-number-button>
-  <app-number-button [value]="'6'" (click)="onNumberClick(6)"></app-number-button>
-  <app-number-button [value]="'7'" (click)="onNumberClick(7)"></app-number-button>
-  <app-number-button [value]="'8'" (click)="onNumberClick(8)"></app-number-button>
-  <app-number-button [value]="'9'" (click)="onNumberClick(9)"></app-number-button>
+  @for (n of numbers; track n.value) {
+    <app-number-button [value]="n.value.toString()" [missingValue]="n.missingValue.toString()" (click)="onNumberClick(n.value)"></app-number-button>
+  }
 </div>

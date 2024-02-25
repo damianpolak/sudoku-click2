@@ -31,13 +31,13 @@
 
 @media (orientation: portrait) {
   html {
-    font-size: calc(12px + 1vw);
+    font-size: calc(8px + 1.5vw);
   }
 }
 
 @media (orientation: landscape) {
   html {
-    font-size: calc(12px + 1vh);
+    font-size: calc(8px + 1.5vh);
   }
 }
 
@@ -47,11 +47,11 @@ ion-content {
 
 ion-button {
   --border-radius: 7px;
-  font-size: 0.7rem;
+  // font-size: 0.7rem;
 }
 
 .action-sheet-button.sc-ion-action-sheet-ios {
-  font-size: 0.8rem;
+  // font-size: 0.8rem;
 }
 app-field {
   $borderSquare: 2px solid var(--ion-board-border-square);
