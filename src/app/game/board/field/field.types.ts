@@ -7,6 +7,7 @@ export type Field = {
   selected: boolean;
   highlight: boolean;
   initialValue: boolean;
+  isCorrectValue?: boolean;
 };
 
 export type Address = {

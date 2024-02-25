@@ -72,6 +72,7 @@ export class BoardService {
         fieldGrid[row][col].value = sudokuValue;
         fieldGrid[row][col].initialValue = sudokuValue === 0 ? false : true;
         fieldGrid[row][col].address = { row: row, col: col };
+        fieldGrid[row][col].isCorrectValue = sudokuValue > 0;
       }
     }
 

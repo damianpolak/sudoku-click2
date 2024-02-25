@@ -15,6 +15,10 @@
   color: var(--ion-color-primary);
 }
 
+.player-wrong-value {
+  color: red;
+}
+
 .initial-value {
   color: var(--ion-text-color);
 }
@@ -22,7 +26,7 @@
 :host {
   transition: 0.3s;
   background-color: var(--ion-board-background);
-  & .notes-value {
+  & .field-value {
     font-size: 1.2em;
   }
 

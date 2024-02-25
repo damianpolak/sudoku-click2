@@ -1,5 +1,5 @@
 @if(field.value !== 0) {
-<div class="notes-value" [ngClass]="field.initialValue ? 'initial-value' : 'player-value'">{{ field.value }}</div>
+<div class="field-value" [ngClass]="getFieldValueClass(field)">{{ field.value }}</div>
 } @else if(field.value === 0) {
 <div class="notes-grid">
   @for (item of field.notes; track item) {

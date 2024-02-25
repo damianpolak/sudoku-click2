@@ -10,7 +10,7 @@ import { Address, Field } from './field.types';
   templateUrl: './field.component.html',
   styleUrls: ['./field.component.scss'],
 })
-export class FieldComponent implements OnInit {
+export class FieldComponent {
   @Input() field!: Field;
   @Input() border!: string[];
   inputMode$: Observable<InputMode> = this.gameStateServ.getInputMode$();
@@ -48,8 +48,7 @@ export class FieldComponent implements OnInit {
 
   constructor(private gameStateServ: GameStateService) {}
 
-  ngOnInit() {
-    {
-    }
+  getFieldValueClass(field: Field) {
+    return field.initialValue ? 'initial-value' : field.isCorrectValue ? 'player-value' : 'player-wrong-value';
   }
 }

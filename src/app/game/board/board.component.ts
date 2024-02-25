@@ -23,9 +23,10 @@ export class BoardComponent implements OnInit, OnDestroy {
   inputMode: InputMode = 'value';
   level!: GameLevel;
   private _board: Board = [];
-  private boardSub$: Subscription = this.boardServ.getBoard().subscribe(board => {
-    this._board = board;
-  });
+  private _boardFinal: number[][] = [];
+
+  private boardSub$: Subscription = this.boardServ.getBoard().subscribe((board) => (this._board = board));
+  private boardFinal$: Subscription = this.boardServ.getBoardFinal$().subscribe((board) => (this._boardFinal = board));
 
   get board() {
     return this._board;
@@ -34,6 +35,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   borderSquares: Array<Record<string, string>> = [];
   private selectedField!: Field;
   private inputModeSubs$: Subscription = this.gameStateServ.getInputMode$().subscribe((x) => (this.inputMode = x));
+
   private fieldClickSub$: Subscription = this.gameStateServ
     .getBoardFieldClick$()
     .pipe(
@@ -42,7 +44,30 @@ export class BoardComponent implements OnInit, OnDestroy {
       })
     )
     .subscribe((v) => this.onFieldClick(v));
-  private numberClickSub$: Subscription = this.controlsServ.getNumberClick$().subscribe((v) => this.onNumberClick(v));
+
+  private numberClickSub$: Subscription = this.controlsServ
+    .getNumberClick$()
+    .pipe(
+      tap((clickEvent) => {
+        const notInitialValue = !this.selectedField.initialValue;
+        const notCorrectValue =
+          !this.board[this.selectedField.address.row][this.selectedField.address.col].isCorrectValue;
+        const notNotesMode = this.inputMode !== 'notes';
+
+        if (notInitialValue && notCorrectValue && notNotesMode) {
+          this.onNumberClick(clickEvent);
+          this.boardServ.setBoard(this.unselectAllFields(this.board));
+          this.onFieldClick({
+            ...this.selectedField,
+            ...{ value: clickEvent.number },
+          });
+        } else if (!notNotesMode) {
+          this.onNumberClick(clickEvent);
+        }
+      })
+    )
+    .subscribe();
+
   private featureClickSub$: Subscription = this.controlsServ
     .getFeatureClick$()
     .subscribe((v) => this.onFeatureClick(v));
@@ -64,6 +89,8 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.numberClickSub$.unsubscribe();
     this.fieldClickSub$.unsubscribe();
     this.featureClickSub$.unsubscribe();
+    this.boardSub$.unsubscribe();
+    this.boardFinal$.unsubscribe();
   }
 
   private countBorderSquares(board: Board): Array<Record<string, string>> {
@@ -115,8 +142,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         col: this.selectedField.address.col,
       };
 
-      const isUserValue =
-        this.board[addr.row][addr.col].initialValue === false;
+      const isUserValue = this.board[addr.row][addr.col].initialValue === false;
       if (isUserValue) {
         this.board[addr.row][addr.col] = {
           ...this.board[addr.row][addr.col],
@@ -128,7 +154,7 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   private onNumberClick(numberClickEvent: NumberClickEvent): void {
     const updateBoard = (board: Board) => {
-      this.boardServ.setBoard(this.selectedField.value === 0 ? board : this.board);
+      this.boardServ.setBoard(this.selectedField.initialValue === false ? board : this.board);
     };
     switch (this.inputMode) {
       case 'value':
@@ -184,13 +210,29 @@ export class BoardComponent implements OnInit, OnDestroy {
     });
   }
 
-  private updateNumberValue(board: Board, value: number, selectedField: Address): Board {
+  private updateNumberValue(board: Board, value: number, selectedFieldAddr: Address): Board {
     return structuredClone(board).map((row) =>
       row.map((field) => {
-        field.value = this.boardServ.isAddressEqual(field.address, selectedField) ? value : field.value;
-        return field;
+        if (this.boardServ.isAddressEqual(field.address, selectedFieldAddr)) {
+          field.value = value;
+          field.isCorrectValue = this.isValueCorrect(board, value, selectedFieldAddr);
+        }
+        // field.value = this.boardServ.isAddressEqual(field.address, selectedFieldAddr) ? value : field.value;
+        // field.isCorrectValue = this.boardServ.isAddressEqual(field.address, selectedFieldAddr) ? this.isValueCorrect(board, value, selectedFieldAddr) : field.isCorrectValue;
+        return structuredClone(field);
       })
     );
+  }
+
+  private isValueCorrect(board: Board, value: number, addr: Address): boolean {
+    const foundField = structuredClone(board)
+      .flat()
+      .find((i) => {
+        return this.boardServ.isAddressEqual(i.address, addr);
+      }) as Field;
+    return foundField.initialValue
+      ? (foundField.isCorrectValue as boolean)
+      : this._boardFinal[addr.row][addr.col] === value;
   }
 
   private updateNotesValue(board: Board, value: number, selectedAddress: Address): Board {
