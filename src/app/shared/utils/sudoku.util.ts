@@ -74,8 +74,8 @@ export class SudokuUtil {
     return array;
   }
 
-  static eraseSome(grid: number[][], percent: number): number[][] {
-    const amount = Math.floor(grid.length ** 2 * percent);
+  static eraseSome(grid: number[][], givenNumbers: number): number[][] {
+    const amount = (grid.length ** 2) - givenNumbers;
     const randomize = (max: number, sqrt: number, addr: string[] = []): string[] => {
       if (addr.length < max) {
         const rand = `${Math.floor(Math.random() * sqrt)},${Math.floor(Math.random() * sqrt)}`;

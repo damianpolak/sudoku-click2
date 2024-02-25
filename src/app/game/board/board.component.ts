@@ -47,7 +47,7 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadLevelProperties();
-    this.board = this.boardServ.createBoardSet(0.6, this.level).initial;
+    this.board = this.boardServ.createBoardSet(this.level.givenNumbers, this.level).initial;
     this.borderSquares = this.countBorderSquares(this.board);
     this.setDefaultSelectedField();
   }

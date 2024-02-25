@@ -12,22 +12,22 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root',
 })
 export class BoardService {
-  private readonly boardSet$ = new BehaviorSubject<BoardSet>(this.createBoardSet(0.6, this.gameStateServ.selectedLevel));
+  // private readonly boardSet$ = new BehaviorSubject<BoardSet>(this.createBoardSet(0.2, this.gameStateServ.selectedLevel));
 
   // trzeba przeniesc board z boardComponent do service!
   // getBoar
   constructor(private gameStateServ: GameStateService) {}
 
-  private createSudokuGridSet(erasePercentage: number, size: number): SudokuGridSet {
+  private createSudokuGridSet(givenNumbers: number, size: number): SudokuGridSet {
     const grid: number[][] = new SudokuBuilder(size).randomizeDiagonal().solveSudoku().getGrid();
     return {
-      initial: SudokuUtil.eraseSome(grid, erasePercentage),
+      initial: SudokuUtil.eraseSome(grid, givenNumbers),
       final: grid,
     };
   }
 
-  createBoardSet(erasePercentage: number, level: GameLevel): BoardSet {
-    const sudokuGrids = this.createSudokuGridSet(erasePercentage, level.rows);
+  createBoardSet(givenNumbers: number, level: GameLevel): BoardSet {
+    const sudokuGrids = this.createSudokuGridSet(givenNumbers, level.rows);
     let fieldGrid: Board = new GridBuilder<Field>(level.rows, level.cols, {
       value: 0,
       notes: new NotesBuilder().get(),
@@ -45,6 +45,9 @@ export class BoardService {
         fieldGrid[row][col].address = { row: row, col: col };
       }
     }
+
+    console.log('Empty: ', SudokuUtil.toNumericBoard(fieldGrid, 'value').flat().filter(i => i == 0).length);
+    console.log('Given number: ', SudokuUtil.toNumericBoard(fieldGrid, 'value').flat().filter(i => i != 0).length);
 
     return {
       initial: fieldGrid,

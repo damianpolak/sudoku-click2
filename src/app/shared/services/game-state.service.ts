@@ -16,22 +16,22 @@ interface Level {
   rows: number;
   cols: number;
   name: Levels;
-  difficulty: number;
+  givenNumbers: number;
 }
 
 const levelList: Level[] = [
-  { rows: 9, cols: 9, name: Levels.EASY, difficulty: 0 },
-  { rows: 9, cols: 9, name: Levels.MEDIUM, difficulty: 0 },
-  { rows: 9, cols: 9, name: Levels.HARD, difficulty: 0 },
-  { rows: 9, cols: 9, name: Levels.EXPERT, difficulty: 0 },
-  { rows: 9, cols: 9, name: Levels.MASTER, difficulty: 0 },
+  { rows: 9, cols: 9, name: Levels.EASY, givenNumbers: 50 },
+  { rows: 9, cols: 9, name: Levels.MEDIUM, givenNumbers: 44 },
+  { rows: 9, cols: 9, name: Levels.HARD, givenNumbers: 38 },
+  { rows: 9, cols: 9, name: Levels.EXPERT, givenNumbers: 28 },
+  { rows: 9, cols: 9, name: Levels.MASTER, givenNumbers: 17 },
 ];
 
 export class GameLevel implements Level {
   rows: number;
   cols: number;
   name: Levels;
-  difficulty: number;
+  givenNumbers: number;
 
   constructor(selectedLevel?: Levels) {
     const level = levelList.find((item) => item.name === selectedLevel);
@@ -39,13 +39,13 @@ export class GameLevel implements Level {
       this.rows = levelList[0].rows;
       this.cols = levelList[0].cols;
       this.name = levelList[0].name;
-      this.difficulty = levelList[0].difficulty;
+      this.givenNumbers = levelList[0].givenNumbers;
       return this;
     } else {
       this.rows = level.rows;
       this.cols = level.cols;
       this.name = level.name;
-      this.difficulty = level.difficulty;
+      this.givenNumbers = level.givenNumbers;
     }
   }
 }
