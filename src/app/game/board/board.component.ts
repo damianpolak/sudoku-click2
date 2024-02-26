@@ -10,6 +10,7 @@ import { BehaviorSubject, Observable, Subscription, tap } from 'rxjs';
 import { ControlsService, FeatureClickEvent, NumberClickEvent } from '../controls/controls.service';
 import { InputMode } from 'src/app/shared/services/game-state.types';
 import { BoardService } from './board.service';
+import { HistoryService } from 'src/app/shared/services/history.service';
 
 @Component({
   selector: 'app-board',
@@ -75,7 +76,8 @@ export class BoardComponent implements OnInit, OnDestroy {
   constructor(
     private gameStateServ: GameStateService,
     private controlsServ: ControlsService,
-    private boardServ: BoardService
+    private boardServ: BoardService,
+    private historyServ: HistoryService,
   ) {}
 
   ngOnInit() {
@@ -150,10 +152,19 @@ export class BoardComponent implements OnInit, OnDestroy {
         };
       }
     }
+
+    if(featureClickEvent.feature === 'back') {
+      const lastHistory = this.historyServ.back();
+      if(typeof lastHistory !== 'undefined') {
+        this.boardServ.setBoard(lastHistory.board);
+        this.gameStateServ.onBoardFieldClick(lastHistory.selectedField);
+      }
+    }
   }
 
   private onNumberClick(numberClickEvent: NumberClickEvent): void {
     const updateBoard = (board: Board) => {
+      this.historyServ.add(this.unselectAllFields(board), this.selectedField);
       this.boardServ.setBoard(this.selectedField.initialValue === false ? board : this.board);
     };
     switch (this.inputMode) {
