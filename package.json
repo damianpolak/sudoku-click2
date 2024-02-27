@@ -1,8 +1,13 @@
 {
   "name": "sudoku-click2",
   "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
+  "author": "Damian Polak",
+  "description": "An Sudoku Classic project in Ionic 17. ",
+  "homepage": "https://sudoku.click/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/damianpolak/sudoku-click2.git"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -64,6 +69,5 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "ts-node": "^8.3.0",
     "typescript": "~5.2.2"
-  },
-  "description": "An Ionic project"
+  }
 }
