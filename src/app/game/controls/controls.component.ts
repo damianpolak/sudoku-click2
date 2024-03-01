@@ -23,18 +23,9 @@ type FeatureControl = FeatureClickEvent & {
 export class ControlsComponent implements OnInit, OnDestroy {
   inputMode!: InputMode;
   private inputModeSubs$!: Subscription;
-  private numberSub$: Subscription = this.gameStateServ.getMissingNumbers$().pipe(map(x => {
-    return x.map(i => {
-      return {
-        value: i.id,
-        missingValue: i.value
-      }
-    })
-  })).subscribe(v => {
-    this._numbers = v;
-  });
+  private numberSub$!: Subscription
 
-  private _numbers: NumberControl[] = [];
+  private _numbers!: NumberControl[];
 
   get numbers() {
     return this._numbers;
@@ -44,6 +35,18 @@ export class ControlsComponent implements OnInit, OnDestroy {
   constructor(private controlsServ: ControlsService, private gameStateServ: GameStateService) {}
 
   ngOnInit() {
+    this.numberSub$ = this.gameStateServ.getMissingNumbers$().pipe(map(x => {
+      console.log('numbersub', x)
+      return x.map(i => {
+        return {
+          value: i.id,
+          missingValue: i.value
+        }
+      })
+    })).subscribe(v => {
+      this._numbers = v;
+    });
+
     this.inputModeSubs$ = this.gameStateServ.getInputMode$().subscribe((mode) => {
       this.inputMode = mode;
       this.features = this.featuresCreate();
@@ -51,6 +54,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    console.log('controls destroy')
     this.inputModeSubs$.unsubscribe();
     this.numberSub$.unsubscribe();
   }

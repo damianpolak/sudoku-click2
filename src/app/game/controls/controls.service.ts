@@ -26,10 +26,12 @@ export class ControlsService {
   private readonly featureClick$ = new Subject<FeatureClickEvent>();
 
   onNumberClick(value: NumberClickEvent): void {
+    console.log('controls number click', value);
     this.numberClick$.next(value);
   }
 
   getNumberClick$(): Observable<NumberClickEvent> {
+
     return this.numberClick$.asObservable();
   }
 

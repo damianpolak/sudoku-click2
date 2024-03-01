@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
 import { InputMode } from './game-state.types';
 import { Board, MissingNumber } from 'src/app/game/board/board.types';
 import { Field } from 'src/app/game/board/field/field.types';
@@ -57,13 +57,13 @@ export class GameStateService {
   private readonly continueAvailable$ = new BehaviorSubject<boolean>(false);
   private readonly pauseState$ = new BehaviorSubject<boolean>(false);
   private readonly inputMode$ = new BehaviorSubject<InputMode>('value');
-  private readonly missingNumbers$ = new Subject<MissingNumber[]>();
+  private readonly missingNumbers$ = new ReplaySubject<MissingNumber[]>();
   private fieldClick$ = new Subject<Field>();
 
   private _selectedLevel: GameLevel;
 
   constructor() {
-    this._selectedLevel = new GameLevel(Levels.EASY);
+    this._selectedLevel = new GameLevel(Levels.EXPERT);
   }
 
   setPauseState(pause: boolean): void {
@@ -96,6 +96,7 @@ export class GameStateService {
   }
 
   onBoardFieldClick(field: Field): void {
+    console.log('click', field);
     this.fieldClick$.next(field);
   }
 
@@ -108,6 +109,7 @@ export class GameStateService {
   }
 
   setMissingNumbers(value: MissingNumber[]): void {
+    console.log('missing', value)
     this.missingNumbers$.next(value);
   }
 
