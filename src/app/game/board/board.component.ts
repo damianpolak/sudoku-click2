@@ -146,10 +146,10 @@ export class BoardComponent implements OnInit, OnDestroy {
 
       const isUserValue = this.board[addr.row][addr.col].initialValue === false;
       if (isUserValue) {
-        this.board[addr.row][addr.col] = {
-          ...this.board[addr.row][addr.col],
-          ...{ value: 0, notes: new NotesBuilder().get() },
-        };
+        const erased = this.unselectAllFields(this.eraseField(this.board, addr));
+        this.historyServ.add(erased, this.selectedField);
+        this.boardServ.setBoard(erased);
+        this.gameStateServ.onBoardFieldClick({...this.selectedField, ...{ value: 0, highlight: false }});
       }
     }
 
@@ -221,6 +221,19 @@ export class BoardComponent implements OnInit, OnDestroy {
     });
   }
 
+  private eraseField(board: Board, fieldAddress: Address): Board {
+    return structuredClone(board).map((row) =>
+      row.map((field) => {
+        if (this.boardServ.isAddressEqual(field.address, fieldAddress)) {
+          field.value = 0;
+          field.isCorrectValue = false;
+          field.notes = new NotesBuilder().get();
+        }
+        return field;
+      })
+    );
+  }
+
   private updateNumberValue(board: Board, value: number, selectedFieldAddr: Address): Board {
     return structuredClone(board).map((row) =>
       row.map((field) => {
@@ -228,9 +241,7 @@ export class BoardComponent implements OnInit, OnDestroy {
           field.value = value;
           field.isCorrectValue = this.isValueCorrect(board, value, selectedFieldAddr);
         }
-        // field.value = this.boardServ.isAddressEqual(field.address, selectedFieldAddr) ? value : field.value;
-        // field.isCorrectValue = this.boardServ.isAddressEqual(field.address, selectedFieldAddr) ? this.isValueCorrect(board, value, selectedFieldAddr) : field.isCorrectValue;
-        return structuredClone(field);
+        return field;
       })
     );
   }
