@@ -10,6 +10,6 @@
 </div>
 <div class="numbers-buttons">
   @for (n of numbers; track n.value) {
-    <app-number-button [value]="n.value.toString()" [missingValue]="n.missingValue.toString()" (click)="onNumberClick(n.value)"></app-number-button>
+    <app-number-button [value]="n.value.toString()" [missingValue]="n.missingValue.toString()" (click)="onNumberClick(n.value)" [ngStyle]="{'visibility': n.missingValue <= 0 ? 'hidden' : 'visible'}"></app-number-button>
   }
 </div>

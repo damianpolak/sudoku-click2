@@ -11,9 +11,7 @@ export class NumberButtonComponent implements OnInit {
   @Input() missingValue: string = '';
   @HostListener('click', ['$event'])
   mouseclick(event: PointerEvent) {
-    this.style = this.sanitizer.bypassSecurityTrustStyle(
-      'transform: scale(1.1); z-index: 10;'
-    );
+    this.style = this.sanitizer.bypassSecurityTrustStyle('transform: scale(1.1); z-index: 10;');
     setTimeout(() => {
       this.mouseleave(event);
     }, 300);
@@ -25,7 +23,6 @@ export class NumberButtonComponent implements OnInit {
   }
 
   @HostBinding('style') style!: SafeStyle;
-
   constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit() {

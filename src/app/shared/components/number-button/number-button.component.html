@@ -1,6 +1,7 @@
 <div class="number">
   {{ value }}
 </div>
-<div class="missing">
+
+<div class="missing" [ngStyle]="{ visibility: +missingValue <= 0 ? 'hidden' : 'visible' }">
   {{ missingValue }}
 </div>
