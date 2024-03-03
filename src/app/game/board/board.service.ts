@@ -1,19 +1,17 @@
 import { Injectable } from '@angular/core';
-import { SudokuBuilder } from 'src/app/shared/builders/sudoku.builder';
 import { SudokuUtil } from 'src/app/shared/utils/sudoku.util';
-import { Board, BoardSet, MissingNumber, SudokuGridSet } from './board.types';
+import { Board, BoardSet } from './board.types';
 import { GameLevel, GameStateService } from 'src/app/shared/services/game-state.service';
-import { GridBuilder } from 'src/app/shared/builders/grid.builder';
-import { NotesBuilder } from 'src/app/shared/builders/notes.builder';
-import { Address, Field } from './field/field.types';
+import { Address } from './field/field.types';
 import { BehaviorSubject, Observable, Subject, Subscription, map, tap } from 'rxjs';
+import { BoardBuilder } from 'src/app/shared/builders/board.builder';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BoardService {
   private readonly newBoardSet$ = new BehaviorSubject<BoardSet>(
-    this.createBoardSet(this.gameStateServ.selectedLevel.givenNumbers, this.gameStateServ.selectedLevel)
+    this.createBoardSet(this.gameStateServ.selectedLevel)
   );
 
   getBoard(): Observable<Board> {
@@ -47,51 +45,11 @@ export class BoardService {
 
   constructor(private gameStateServ: GameStateService) {}
 
-  private createSudokuGridSet(givenNumbers: number, size: number): SudokuGridSet {
-    const grid: number[][] = new SudokuBuilder(size).randomizeDiagonal().solveSudoku().getGrid();
+  createBoardSet(level: GameLevel): BoardSet {
+    const boardConstructor = new BoardBuilder({ level: level });
     return {
-      initial: SudokuUtil.eraseSome(grid, givenNumbers),
-      final: grid,
-    };
-  }
-
-  createBoardSet(givenNumbers: number, level: GameLevel): BoardSet {
-    const sudokuGrids = this.createSudokuGridSet(givenNumbers, level.rows);
-    let fieldGrid: Board = new GridBuilder<Field>(level.rows, level.cols, {
-      value: 0,
-      notes: new NotesBuilder().get(),
-      address: { row: 0, col: 0 },
-      selected: false,
-      highlight: false,
-      initialValue: false,
-    }).getGrid();
-
-    for (let row = 0; row <= level.rows - 1; row++) {
-      for (let col = 0; col <= level.cols - 1; col++) {
-        const sudokuValue = sudokuGrids.initial[row][col];
-        fieldGrid[row][col].value = sudokuValue;
-        fieldGrid[row][col].initialValue = sudokuValue === 0 ? false : true;
-        fieldGrid[row][col].address = { row: row, col: col };
-        fieldGrid[row][col].isCorrectValue = sudokuValue > 0;
-      }
-    }
-
-    console.log(
-      'Empty: ',
-      SudokuUtil.toNumericBoard(fieldGrid, 'value')
-        .flat()
-        .filter((i) => i == 0).length
-    );
-    console.log(
-      'Given number: ',
-      SudokuUtil.toNumericBoard(fieldGrid, 'value')
-        .flat()
-        .filter((i) => i != 0).length
-    );
-
-    return {
-      initial: fieldGrid,
-      final: sudokuGrids.final,
+      initial: boardConstructor.getBoard(),
+      final: boardConstructor.getSudokuGridSet().final,
     };
   }
 
