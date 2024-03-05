@@ -1,38 +1,35 @@
 import { Board, SudokuGridSet } from 'src/app/game/board/board.types';
 import { GridBuilder } from './grid.builder';
 import { Address, Field } from 'src/app/game/board/field/field.types';
-import { NotesBuilder } from './notes.builder';
+import { Notes, NotesBuilder } from './notes.builder';
 import { SudokuUtil } from '../utils/sudoku.util';
 import { GameLevel, Levels } from '../services/game-state.service';
 import { SudokuBuilder } from './sudoku.builder';
-
-// type BoardBuild = {
-//   board?: Board;
-//   level: GameLevel;
-// }
 
 export class BoardBuilder {
   private _board: Board;
   private _sudokuGrids!: SudokuGridSet;
 
-  constructor(payload: { board?: Board, level?: GameLevel} = {}) {
+  constructor(payload: { board?: Board; level?: GameLevel } = {}) {
     if (typeof payload.board === 'undefined') {
       payload.level = typeof payload.level === 'undefined' ? new GameLevel(Levels.EASY) : payload.level;
       this._sudokuGrids = this.createSudokuGridSet(payload.level.givenNumbers, payload.level.rows);
       this._board = new GridBuilder<Field>(payload.level.rows, payload.level.cols, {
         value: 0,
+        finalValue: 0,
         notes: new NotesBuilder().get(),
         address: { row: 0, col: 0 },
         selected: false,
         highlight: false,
-        initialValue: false,
+        isInitialValue: false,
       }).getGrid();
 
       for (let row = 0; row <= payload.level.rows - 1; row++) {
         for (let col = 0; col <= payload.level.cols - 1; col++) {
           const sudokuValue = this._sudokuGrids.initial[row][col];
+          this._board[row][col].finalValue = this._sudokuGrids.final[row][col];
           this._board[row][col].value = sudokuValue;
-          this._board[row][col].initialValue = sudokuValue === 0 ? false : true;
+          this._board[row][col].isInitialValue = sudokuValue === 0 ? false : true;
           this._board[row][col].address = { row: row, col: col };
           this._board[row][col].isCorrectValue = sudokuValue > 0;
         }
@@ -51,20 +48,33 @@ export class BoardBuilder {
     };
   }
 
-  getSudokuGridSet(): SudokuGridSet {
+  getGridset(): SudokuGridSet {
     return this._sudokuGrids;
   }
 
   updateFieldInBoard(partialField: { address: Address } & Partial<Field>): this {
     this._board = structuredClone(this._board).map((row) => {
       return row.map((field) => {
+        const mergedField: Field = { ...field, ...partialField };
         return this.isAddressEqual(field.address, partialField.address)
           ? {
-              ...field,
-              ...partialField,
+              ...mergedField,
+              ...{ isCorrectValue: this.isCorrectValue(mergedField.value, mergedField.address) },
             }
           : field;
       });
+    });
+    return this;
+  }
+
+  eraseField(address: Address): this {
+    this.updateFieldInBoard({
+      address,
+      ...{
+        value: 0,
+        notes: new NotesBuilder().get(),
+        isCorrectValue: false,
+      },
     });
     return this;
   }
@@ -88,10 +98,17 @@ export class BoardBuilder {
       .filter((x) => x.value === value);
   }
 
-  unselectAllFields(): this {
+  unselectAllFields(exceptAddress?: Address): this {
+    const exceptAddr = (source: Address | undefined, dest: Address) => {
+      if (typeof source == 'undefined') {
+        return false;
+      }
+      return this.isAddressEqual(source, dest);
+    };
+
     this._board = structuredClone(this._board).map((row) => {
       return row.map((field) => {
-        field.selected = false;
+        field.selected = exceptAddr(exceptAddress, field.address);
         field.highlight = false;
         return field;
       });
@@ -118,7 +135,7 @@ export class BoardBuilder {
     return this;
   }
 
-  getBoard(): Board {
+  get(): Board {
     return this._board;
   }
 
@@ -139,6 +156,7 @@ export class BoardBuilder {
         return field;
       });
     });
+    this.highlightFields(random);
     return this;
   }
 
@@ -148,5 +166,14 @@ export class BoardBuilder {
       col: Math.floor(Math.random() * board.length),
     };
     return board[address.row][address.col].value === 0 ? address : this.getRandomEmptyFieldAddress(board);
+  }
+
+  private isCorrectValue(value: number, addr: Address): boolean {
+    const foundField = this._board.flat().find((i) => {
+      return this.isAddressEqual(i.address, addr);
+    }) as Field;
+    return foundField.isInitialValue
+      ? (foundField.isCorrectValue as boolean)
+      : this._board[addr.row][addr.col].finalValue === value;
   }
 }

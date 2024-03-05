@@ -10,59 +10,44 @@ import { BoardBuilder } from 'src/app/shared/builders/board.builder';
   providedIn: 'root',
 })
 export class BoardService {
-  private readonly newBoardSet$ = new BehaviorSubject<BoardSet>(
-    this.createBoardSet(this.gameStateServ.selectedLevel)
+  private readonly board$ = new BehaviorSubject<Board>(
+    new BoardBuilder({ level: this.gameStateServ.selectedLevel }).get()
   );
-
-  getBoard(): Observable<Board> {
-    return this.newBoardSet$
-      .asObservable()
-      .pipe(
-        tap((_) => {
-          this.gameStateServ.setMissingNumbers(
-            this.getMissingNumbers(SudokuUtil.toNumericBoard(_.initial, 'value')).map((i, index) => {
-              return {
-                id: index + 1,
-                value: i,
-              };
-            })
-          );
-        })
-      )
-      .pipe(map((x) => x.initial));
-  }
-
-  getBoardFinal$(): Observable<number[][]> {
-    return this.newBoardSet$.asObservable().pipe(map((x) => x.final));
-  }
-
-  setBoard(board: Board): void {
-    this.newBoardSet$.next({
-      final: this.newBoardSet$.value.final,
-      initial: board,
-    });
-  }
 
   constructor(private gameStateServ: GameStateService) {}
 
-  createBoardSet(level: GameLevel): BoardSet {
-    const boardConstructor = new BoardBuilder({ level: level });
-    return {
-      initial: boardConstructor.getBoard(),
-      final: boardConstructor.getSudokuGridSet().final,
-    };
+  getBoard(): Observable<Board> {
+    return this.board$
+      .asObservable()
+      .pipe(
+        tap((_) => {
+          this.updateMissingNumbers(_);
+        })
+      )
+      .pipe(map((x) => x));
   }
 
-  getMissingNumbers(board: number[][], max: number = 9): number[] {
+  setBoard(board: Board): void {
+    this.board$.next(board);
+  }
+
+  private updateMissingNumbers(board: Board): void {
+    this.gameStateServ.setMissingNumbers(
+      this.getMissingNumbers(SudokuUtil.toNumericBoard(board, 'value')).map((i, index) => {
+        return {
+          id: index + 1,
+          value: i,
+        };
+      })
+    );
+  }
+
+  private getMissingNumbers(board: number[][], max: number = 9): number[] {
     const b = structuredClone(board).flat();
     const missingArr: number[] = [];
     for (let i = 1; i <= max; i++) {
       missingArr.push(max - b.filter((f) => f === i).length);
     }
     return missingArr;
-  }
-
-  isAddressEqual(sourceAddress: Address, destAddress: Address): boolean {
-    return sourceAddress.row === destAddress.row && sourceAddress.col === destAddress.col;
   }
 }

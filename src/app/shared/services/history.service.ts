@@ -32,7 +32,7 @@ export class HistoryService {
       return {
         board: this.historyBoards[0].board.map((row) => {
           return row.map((field) => {
-            if (!field.initialValue) {
+            if (!field.isInitialValue) {
               field.isCorrectValue = false;
               field.value = 0;
               field.notes = new NotesBuilder().get();
