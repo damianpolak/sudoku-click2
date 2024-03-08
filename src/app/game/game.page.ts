@@ -56,19 +56,6 @@ export class GamePage implements OnInit, OnDestroy {
     this.timerServ.restart();
   }
 
-  // Timers toogle test
-  timerStart(): void {
-    this.timerServ.start();
-  }
-
-  timerStop(): void {
-    this.timerServ.stop();
-  }
-
-  timerRestart(): void {
-    this.timerServ.restart();
-  }
-
   pause(event: boolean): void {
     this.gameStateServ.setPauseState(event);
   }
