@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription, interval, skipWhile } from 'rxjs';
 
+type Timestring = `${string}:${string}:${string}`;
 @Injectable({
   providedIn: 'root',
 })
@@ -44,7 +45,11 @@ export class TimerService {
     this.timestring.next(timestring);
   }
 
-  start(): void {
+  start(startAtTimestring?: Timestring): void {
+    if(typeof startAtTimestring !== 'undefined') {
+      this.overrideTimeValues(startAtTimestring);
+    }
+
     if (!this.timerSubs$) {
       if (this._finished) {
         this.restart();
@@ -91,5 +96,20 @@ export class TimerService {
     }
 
     this.setTimestring();
+  }
+
+  private overrideTimeValues(timestring: Timestring): void {
+    const numstrToNumber = (value: string) => {
+      return Number.isNaN(Number(value)) ? 0 : Number(value);
+    }
+
+    try {
+      const splittedTimestring = timestring.split(':');
+      this._hours = numstrToNumber(splittedTimestring[0]);
+      this._minutes = numstrToNumber(splittedTimestring[1]);
+      this._seconds = numstrToNumber(splittedTimestring[2]);
+    } catch(e) {
+      throw new RangeError('Something is wrong with saved time values.');
+    }
   }
 }
