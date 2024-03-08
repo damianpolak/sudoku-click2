@@ -1,12 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Board } from 'src/app/game/board/board.types';
-import { Address, Field } from 'src/app/game/board/field/field.types';
+import { Field } from 'src/app/game/board/field/field.types';
 import { NotesBuilder } from '../builders/notes.builder';
-
-type HistoryBoard = {
-  board: Board;
-  selectedField: Field;
-};
+import { HistoryBoard } from './history.types';
 
 @Injectable({
   providedIn: 'root',
