@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription, interval, skipWhile } from 'rxjs';
-import { Timestring } from './game-state.types';
+import { Timestring } from './timer.types';
 
 
 @Injectable({
