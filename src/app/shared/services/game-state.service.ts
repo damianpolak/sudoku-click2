@@ -63,7 +63,7 @@ export class GameStateService {
   private _selectedLevel: GameLevel;
 
   constructor() {
-    this._selectedLevel = new GameLevel(Levels.EASY);
+    this._selectedLevel = new GameLevel(Levels.MASTER);
   }
 
   setPauseState(pause: boolean): void {

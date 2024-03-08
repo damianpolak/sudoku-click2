@@ -27,24 +27,21 @@ export class NotesBuilder {
     }
   }
 
-  update(numbers: number[] = [], options: { active: boolean } = { active: true }): this {
+  update(numbers: number[] = []): this {
     this.validate(numbers);
 
-    const entries = Array.from(this.notes).filter((x) => numbers.includes(x.value));
-    entries.forEach((i) => {
-      this.notes.delete(i);
-      this.notes.add({
-        value: i.value,
-        active: options.active,
-      });
-    });
-    this.notes = new Set(Array.from(this.notes).sort((a, b) => a.value - b.value));
-    return this;
-  }
-
-  delete(numbers: number[] = []): this {
-    this.validate(numbers);
-    this.update(numbers, { active: false });
+    this.notes = new Set(
+      Array.from(this.notes).map((x) => {
+        if (numbers.includes(x.value)) {
+          return {
+            value: x.value,
+            active: !x.active,
+          };
+        } else {
+          return x;
+        }
+      })
+    );
     return this;
   }
 

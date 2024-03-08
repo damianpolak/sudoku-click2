@@ -49,6 +49,6 @@ export class FieldComponent {
   constructor(private gameStateServ: GameStateService) {}
 
   getFieldValueClass(field: Field) {
-    return field.initialValue ? 'initial-value' : field.isCorrectValue ? 'player-value' : 'player-wrong-value';
+    return field.isInitialValue ? 'initial-value' : field.isCorrectValue ? 'player-value' : 'player-wrong-value';
   }
 }

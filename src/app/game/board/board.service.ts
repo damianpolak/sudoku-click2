@@ -1,101 +1,189 @@
-import { Injectable } from '@angular/core';
-import { SudokuBuilder } from 'src/app/shared/builders/sudoku.builder';
+import { Injectable, OnDestroy } from '@angular/core';
 import { SudokuUtil } from 'src/app/shared/utils/sudoku.util';
-import { Board, BoardSet, MissingNumber, SudokuGridSet } from './board.types';
+import { Board, BoardSet } from './board.types';
 import { GameLevel, GameStateService } from 'src/app/shared/services/game-state.service';
-import { GridBuilder } from 'src/app/shared/builders/grid.builder';
-import { NotesBuilder } from 'src/app/shared/builders/notes.builder';
 import { Address, Field } from './field/field.types';
 import { BehaviorSubject, Observable, Subject, Subscription, map, tap } from 'rxjs';
+import { BoardBuilder } from 'src/app/shared/builders/board.builder';
+import { ControlsService, FeatureClickEvent, NumberClickEvent } from '../controls/controls.service';
+import { InputMode } from 'src/app/shared/services/game-state.types';
+import { HistoryService } from 'src/app/shared/services/history.service';
+import { NotesBuilder } from 'src/app/shared/builders/notes.builder';
 
 @Injectable({
   providedIn: 'root',
 })
-export class BoardService {
-  private readonly newBoardSet$ = new BehaviorSubject<BoardSet>(
-    this.createBoardSet(this.gameStateServ.selectedLevel.givenNumbers, this.gameStateServ.selectedLevel)
+export class BoardService implements OnDestroy {
+  private inputMode: InputMode = 'value';
+  private selectedField!: Field;
+  private _board!: Board;
+  private subscriptions$: Subscription[] = [];
+
+  private readonly board$ = new BehaviorSubject<Board>(
+    new BoardBuilder({ level: this.gameStateServ.selectedLevel }).get()
   );
 
-  getBoard(): Observable<Board> {
-    return this.newBoardSet$
-      .asObservable()
-      .pipe(
-        tap((_) => {
-          this.gameStateServ.setMissingNumbers(
-            this.getMissingNumbers(SudokuUtil.toNumericBoard(_.initial, 'value')).map((i, index) => {
-              return {
-                id: index + 1,
-                value: i,
-              };
-            })
-          );
-        })
-      )
-      .pipe(map((x) => x.initial));
+  private boardSub$: Subscription = this.getBoard$().subscribe((board) => (this._board = board));
+  private inputModeSub$: Subscription = this.gameStateServ.getInputMode$().subscribe((x) => (this.inputMode = x));
+  private fieldClickSub$: Subscription = this.gameStateServ
+    .getBoardFieldClick$()
+    .subscribe((v) => this.onFieldClick(v));
+
+  private numberClickSub$: Subscription = this.controlsServ.getNumberClick$().subscribe((v) => {
+    this.onNumberClick(v);
+  });
+
+  private featureClickSub$: Subscription = this.controlsServ
+    .getFeatureClick$()
+    .subscribe((v) => this.onFeatureClick(v));
+
+  get board() {
+    return this._board;
   }
 
-  getBoardFinal$(): Observable<number[][]> {
-    return this.newBoardSet$.asObservable().pipe(map((x) => x.final));
+  constructor(
+    private readonly gameStateServ: GameStateService,
+    private readonly controlsServ: ControlsService,
+    private readonly historyServ: HistoryService
+  ) {
+    this.registerSubscriptions();
   }
 
-  setBoard(board: Board): void {
-    this.newBoardSet$.next({
-      final: this.newBoardSet$.value.final,
-      initial: board,
-    });
+  ngOnDestroy(): void {
+    this.unsubscribeSubscriptions();
   }
 
-  constructor(private gameStateServ: GameStateService) {}
-
-  private createSudokuGridSet(givenNumbers: number, size: number): SudokuGridSet {
-    const grid: number[][] = new SudokuBuilder(size).randomizeDiagonal().solveSudoku().getGrid();
-    return {
-      initial: SudokuUtil.eraseSome(grid, givenNumbers),
-      final: grid,
-    };
+  private registerSubscriptions(): void {
+    this.subscriptions$ = [
+      ...this.subscriptions$,
+      this.boardSub$,
+      this.inputModeSub$,
+      this.fieldClickSub$,
+      this.numberClickSub$,
+      this.featureClickSub$,
+    ];
   }
 
-  createBoardSet(givenNumbers: number, level: GameLevel): BoardSet {
-    const sudokuGrids = this.createSudokuGridSet(givenNumbers, level.rows);
-    let fieldGrid: Board = new GridBuilder<Field>(level.rows, level.cols, {
-      value: 0,
-      notes: new NotesBuilder().get(),
-      address: { row: 0, col: 0 },
-      selected: false,
-      highlight: false,
-      initialValue: false,
-    }).getGrid();
+  private unsubscribeSubscriptions(): void {
+    this.subscriptions$.forEach((sub) => sub.unsubscribe());
+    this.subscriptions$ = [];
+  }
 
-    for (let row = 0; row <= level.rows - 1; row++) {
-      for (let col = 0; col <= level.cols - 1; col++) {
-        const sudokuValue = sudokuGrids.initial[row][col];
-        fieldGrid[row][col].value = sudokuValue;
-        fieldGrid[row][col].initialValue = sudokuValue === 0 ? false : true;
-        fieldGrid[row][col].address = { row: row, col: col };
-        fieldGrid[row][col].isCorrectValue = sudokuValue > 0;
+  private onFeatureClick(featureClickEvent: FeatureClickEvent): void {
+    if (featureClickEvent.feature === 'notes') {
+      this.gameStateServ.setInputMode(this.inputMode === 'value' ? 'notes' : 'value');
+    }
+
+    if (featureClickEvent.feature === 'erase') {
+      const addr: Address = this.selectedField.address;
+      const isUserValue = this.board[addr.row][addr.col].isInitialValue === false;
+      if (isUserValue) {
+        const clearedField = new BoardBuilder({ board: this.board }).unselectAllFields().eraseField(addr).get();
+        this.historyServ.add(clearedField, this.selectedField);
+        this.setBoard(clearedField);
+        this.gameStateServ.onBoardFieldClick({ ...this.selectedField, ...{ value: 0, highlight: false } });
       }
     }
 
-    console.log(
-      'Empty: ',
-      SudokuUtil.toNumericBoard(fieldGrid, 'value')
-        .flat()
-        .filter((i) => i == 0).length
-    );
-    console.log(
-      'Given number: ',
-      SudokuUtil.toNumericBoard(fieldGrid, 'value')
-        .flat()
-        .filter((i) => i != 0).length
-    );
-
-    return {
-      initial: fieldGrid,
-      final: sudokuGrids.final,
-    };
+    if (featureClickEvent.feature === 'back') {
+      const lastHistory = this.historyServ.back();
+      if (typeof lastHistory !== 'undefined') {
+        this.setBoard(lastHistory.board);
+        this.gameStateServ.onBoardFieldClick(lastHistory.selectedField);
+      }
+    }
   }
 
-  getMissingNumbers(board: number[][], max: number = 9): number[] {
+  private onNumberClick(numberClickEvent: NumberClickEvent): void {
+    const notInitialValue = !this.selectedField.isInitialValue;
+    const notCorrectValue = !this.board[this.selectedField.address.row][this.selectedField.address.col].isCorrectValue;
+    const notNotesMode = this.inputMode !== 'notes';
+    if (notInitialValue && notCorrectValue && notNotesMode) {
+      this.setBoard(
+        new BoardBuilder({ board: this._board })
+          .unselectAllFields()
+          .updateFieldInBoard({ address: this.selectedField.address, value: numberClickEvent.number })
+          .highlightFields(this.selectedField.address)
+          .selectFieldsByNumber(numberClickEvent.number)
+          .get()
+      );
+      this.historyServ.add(new BoardBuilder({ board: this._board }).unselectAllFields().get(), this.selectedField);
+      this.selectedField = { ...this.selectedField, value: numberClickEvent.number };
+    } else if (!notNotesMode) {
+      this.setBoard(
+        new BoardBuilder({ board: this._board })
+          .unselectAllFields(this.selectedField.address)
+          .updateFieldInBoard({
+            address: this.selectedField.address,
+            notes: new NotesBuilder(this.selectedField.notes.filter((x) => x.active === true).map((x) => x.value))
+              .update([numberClickEvent.number])
+              .get(),
+          })
+          .highlightFields(this.selectedField.address)
+          .get()
+      );
+      this.historyServ.add(new BoardBuilder({ board: this._board }).unselectAllFields().get(), this.selectedField);
+      this.selectedField = {
+        ...this.selectedField,
+        notes: new NotesBuilder(this.selectedField.notes.filter((x) => x.active === true).map((x) => x.value))
+          .update([numberClickEvent.number])
+          .get(),
+      };
+    }
+  }
+
+  private onFieldClick(field: Field): void {
+    if (this.isFieldNotEmpty(field.value)) {
+      this.setBoard(
+        new BoardBuilder({ board: this.board })
+          .unselectAllFields()
+          .highlightFields(field.address)
+          .selectFieldsByNumber(field.value)
+          .get()
+      );
+      this.selectedField = field;
+    } else {
+      this.setBoard(
+        new BoardBuilder({ board: this.board })
+          .unselectAllFields()
+          .highlightFields(field.address)
+          .updateFieldInBoard({
+            ...{ address: field.address },
+            ...{ selected: field.selected },
+          })
+          .get()
+      );
+      this.selectedField = field;
+    }
+  }
+
+  getBoard$(): Observable<Board> {
+    return this.board$
+      .asObservable()
+      .pipe(
+        tap((_) => {
+          this.updateMissingNumbers(_);
+        })
+      )
+      .pipe(map((x) => x));
+  }
+
+  setBoard(board: Board): void {
+    this.board$.next(board);
+  }
+
+  private updateMissingNumbers(board: Board): void {
+    this.gameStateServ.setMissingNumbers(
+      this.getMissingNumbers(SudokuUtil.toNumericBoard(board, 'value')).map((i, index) => {
+        return {
+          id: index + 1,
+          value: i,
+        };
+      })
+    );
+  }
+
+  private getMissingNumbers(board: number[][], max: number = 9): number[] {
     const b = structuredClone(board).flat();
     const missingArr: number[] = [];
     for (let i = 1; i <= max; i++) {
@@ -104,7 +192,13 @@ export class BoardService {
     return missingArr;
   }
 
-  isAddressEqual(sourceAddress: Address, destAddress: Address): boolean {
-    return sourceAddress.row === destAddress.row && sourceAddress.col === destAddress.col;
+  private isFieldNotEmpty(value: number): boolean {
+    return value !== 0;
+  }
+
+  setDefaultSelectedField(): void {
+    const board = new BoardBuilder({ board: this.board }).setDefaultSelectedField().get();
+    this.setBoard(board);
+    this.selectedField = board.flat().filter((f) => f.selected === true)[0];
   }
 }
