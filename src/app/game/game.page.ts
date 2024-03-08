@@ -17,6 +17,7 @@ export class GamePage implements OnInit, OnDestroy {
   inputMode!: InputMode;
   isPaused!: boolean;
   level!: GameLevel;
+  title: string = 'Sudoku.click';
 
   private inputModeSubs$: Subscription = this.gameStateServ.getInputMode$().subscribe((mode) => {
     this.inputMode = mode;
