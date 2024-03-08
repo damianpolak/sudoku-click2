@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { InputMode } from './game-state.types';
+import { BehaviorSubject, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { GameState, InputMode } from './game-state.types';
 import { Board, MissingNumber } from 'src/app/game/board/board.types';
 import { Field } from 'src/app/game/board/field/field.types';
 
@@ -58,12 +58,30 @@ export class GameStateService {
   private readonly pauseState$ = new BehaviorSubject<boolean>(false);
   private readonly inputMode$ = new BehaviorSubject<InputMode>('value');
   private readonly missingNumbers$ = new Subject<MissingNumber[]>();
+  private readonly gameState$ = new ReplaySubject<Partial<GameState>>();
   private fieldClick$ = new Subject<Field>();
+  private _gameState!: Partial<GameState>;
 
   private _selectedLevel: GameLevel;
 
+  private gameStateSub$: Subscription = this.gameState$.subscribe(v => {
+    console.log('vvv', v);
+    this._gameState = v;
+  });
+
   constructor() {
     this._selectedLevel = new GameLevel(Levels.MASTER);
+  }
+
+  setGameState(gameState: Partial<GameState>): void {
+    this.gameState$.next({
+      ...this._gameState,
+      ...gameState
+    })
+  }
+
+  getGameState$(): Observable<Partial<GameState>> {
+    return this.gameState$.asObservable();
   }
 
   setPauseState(pause: boolean): void {

@@ -3,27 +3,47 @@ import { SudokuUtil } from 'src/app/shared/utils/sudoku.util';
 import { Board, BoardSet } from './board.types';
 import { GameLevel, GameStateService } from 'src/app/shared/services/game-state.service';
 import { Address, Field } from './field/field.types';
-import { BehaviorSubject, Observable, Subject, Subscription, map, tap } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject, Subject, Subscription, combineLatest, map, tap, withLatestFrom } from 'rxjs';
 import { BoardBuilder } from 'src/app/shared/builders/board.builder';
 import { ControlsService, FeatureClickEvent, NumberClickEvent } from '../controls/controls.service';
 import { InputMode } from 'src/app/shared/services/game-state.types';
 import { HistoryService } from 'src/app/shared/services/history.service';
 import { NotesBuilder } from 'src/app/shared/builders/notes.builder';
+import { TimerService } from 'src/app/shared/services/timer.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BoardService implements OnDestroy {
   private inputMode: InputMode = 'value';
-  private selectedField!: Field;
+  private _selectedField!: Field;
   private _board!: Board;
   private subscriptions$: Subscription[] = [];
 
+  private readonly selectedField$ = new ReplaySubject<Field>();
   private readonly board$ = new BehaviorSubject<Board>(
     new BoardBuilder({ level: this.gameStateServ.selectedLevel }).get()
   );
 
-  private boardSub$: Subscription = this.getBoard$().subscribe((board) => (this._board = board));
+  private boardSub$: Subscription = this.getBoard$()
+    .pipe(withLatestFrom(this.timerServ.getTimestring()))
+    .subscribe(([board, timestring]) => {
+    this._board = board;
+    console.log('timestring', timestring);
+    this.gameStateServ.setGameState({
+      board: board,
+      selectedField: this._selectedField,
+      history: this.historyServ.historyBoards,
+      level: this.gameStateServ.selectedLevel,
+      timestring: timestring,
+      mistakes: 1
+    });
+  });
+
+  private selectedFieldSub$: Subscription = this.getSelectedField$().subscribe((field) => {
+    this._selectedField = field;
+  });
+
   private inputModeSub$: Subscription = this.gameStateServ.getInputMode$().subscribe((x) => (this.inputMode = x));
   private fieldClickSub$: Subscription = this.gameStateServ
     .getBoardFieldClick$()
@@ -44,9 +64,21 @@ export class BoardService implements OnDestroy {
   constructor(
     private readonly gameStateServ: GameStateService,
     private readonly controlsServ: ControlsService,
-    private readonly historyServ: HistoryService
+    private readonly historyServ: HistoryService,
+    private readonly timerServ: TimerService,
   ) {
     this.registerSubscriptions();
+
+    /*
+  level: Levels;
+  timestring: Timestring;
+  history: HistoryBoard[];
+  board: Board;
+  mistakes: number;
+  selectedField: Field;
+}
+
+    */
   }
 
   ngOnDestroy(): void {
@@ -61,6 +93,7 @@ export class BoardService implements OnDestroy {
       this.fieldClickSub$,
       this.numberClickSub$,
       this.featureClickSub$,
+      this.selectedFieldSub$,
     ];
   }
 
@@ -75,13 +108,13 @@ export class BoardService implements OnDestroy {
     }
 
     if (featureClickEvent.feature === 'erase') {
-      const addr: Address = this.selectedField.address;
+      const addr: Address = this._selectedField.address;
       const isUserValue = this.board[addr.row][addr.col].isInitialValue === false;
       if (isUserValue) {
         const clearedField = new BoardBuilder({ board: this.board }).unselectAllFields().eraseField(addr).get();
-        this.historyServ.add(clearedField, this.selectedField);
+        this.historyServ.add(clearedField, this._selectedField);
         this.setBoard(clearedField);
-        this.gameStateServ.onBoardFieldClick({ ...this.selectedField, ...{ value: 0, highlight: false } });
+        this.gameStateServ.onBoardFieldClick({ ...this._selectedField, ...{ value: 0, highlight: false } });
       }
     }
 
@@ -95,40 +128,41 @@ export class BoardService implements OnDestroy {
   }
 
   private onNumberClick(numberClickEvent: NumberClickEvent): void {
-    const notInitialValue = !this.selectedField.isInitialValue;
-    const notCorrectValue = !this.board[this.selectedField.address.row][this.selectedField.address.col].isCorrectValue;
+    const notInitialValue = !this._selectedField.isInitialValue;
+    const notCorrectValue =
+      !this.board[this._selectedField.address.row][this._selectedField.address.col].isCorrectValue;
     const notNotesMode = this.inputMode !== 'notes';
     if (notInitialValue && notCorrectValue && notNotesMode) {
       this.setBoard(
         new BoardBuilder({ board: this._board })
           .unselectAllFields()
-          .updateFieldInBoard({ address: this.selectedField.address, value: numberClickEvent.number })
-          .highlightFields(this.selectedField.address)
+          .updateFieldInBoard({ address: this._selectedField.address, value: numberClickEvent.number })
+          .highlightFields(this._selectedField.address)
           .selectFieldsByNumber(numberClickEvent.number)
           .get()
       );
-      this.historyServ.add(new BoardBuilder({ board: this._board }).unselectAllFields().get(), this.selectedField);
-      this.selectedField = { ...this.selectedField, value: numberClickEvent.number };
+      this.historyServ.add(new BoardBuilder({ board: this._board }).unselectAllFields().get(), this._selectedField);
+      this.setSelectedField({ ...this._selectedField, value: numberClickEvent.number });
     } else if (!notNotesMode) {
       this.setBoard(
         new BoardBuilder({ board: this._board })
-          .unselectAllFields(this.selectedField.address)
+          .unselectAllFields(this._selectedField.address)
           .updateFieldInBoard({
-            address: this.selectedField.address,
-            notes: new NotesBuilder(this.selectedField.notes.filter((x) => x.active === true).map((x) => x.value))
+            address: this._selectedField.address,
+            notes: new NotesBuilder(this._selectedField.notes.filter((x) => x.active === true).map((x) => x.value))
               .update([numberClickEvent.number])
               .get(),
           })
-          .highlightFields(this.selectedField.address)
+          .highlightFields(this._selectedField.address)
           .get()
       );
-      this.historyServ.add(new BoardBuilder({ board: this._board }).unselectAllFields().get(), this.selectedField);
-      this.selectedField = {
-        ...this.selectedField,
-        notes: new NotesBuilder(this.selectedField.notes.filter((x) => x.active === true).map((x) => x.value))
+      this.historyServ.add(new BoardBuilder({ board: this._board }).unselectAllFields().get(), this._selectedField);
+      this.setSelectedField({
+        ...this._selectedField,
+        notes: new NotesBuilder(this._selectedField.notes.filter((x) => x.active === true).map((x) => x.value))
           .update([numberClickEvent.number])
           .get(),
-      };
+      });
     }
   }
 
@@ -141,7 +175,7 @@ export class BoardService implements OnDestroy {
           .selectFieldsByNumber(field.value)
           .get()
       );
-      this.selectedField = field;
+      this.setSelectedField(field);
     } else {
       this.setBoard(
         new BoardBuilder({ board: this.board })
@@ -153,7 +187,7 @@ export class BoardService implements OnDestroy {
           })
           .get()
       );
-      this.selectedField = field;
+      this.setSelectedField(field);
     }
   }
 
@@ -170,6 +204,14 @@ export class BoardService implements OnDestroy {
 
   setBoard(board: Board): void {
     this.board$.next(board);
+  }
+
+  getSelectedField$(): Observable<Field> {
+    return this.selectedField$.asObservable();
+  }
+
+  setSelectedField(value: Field): void {
+    this.selectedField$.next(value);
   }
 
   private updateMissingNumbers(board: Board): void {
@@ -199,6 +241,6 @@ export class BoardService implements OnDestroy {
   setDefaultSelectedField(): void {
     const board = new BoardBuilder({ board: this.board }).setDefaultSelectedField().get();
     this.setBoard(board);
-    this.selectedField = board.flat().filter((f) => f.selected === true)[0];
+    this.setSelectedField(board.flat().filter((f) => f.selected === true)[0]);
   }
 }
