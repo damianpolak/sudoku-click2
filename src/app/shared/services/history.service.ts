@@ -1,32 +1,51 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Board } from 'src/app/game/board/board.types';
 import { Field } from 'src/app/game/board/field/field.types';
 import { NotesBuilder } from '../builders/notes.builder';
 import { HistoryBoard } from './history.types';
+import { BehaviorSubject, Observable, ReplaySubject, Subscription, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class HistoryService {
-  historyBoards: HistoryBoard[] = [];
+export class HistoryService implements OnDestroy {
+  private _historyBoard: HistoryBoard[] = [];
+  private readonly historyBoard$ = new BehaviorSubject<HistoryBoard[]>([]);
+  private readonly historyBoardSub$: Subscription = this.historyBoard$.subscribe((v) => (this._historyBoard = [...v]));
+
+  private get historyBoard() {
+    return this._historyBoard;
+  }
+
   constructor() {}
 
+  ngOnDestroy(): void {
+    this.historyBoardSub$.unsubscribe();
+  }
+
   add(board: Board, selectedField: Field): void {
-    this.historyBoards.push({
-      board: structuredClone(board),
-      selectedField: selectedField,
-    });
+    this.historyBoard$.next([
+      ...this._historyBoard,
+      {
+        board: structuredClone(board),
+        selectedField: selectedField,
+      },
+    ]);
+  }
+
+  get$(): Observable<HistoryBoard[]> {
+    return this.historyBoard$.asObservable();
   }
 
   private getBeforeLast(): HistoryBoard | undefined {
-    if (this.historyBoards.length > 1) {
+    if (this.historyBoard.length > 1) {
       return {
-        board: this.historyBoards.slice(-2, -1)[0].board,
-        selectedField: this.historyBoards.slice(-1)[0].selectedField,
+        board: this.historyBoard.slice(-2, -1)[0].board,
+        selectedField: this.historyBoard.slice(-1)[0].selectedField,
       };
-    } else if (this.historyBoards.length === 1) {
+    } else if (this.historyBoard.length === 1) {
       return {
-        board: this.historyBoards[0].board.map((row) => {
+        board: this.historyBoard[0].board.map((row) => {
           return row.map((field) => {
             if (!field.isInitialValue) {
               field.isCorrectValue = false;
@@ -36,19 +55,19 @@ export class HistoryService {
             return field;
           });
         }),
-        selectedField: this.historyBoards[0].selectedField,
+        selectedField: this.historyBoard[0].selectedField,
       };
     }
     return undefined;
   }
 
-  back(): HistoryBoard | undefined {
+  back(): Observable<HistoryBoard | undefined> {
     const last = this.getBeforeLast();
-    if (this.historyBoards.length > 1) {
-      this.historyBoards = this.historyBoards.splice(0, this.historyBoards.length - 1);
-    } else if (this.historyBoards.length === 1) {
-      this.historyBoards = [];
+    if (this.historyBoard.length > 1) {
+      this.historyBoard$.next(this.historyBoard.splice(0, this.historyBoard.length - 1));
+    } else if (this.historyBoard.length === 1) {
+      this.historyBoard$.next([]);
     }
-    return last;
+    return of(last);
   }
 }

@@ -19,7 +19,7 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   private boardSub$: Subscription = this.boardServ.getBoard$().subscribe((board) => {
     this._board = board;
-    console.log('Board', this._board);
+    // console.log('Board', this._board);
   });
 
   get board() {
@@ -31,7 +31,9 @@ export class BoardComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadLevelProperties();
     this.borderSquares = this.countBorderSquares(this.board);
-    this.boardServ.setDefaultSelectedField();
+    setTimeout(() => {
+      this.boardServ.setDefaultSelectedField();
+    })
   }
 
   ngOnDestroy(): void {

@@ -3,7 +3,7 @@ import { SudokuUtil } from 'src/app/shared/utils/sudoku.util';
 import { Board, BoardSet } from './board.types';
 import { GameLevel, GameStateService } from 'src/app/shared/services/game-state.service';
 import { Address, Field } from './field/field.types';
-import { BehaviorSubject, Observable, ReplaySubject, Subject, Subscription, combineLatest, map, tap, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, combineLatest, from, map, tap, withLatestFrom } from 'rxjs';
 import { BoardBuilder } from 'src/app/shared/builders/board.builder';
 import { ControlsService, FeatureClickEvent, NumberClickEvent } from '../controls/controls.service';
 import { InputMode } from 'src/app/shared/services/game-state.types';
@@ -15,30 +15,30 @@ import { TimerService } from 'src/app/shared/services/timer.service';
   providedIn: 'root',
 })
 export class BoardService implements OnDestroy {
+  private readonly defaultBaseBoard: BoardBuilder = new BoardBuilder({
+    level: this.gameStateServ.selectedLevel,
+  }).setDefaultSelectedField();
   private inputMode: InputMode = 'value';
   private _selectedField!: Field;
   private _board!: Board;
   private subscriptions$: Subscription[] = [];
 
-  private readonly selectedField$ = new ReplaySubject<Field>();
-  private readonly board$ = new BehaviorSubject<Board>(
-    new BoardBuilder({ level: this.gameStateServ.selectedLevel }).get()
-  );
+  private readonly selectedField$ = new BehaviorSubject<Field>(this.defaultBaseBoard.getSelectedFields()[0]);
+  private readonly board$ = new BehaviorSubject<Board>(this.defaultBaseBoard.get());
 
-  private boardSub$: Subscription = this.getBoard$()
+  private boardSub$: Subscription = combineLatest([this.getBoard$(), this.getSelectedField$(), this.historyServ.get$()])
     .pipe(withLatestFrom(this.timerServ.getTimestring()))
-    .subscribe(([board, timestring]) => {
-    this._board = board;
-    console.log('timestring', timestring);
-    this.gameStateServ.setGameState({
-      board: board,
-      selectedField: this._selectedField,
-      history: this.historyServ.historyBoards,
-      level: this.gameStateServ.selectedLevel,
-      timestring: timestring,
-      mistakes: 1
+    .subscribe(([[board, field, history], timestring]) => {
+      this._board = board;
+      this.gameStateServ.setGameState({
+        board: board,
+        selectedField: field,
+        history: history,
+        level: this.gameStateServ.selectedLevel,
+        timestring: timestring,
+        mistakes: 1,
+      });
     });
-  });
 
   private selectedFieldSub$: Subscription = this.getSelectedField$().subscribe((field) => {
     this._selectedField = field;
@@ -65,20 +65,9 @@ export class BoardService implements OnDestroy {
     private readonly gameStateServ: GameStateService,
     private readonly controlsServ: ControlsService,
     private readonly historyServ: HistoryService,
-    private readonly timerServ: TimerService,
+    private readonly timerServ: TimerService
   ) {
     this.registerSubscriptions();
-
-    /*
-  level: Levels;
-  timestring: Timestring;
-  history: HistoryBoard[];
-  board: Board;
-  mistakes: number;
-  selectedField: Field;
-}
-
-    */
   }
 
   ngOnDestroy(): void {
@@ -119,11 +108,12 @@ export class BoardService implements OnDestroy {
     }
 
     if (featureClickEvent.feature === 'back') {
-      const lastHistory = this.historyServ.back();
-      if (typeof lastHistory !== 'undefined') {
-        this.setBoard(lastHistory.board);
-        this.gameStateServ.onBoardFieldClick(lastHistory.selectedField);
-      }
+      from(this.historyServ.back()).subscribe((lastHistory) => {
+        if (typeof lastHistory !== 'undefined') {
+          this.setBoard(lastHistory.board);
+          this.gameStateServ.onBoardFieldClick(lastHistory.selectedField);
+        }
+      });
     }
   }
 
@@ -239,8 +229,7 @@ export class BoardService implements OnDestroy {
   }
 
   setDefaultSelectedField(): void {
-    const board = new BoardBuilder({ board: this.board }).setDefaultSelectedField().get();
-    this.setBoard(board);
-    this.setSelectedField(board.flat().filter((f) => f.selected === true)[0]);
+    this.setBoard(this._board);
+    this.setSelectedField(this._selectedField);
   }
 }

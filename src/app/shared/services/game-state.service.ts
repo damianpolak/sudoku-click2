@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Observable, ReplaySubject, Subject, Subscription, take, takeLast } from 'rxjs';
 import { GameState, InputMode } from './game-state.types';
 import { Board, MissingNumber } from 'src/app/game/board/board.types';
 import { Field } from 'src/app/game/board/field/field.types';
@@ -53,24 +53,28 @@ export class GameLevel implements Level {
 @Injectable({
   providedIn: 'root',
 })
-export class GameStateService {
+export class GameStateService implements OnDestroy {
   private readonly continueAvailable$ = new BehaviorSubject<boolean>(false);
   private readonly pauseState$ = new BehaviorSubject<boolean>(false);
   private readonly inputMode$ = new BehaviorSubject<InputMode>('value');
   private readonly missingNumbers$ = new Subject<MissingNumber[]>();
-  private readonly gameState$ = new ReplaySubject<Partial<GameState>>();
+  private readonly gameState$ = new Subject<Partial<GameState>>();
   private fieldClick$ = new Subject<Field>();
   private _gameState!: Partial<GameState>;
 
   private _selectedLevel: GameLevel;
 
   private gameStateSub$: Subscription = this.gameState$.subscribe(v => {
-    console.log('vvv', v);
+    console.log('State', v);
     this._gameState = v;
   });
 
   constructor() {
     this._selectedLevel = new GameLevel(Levels.MASTER);
+  }
+
+  ngOnDestroy(): void {
+    this.gameStateSub$.unsubscribe();
   }
 
   setGameState(gameState: Partial<GameState>): void {
