@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AppStateService } from '../shared/services/app-state.service';
-import { Observable, Subscription, lastValueFrom, tap } from 'rxjs';
+import { Observable, Subscription, combineLatest, lastValueFrom, tap } from 'rxjs';
 import { GameLevel, GameStateService } from '../shared/services/game-state.service';
 import { TimerService } from '../shared/services/timer.service';
-import { InputMode } from '../shared/services/game-state.types';
+import { GameState, InputMode } from '../shared/services/game-state.types';
 import { PauseModalActionType } from './pause/pause.types';
 import { HeaderComponent } from '../shared/components/header/header.component';
 
@@ -13,11 +13,21 @@ import { HeaderComponent } from '../shared/components/header/header.component';
   styleUrls: ['./game.page.scss'],
 })
 export class GamePage implements OnInit, OnDestroy {
+  private _gameState!: GameState;
   orientation$ = this.appStateServ.getScreenOrientation$();
   inputMode!: InputMode;
   isPaused!: boolean;
   level!: GameLevel;
   title: string = 'Sudoku.click';
+
+  private gameStateSub$: Subscription = combineLatest([
+    this.gameStateServ.getPauseState$(),
+    this.gameStateServ.getGameState$()
+  ])
+  .subscribe(([pauseState, gameState]) => {
+    console.log('Save game state', gameState, 'Pause state', pauseState);
+    this._gameState = gameState;
+  });
 
   private inputModeSubs$: Subscription = this.gameStateServ.getInputMode$().subscribe((mode) => {
     this.inputMode = mode;
@@ -47,13 +57,20 @@ export class GamePage implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log();
+    this.gameStateServ.setPauseState(false);
   }
 
   ngOnDestroy(): void {
+    console.log('GamePage Destroy');
     this.inputModeSubs$.unsubscribe();
     this.pauseStateSub$.unsubscribe();
+    this.gameStateSub$.unsubscribe();
     this.timerServ.restart();
+  }
+
+  back(event: void): void {
+    console.log('Back to menu: ', event);
+    this.gameStateServ.setPauseState(true);
   }
 
   pause(event: boolean): void {

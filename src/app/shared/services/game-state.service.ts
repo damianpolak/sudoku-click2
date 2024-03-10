@@ -1,7 +1,7 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Observable, ReplaySubject, Subject, Subscription, combineLatest, take, takeLast, withLatestFrom } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { GameState, InputMode } from './game-state.types';
-import { Board, MissingNumber } from 'src/app/game/board/board.types';
+import { MissingNumber } from 'src/app/game/board/board.types';
 import { Field } from 'src/app/game/board/field/field.types';
 
 export enum Levels {
@@ -35,7 +35,7 @@ export class GameLevel implements Level {
 
   constructor(selectedLevel?: Levels) {
     const level = levelList.find((item) => item.name === selectedLevel);
-    if(typeof level == 'undefined') {
+    if (typeof level == 'undefined') {
       this.rows = levelList[0].rows;
       this.cols = levelList[0].cols;
       this.name = levelList[0].name;
@@ -53,42 +53,26 @@ export class GameLevel implements Level {
 @Injectable({
   providedIn: 'root',
 })
-export class GameStateService implements OnDestroy {
+export class GameStateService {
   private readonly continueAvailable$ = new BehaviorSubject<boolean>(false);
-  private readonly pauseState$ = new BehaviorSubject<boolean>(false);
+  private readonly pauseState$ = new Subject<boolean>();
   private readonly inputMode$ = new BehaviorSubject<InputMode>('value');
   private readonly missingNumbers$ = new Subject<MissingNumber[]>();
-  private readonly gameState$ = new Subject<Partial<GameState>>();
+  private readonly gameState$ = new Subject<GameState>();
   private fieldClick$ = new Subject<Field>();
-  private _gameState!: Partial<GameState>;
 
   private _selectedLevel: GameLevel;
 
-  private gameStateSub$: Subscription = combineLatest([
-    this.getPauseState$(),
-    this.getGameState$()
-  ])
-  .subscribe(([pauseState, gameState]) => {
-    console.log('Save game state', gameState, 'Pause state', pauseState);
-    this._gameState = gameState;
-  });
-
   constructor() {
+    console.log('GameStateService constructor');
     this._selectedLevel = new GameLevel(Levels.MASTER);
   }
 
-  ngOnDestroy(): void {
-    this.gameStateSub$.unsubscribe();
+  setGameState(gameState: GameState): void {
+    this.gameState$.next(gameState);
   }
 
-  setGameState(gameState: Partial<GameState>): void {
-    this.gameState$.next({
-      ...this._gameState,
-      ...gameState
-    })
-  }
-
-  getGameState$(): Observable<Partial<GameState>> {
+  getGameState$(): Observable<GameState> {
     return this.gameState$.asObservable();
   }
 
@@ -136,5 +120,4 @@ export class GameStateService implements OnDestroy {
   setMissingNumbers(value: MissingNumber[]): void {
     this.missingNumbers$.next(value);
   }
-
 }

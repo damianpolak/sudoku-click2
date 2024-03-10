@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Board } from 'src/app/game/board/board.types';
 import { Field } from 'src/app/game/board/field/field.types';
 import { NotesBuilder } from '../builders/notes.builder';
@@ -8,10 +8,10 @@ import { BehaviorSubject, Observable, ReplaySubject, Subscription, of } from 'rx
 @Injectable({
   providedIn: 'root',
 })
-export class HistoryService implements OnDestroy {
+export class HistoryService {
   private _historyBoard: HistoryBoard[] = [];
   private readonly historyBoard$ = new BehaviorSubject<HistoryBoard[]>([]);
-  private readonly historyBoardSub$: Subscription = this.historyBoard$.subscribe((v) => (this._historyBoard = [...v]));
+  private historyBoardSub$: Subscription | undefined;
 
   private get historyBoard() {
     return this._historyBoard;
@@ -19,8 +19,12 @@ export class HistoryService implements OnDestroy {
 
   constructor() {}
 
-  ngOnDestroy(): void {
-    this.historyBoardSub$.unsubscribe();
+  create(): void {
+    if (!this.historyBoardSub$) {
+      console.log('=== create history');
+      this._historyBoard = [];
+      this.historyBoardSub$ = this.historyBoard$.subscribe((v) => (this._historyBoard = [...v]));
+    }
   }
 
   add(board: Board, selectedField: Field): void {
@@ -31,6 +35,10 @@ export class HistoryService implements OnDestroy {
         selectedField: selectedField,
       },
     ]);
+  }
+
+  protected clear(): void {
+    this.historyBoard$.next([]);
   }
 
   get$(): Observable<HistoryBoard[]> {
@@ -69,5 +77,14 @@ export class HistoryService implements OnDestroy {
       this.historyBoard$.next([]);
     }
     return of(last);
+  }
+
+  destroy(): void {
+    if (this.historyBoardSub$) {
+      console.log('=== history destroy');
+      this.clear();
+      this.historyBoardSub$.unsubscribe();
+      this.historyBoardSub$ = undefined;
+    }
   }
 }

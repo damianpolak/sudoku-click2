@@ -17,7 +17,7 @@ export class HeaderComponent implements OnInit {
 
   @Output() pauseClickEvent = new EventEmitter<boolean>();
   @Output() optionsClickEvent = new EventEmitter<boolean>();
-  @Output() backClickEvent = new EventEmitter<boolean>();
+  @Output() backClickEvent = new EventEmitter<void>();
 
   @Input() isPaused: boolean = false;
   isOptionsMenuVisible: boolean = false;
@@ -30,6 +30,7 @@ export class HeaderComponent implements OnInit {
   onBack(): void {
     if(this.showBack && this.backPath !== '') {
       this.navCtrl.navigateBack(this.backPath);
+      this.backClickEvent.emit();
     }
   }
 

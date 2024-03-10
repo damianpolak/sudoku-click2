@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { SudokuUtil } from 'src/app/shared/utils/sudoku.util';
 import { Board, BoardSet } from './board.types';
 import { GameLevel, GameStateService } from 'src/app/shared/services/game-state.service';
@@ -11,9 +11,7 @@ import { HistoryService } from 'src/app/shared/services/history.service';
 import { NotesBuilder } from 'src/app/shared/builders/notes.builder';
 import { TimerService } from 'src/app/shared/services/timer.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class BoardService implements OnDestroy {
   private readonly defaultBaseBoard: BoardBuilder = new BoardBuilder({
     level: this.gameStateServ.selectedLevel,
@@ -67,10 +65,13 @@ export class BoardService implements OnDestroy {
     private readonly historyServ: HistoryService,
     private readonly timerServ: TimerService
   ) {
+    this.historyServ.create();
     this.registerSubscriptions();
   }
 
   ngOnDestroy(): void {
+    console.log('BoardService Destroy');
+    this.historyServ.destroy();
     this.unsubscribeSubscriptions();
   }
 
