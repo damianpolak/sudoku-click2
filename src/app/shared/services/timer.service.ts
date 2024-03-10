@@ -70,11 +70,15 @@ export class TimerService {
     }
   }
 
-  restart(): void {
+  restart(startAtTimestring?: Timestring): void {
     this.stop();
-    this._hours = 0;
-    this._minutes = 0;
-    this._seconds = 0;
+    if(typeof startAtTimestring !== 'undefined') {
+      this.overrideTimeValues(startAtTimestring);
+    } else {
+      this._hours = 0;
+      this._minutes = 0;
+      this._seconds = 0;
+    }
     this.setTimestring();
   }
 
