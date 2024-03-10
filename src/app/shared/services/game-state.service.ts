@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Observable, ReplaySubject, Subject, Subscription, take, takeLast } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject, Subject, Subscription, combineLatest, take, takeLast, withLatestFrom } from 'rxjs';
 import { GameState, InputMode } from './game-state.types';
 import { Board, MissingNumber } from 'src/app/game/board/board.types';
 import { Field } from 'src/app/game/board/field/field.types';
@@ -64,9 +64,13 @@ export class GameStateService implements OnDestroy {
 
   private _selectedLevel: GameLevel;
 
-  private gameStateSub$: Subscription = this.gameState$.subscribe(v => {
-    console.log('State', v);
-    this._gameState = v;
+  private gameStateSub$: Subscription = combineLatest([
+    this.getPauseState$(),
+    this.getGameState$()
+  ])
+  .subscribe(([pauseState, gameState]) => {
+    console.log('Save game state', gameState, 'Pause state', pauseState);
+    this._gameState = gameState;
   });
 
   constructor() {
