@@ -13,21 +13,11 @@ import { HeaderComponent } from '../shared/components/header/header.component';
   styleUrls: ['./game.page.scss'],
 })
 export class GamePage implements OnInit, OnDestroy {
-  private _gameState!: GameState;
   orientation$ = this.appStateServ.getScreenOrientation$();
   inputMode!: InputMode;
   isPaused!: boolean;
   level!: GameLevel;
   title: string = 'Sudoku.click';
-
-  private gameStateSub$: Subscription = combineLatest([
-    this.gameStateServ.getPauseState$(),
-    this.gameStateServ.getGameState$()
-  ])
-  .subscribe(([pauseState, gameState]) => {
-    console.log('Save game state', gameState, 'Pause state', pauseState);
-    this._gameState = gameState;
-  });
 
   private inputModeSubs$: Subscription = this.gameStateServ.getInputMode$().subscribe((mode) => {
     this.inputMode = mode;
@@ -64,7 +54,6 @@ export class GamePage implements OnInit, OnDestroy {
     console.log('GamePage Destroy');
     this.inputModeSubs$.unsubscribe();
     this.pauseStateSub$.unsubscribe();
-    this.gameStateSub$.unsubscribe();
     this.timerServ.restart();
   }
 

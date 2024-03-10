@@ -7,7 +7,7 @@
 
 ion-content {
   .container,
-  .buttons {
+  .buttons-section {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -16,15 +16,27 @@ ion-content {
     justify-content: space-evenly;
     height: 100%;
 
-    .buttons {
+    .buttons-section {
       width: 100%;
 
+      $width: 80%;
+      $maxWidthVw: 30vw;
+      $maxWidthVh: 30vh;
+
+      .continue-info {
+        display: flex;
+        flex-direction: column;
+        width: $width;
+        max-width: max($maxWidthVh, $maxWidthVw);
+        text-align: left;
+      }
+
       @media (orientation: portrait) {
-        @include button(80%, 30vh);
+        @include button($width, $maxWidthVh);
       }
 
       @media (orientation: landscape) {
-        @include button(80%, 30vw);
+        @include button($width, $maxWidthVw);
       }
     }
   }
