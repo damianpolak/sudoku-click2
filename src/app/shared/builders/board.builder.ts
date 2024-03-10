@@ -98,6 +98,12 @@ export class BoardBuilder {
       .filter((x) => x.value === value);
   }
 
+  getSelectedFields(): Field[] {
+    return structuredClone(this._board)
+      .flat()
+      .filter((x) => x.selected);
+  }
+
   unselectAllFields(exceptAddress?: Address): this {
     const exceptAddr = (source: Address | undefined, dest: Address) => {
       if (typeof source == 'undefined') {
