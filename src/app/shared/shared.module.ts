@@ -8,6 +8,6 @@ import { FirstUpperPipe } from './pipes/first-upper.pipe';
 @NgModule({
   declarations: [HeaderComponent, NumberButtonComponent, FirstUpperPipe],
   imports: [CommonModule, IonicModule],
-  exports: [HeaderComponent, NumberButtonComponent],
+  exports: [HeaderComponent, NumberButtonComponent, FirstUpperPipe],
 })
 export class SharedModule {}
