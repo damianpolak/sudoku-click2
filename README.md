@@ -18,6 +18,11 @@ ng serve --port 1338
 ```
 
 ## Features to do:
+- Create tip feature
+- Show wrong numbers in cross selection (red tint backgrounds)
+- Restart game
+- Fix history when continue game
+- Create and change control icons for own custom
 - Change animation on number button
 - Create sudoku.click logo and icons
 - Create statistic/rank page
