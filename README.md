@@ -18,6 +18,13 @@ ng serve --port 1338
 ```
 
 ## Features to do:
+- Change animation on number button
+- Create sudoku.click logo and icons
+- Create statistic/rank page
+- Change continue text
+- Create three additional themes (light and two custom)
+- Make theme menu on app-header
+- Create capacitor splash screen
 - Change color and background of numbered buttons when change input mode (notes enabled/disabled)
 - Option for enable/disable opacity or hidden/visible numbered button when all available numbers have been used
 - Set larger font size on app-status-bar (top info bar)
@@ -29,6 +36,7 @@ ng serve --port 1338
 - Create finish game menu
 - Create scoring feature
 - Mistakes handling and finishing game
+- Lock rotating screen on smartphones, enabled on tables
 
 ### Author
 Damian Polak @ 2023-2024
