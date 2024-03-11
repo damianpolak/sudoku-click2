@@ -17,10 +17,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   private level!: GameLevel;
   private borderSquares: Array<Record<string, string>> = [];
 
-  private boardSub$: Subscription = this.boardServ.getBoard$().subscribe((board) => {
-    this._board = board;
-    // console.log('Board', this._board);
-  });
+  private boardSub$: Subscription = this.boardServ.getBoard$().subscribe((board) => this._board = board);
 
   get board() {
     return this._board;
@@ -31,9 +28,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadLevelProperties();
     this.borderSquares = this.countBorderSquares(this.board);
-    setTimeout(() => {
-      this.boardServ.setDefaultSelectedField();
-    })
+    this.boardServ.setDefaultSelectedField();
   }
 
   ngOnDestroy(): void {

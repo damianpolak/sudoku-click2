@@ -3,7 +3,7 @@ import { ActionSheetButton, ActionSheetOptions, NavController } from '@ionic/ang
 import { GameStateService, Levels } from '../shared/services/game-state.service';
 import { ConversionUtil } from '../shared/utils/conversion.util';
 import { Subscription, combineLatest } from 'rxjs';
-import { GameState } from '../shared/services/game-state.types';
+import { GameStartType, GameState } from '../shared/services/game-state.types';
 import { Timestring } from '../shared/services/timer.types';
 
 type ContinueOptions = {
@@ -18,7 +18,6 @@ type ContinueOptions = {
 })
 export class HomePage implements OnInit, OnDestroy {
   isMenuLevelOpen = false;
-  // canContinue$ = this.gameStateServ.getContinueState$();
   canContinue: boolean = false;
   continueOptions!: ContinueOptions;
   menuLevelTitle = 'Choose difficulty level';
@@ -30,10 +29,9 @@ export class HomePage implements OnInit, OnDestroy {
     this.gameStateServ.getGameState$()
   ])
   .subscribe(([pauseState, gameState]) => {
-    this._gameState = gameState;
-    console.log('Save game state', gameState, 'Pause state', pauseState);
-    this.gameStateServ.saveGameState(this._gameState);
     this.canContinue = true;
+    this._gameState = gameState;
+    this.gameStateServ.saveGameState(this._gameState);
     this.setContinueOptions(gameState);
   });
 
@@ -48,12 +46,16 @@ export class HomePage implements OnInit, OnDestroy {
     this.gameStateSub$.unsubscribe();
   }
 
-  loadGameStateFromStorage(): void {
+  private loadGameStateFromStorage(): void {
     const gameState = this.gameStateServ.loadGameState();
     if(gameState) {
-      console.log('Loaded game state', gameState);
       this.canContinue = true;
+      this._gameState = gameState;
       this.setContinueOptions(gameState);
+      this.gameStateServ.setGameStartMode({
+        type: GameStartType.CONTINUE,
+        gameState: gameState,
+      });
     } else {
       this.canContinue = false;
     }
@@ -68,11 +70,18 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   onContinue(): void {
+    this.gameStateServ.setGameStartMode({
+      type: GameStartType.CONTINUE,
+      gameState: this._gameState,
+    });
     this.navCtrl.navigateForward('game');
   }
 
   onNewGame(): void {
     this.gameStateServ.clearGameState();
+    this.gameStateServ.setGameStartMode({
+      type: GameStartType.NEW_GAME
+    });
     this.navCtrl.navigateForward('game');
   }
 

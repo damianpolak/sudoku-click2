@@ -1,18 +1,17 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { AppStateService } from '../shared/services/app-state.service';
-import { Observable, Subscription, combineLatest, lastValueFrom, tap } from 'rxjs';
+import { Subscription, tap } from 'rxjs';
 import { GameLevel, GameStateService } from '../shared/services/game-state.service';
 import { TimerService } from '../shared/services/timer.service';
-import { GameState, InputMode } from '../shared/services/game-state.types';
+import { InputMode } from '../shared/services/game-state.types';
 import { PauseModalActionType } from './pause/pause.types';
-import { HeaderComponent } from '../shared/components/header/header.component';
 
 @Component({
   selector: 'app-game',
   templateUrl: './game.page.html',
   styleUrls: ['./game.page.scss'],
 })
-export class GamePage implements OnInit, OnDestroy {
+export class GamePage implements OnDestroy {
   orientation$ = this.appStateServ.getScreenOrientation$();
   inputMode!: InputMode;
   isPaused!: boolean;
@@ -46,15 +45,10 @@ export class GamePage implements OnInit, OnDestroy {
     this.level = this.gameStateServ.selectedLevel;
   }
 
-  ngOnInit(): void {
-    this.gameStateServ.setPauseState(false);
-  }
-
   ngOnDestroy(): void {
     console.log('GamePage Destroy');
     this.inputModeSubs$.unsubscribe();
     this.pauseStateSub$.unsubscribe();
-    this.timerServ.restart();
   }
 
   back(event: void): void {

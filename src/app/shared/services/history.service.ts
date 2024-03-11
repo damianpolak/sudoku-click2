@@ -3,14 +3,14 @@ import { Board } from 'src/app/game/board/board.types';
 import { Field } from 'src/app/game/board/field/field.types';
 import { NotesBuilder } from '../builders/notes.builder';
 import { HistoryBoard } from './history.types';
-import { BehaviorSubject, Observable, ReplaySubject, Subscription, of } from 'rxjs';
+import { Observable, ReplaySubject, Subscription, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HistoryService {
   private _historyBoard: HistoryBoard[] = [];
-  private readonly historyBoard$ = new BehaviorSubject<HistoryBoard[]>([]);
+  private readonly historyBoard$ = new ReplaySubject<HistoryBoard[]>();
   private historyBoardSub$: Subscription | undefined;
 
   private get historyBoard() {
@@ -19,10 +19,14 @@ export class HistoryService {
 
   constructor() {}
 
-  create(): void {
+  create(history?: HistoryBoard[]): void {
     if (!this.historyBoardSub$) {
-      console.log('=== create history');
-      this._historyBoard = [];
+      this._historyBoard = history ? history : [];
+      this.historyBoardSub$ = this.historyBoard$.subscribe((v) => (this._historyBoard = [...v]));
+      this.clear();
+    } else {
+      this.destroy();
+      this._historyBoard = history ? history : [];
       this.historyBoardSub$ = this.historyBoard$.subscribe((v) => (this._historyBoard = [...v]));
     }
   }
@@ -81,8 +85,7 @@ export class HistoryService {
 
   destroy(): void {
     if (this.historyBoardSub$) {
-      console.log('=== history destroy');
-      this.clear();
+      this._historyBoard = [];
       this.historyBoardSub$.unsubscribe();
       this.historyBoardSub$ = undefined;
     }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { GameState, InputMode } from './game-state.types';
+import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
+import { GameStartMode, GameStartType, GameState, InputMode } from './game-state.types';
 import { MissingNumber } from 'src/app/game/board/board.types';
 import { Field } from 'src/app/game/board/field/field.types';
 
@@ -54,18 +54,21 @@ export class GameLevel implements Level {
   providedIn: 'root',
 })
 export class GameStateService {
-  // private readonly continueAvailable$ = new BehaviorSubject<boolean>(false);
-
   /**
    * Game state local storage key
    */
   private static readonly GAME_STATE_KEY = 'GAME_STATE' as const;
 
+  private readonly gameStartMode$ = new BehaviorSubject<GameStartMode>(
+    this.loadGameState()
+      ? { type: GameStartType.CONTINUE, gameState: this.loadGameState() }
+      : { type: GameStartType.NEW_GAME }
+  );
   private readonly pauseState$ = new Subject<boolean>();
   private readonly inputMode$ = new BehaviorSubject<InputMode>('value');
   private readonly missingNumbers$ = new Subject<MissingNumber[]>();
   private readonly gameState$ = new Subject<GameState>();
-  private fieldClick$ = new Subject<Field>();
+  private readonly fieldClick$ = new Subject<Field>();
 
   private _selectedLevel: GameLevel;
 
@@ -83,7 +86,6 @@ export class GameStateService {
   }
 
   setPauseState(pause: boolean): void {
-    // this.continueAvailable$.next(pause);
     this.pauseState$.next(pause);
   }
 
@@ -99,9 +101,13 @@ export class GameStateService {
     return this._selectedLevel;
   }
 
-  // getContinueState$(): Observable<boolean> {
-  //   return this.continueAvailable$.asObservable();
-  // }
+  getGameStartMode$(): Observable<GameStartMode> {
+    return this.gameStartMode$.asObservable();
+  }
+
+  setGameStartMode(value: GameStartMode): void {
+    this.gameStartMode$.next(value);
+  }
 
   setInputMode(mode: InputMode): void {
     this.inputMode$.next(mode);
@@ -130,7 +136,7 @@ export class GameStateService {
   saveGameState(gamestate: GameState): void {
     try {
       localStorage.setItem(GameStateService.GAME_STATE_KEY, JSON.stringify(gamestate));
-    } catch(e) {
+    } catch (e) {
       console.log('Cannot save game state');
     }
   }
@@ -139,7 +145,7 @@ export class GameStateService {
     try {
       const data = localStorage.getItem(GameStateService.GAME_STATE_KEY);
       return data !== null ? JSON.parse(data) : undefined;
-    } catch(e) {
+    } catch (e) {
       console.log('An error occured when trying to load game state.');
       return undefined;
     }

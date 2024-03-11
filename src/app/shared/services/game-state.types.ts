@@ -1,8 +1,8 @@
-import { Board } from "src/app/game/board/board.types";
-import { GameLevel, Levels } from "./game-state.service";
-import { HistoryBoard } from "./history.types";
-import { Timestring } from "./timer.types";
-import { Field } from "src/app/game/board/field/field.types";
+import { Board } from 'src/app/game/board/board.types';
+import { GameLevel } from './game-state.service';
+import { HistoryBoard } from './history.types';
+import { Timestring } from './timer.types';
+import { Field } from 'src/app/game/board/field/field.types';
 
 export type InputMode = 'value' | 'notes';
 
@@ -13,4 +13,14 @@ export type GameState = {
   board: Board;
   mistakes: number;
   selectedField: Field;
+};
+
+export enum GameStartType {
+  CONTINUE = 'CONTINUE',
+  NEW_GAME = 'NEW_GAME',
 }
+
+export type GameStartMode = {
+  type: GameStartType;
+  gameState?: GameState;
+};

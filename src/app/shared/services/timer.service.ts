@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription, interval, skipWhile } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, interval } from 'rxjs';
 import { Timestring } from './timer.types';
-
 
 @Injectable({
   providedIn: 'root',
@@ -47,13 +46,13 @@ export class TimerService {
   }
 
   start(startAtTimestring?: Timestring): void {
-    if(typeof startAtTimestring !== 'undefined') {
+    if (typeof startAtTimestring !== 'undefined') {
       this.overrideTimeValues(startAtTimestring);
     }
 
     if (!this.timerSubs$) {
       if (this._finished) {
-        this.restart();
+        this.restart(startAtTimestring);
       }
 
       this._finished = false;
@@ -72,7 +71,7 @@ export class TimerService {
 
   restart(startAtTimestring?: Timestring): void {
     this.stop();
-    if(typeof startAtTimestring !== 'undefined') {
+    if (typeof startAtTimestring !== 'undefined') {
       this.overrideTimeValues(startAtTimestring);
     } else {
       this._hours = 0;
@@ -106,14 +105,15 @@ export class TimerService {
   private overrideTimeValues(timestring: Timestring): void {
     const numstrToNumber = (value: string) => {
       return Number.isNaN(Number(value)) ? 0 : Number(value);
-    }
+    };
 
     try {
-      const splittedTimestring = timestring.split(':');
-      this._hours = numstrToNumber(splittedTimestring[0]);
-      this._minutes = numstrToNumber(splittedTimestring[1]);
-      this._seconds = numstrToNumber(splittedTimestring[2]);
-    } catch(e) {
+      const splittedValues = timestring.split(':');
+      const timestringArray = splittedValues.length < 3 ? [...['00'], ...splittedValues] : splittedValues;
+      this._hours = numstrToNumber(timestringArray[0]);
+      this._minutes = numstrToNumber(timestringArray[1]);
+      this._seconds = numstrToNumber(timestringArray[2]);
+    } catch (e) {
       throw new RangeError('Something is wrong with saved time values.');
     }
   }

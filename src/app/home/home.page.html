@@ -2,15 +2,16 @@
 
 <ion-content>
   <div class="container">
-
     <div class="buttons-section">
-      <div class="continue-info" [ngStyle]="{ visibility: !canContinue ? 'hidden' : 'visible' }">
-        <small>{{ continueOptions.level | firstUpper }} difficulty, {{ continueOptions.time}}, {{ continueOptions.mistakes + '/3'}}</small>
+      @if(canContinue) {
+      <div class="continue-info">
+        <small
+          >{{ continueOptions.level | firstUpper }} difficulty, {{ continueOptions.time}}, {{ continueOptions.mistakes +
+          '/3'}}</small
+        >
       </div>
+      }
       <ion-button expand="block" (click)="onContinue()" [disabled]="!canContinue">Continue</ion-button>
-      <!-- <ion-button expand="block" (click)="onContinue()" [disabled]="(canContinue$  | async)"
-        >Continue</ion-button
-      > -->
       <ion-button expand="block" (click)="openMenuLevel(true)">New game</ion-button>
     </div>
   </div>
