@@ -1,9 +1,8 @@
-$header: 44px;
+$header: var(--header-size);
 $vheight: calc(95vh - $header);
 $vwidth: calc(95vw - $header);
 $vhDiff: 20.3vh;
 $vwDiff: 10vw;
-
 
 @mixin grid($size, $unit) {
   display: grid;
