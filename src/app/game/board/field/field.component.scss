@@ -24,7 +24,7 @@
 }
 
 :host {
-  transition: 0.3s;
+  // transition: 0.3s;
   background-color: var(--ion-board-background);
   & .field-value {
     font-size: 1.2em;
