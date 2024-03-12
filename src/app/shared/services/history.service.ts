@@ -1,52 +1,42 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Board } from 'src/app/game/board/board.types';
 import { Field } from 'src/app/game/board/field/field.types';
 import { NotesBuilder } from '../builders/notes.builder';
 import { HistoryBoard } from './history.types';
-import { Observable, ReplaySubject, Subscription, of } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject, Subject, Subscription, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HistoryService {
   private _historyBoard: HistoryBoard[] = [];
-  private readonly historyBoard$ = new ReplaySubject<HistoryBoard[]>();
-  private historyBoardSub$: Subscription | undefined;
-
+  private readonly historyBoard$: BehaviorSubject<HistoryBoard[]> = new BehaviorSubject<HistoryBoard[]>([]);
+  private historyBoardSub$!: Subscription;
   private get historyBoard() {
     return this._historyBoard;
   }
 
   constructor() {}
 
-  create(history?: HistoryBoard[]): void {
-    if (!this.historyBoardSub$) {
-      this._historyBoard = history ? history : [];
-      this.historyBoardSub$ = this.historyBoard$.subscribe((v) => (this._historyBoard = [...v]));
-      this.clear();
-    } else {
-      this.destroy();
-      this._historyBoard = history ? history : [];
-      this.historyBoardSub$ = this.historyBoard$.subscribe((v) => (this._historyBoard = [...v]));
-    }
-  }
-
-  add(board: Board, selectedField: Field): void {
-    this.historyBoard$.next([
-      ...this._historyBoard,
-      {
-        board: structuredClone(board),
-        selectedField: selectedField,
-      },
-    ]);
-  }
-
-  protected clear(): void {
-    this.historyBoard$.next([]);
+  add(history: HistoryBoard[]): void {
+    this.historyBoard$.next([...this._historyBoard, ...history]);
   }
 
   get$(): Observable<HistoryBoard[]> {
     return this.historyBoard$.asObservable();
+  }
+
+  create(): void {
+    if (!this.historyBoardSub$ || this.historyBoardSub$.closed) {
+      this.historyBoardSub$ = this.historyBoard$.subscribe((v) => {
+        this._historyBoard = v;
+      });
+    }
+  }
+
+  destroy(): void {
+    this._historyBoard = [];
+    this.historyBoardSub$.unsubscribe();
   }
 
   private getBeforeLast(): HistoryBoard | undefined {
@@ -81,13 +71,5 @@ export class HistoryService {
       this.historyBoard$.next([]);
     }
     return of(last);
-  }
-
-  destroy(): void {
-    if (this.historyBoardSub$) {
-      this._historyBoard = [];
-      this.historyBoardSub$.unsubscribe();
-      this.historyBoardSub$ = undefined;
-    }
   }
 }

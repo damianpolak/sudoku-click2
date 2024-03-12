@@ -21,7 +21,7 @@ export class BoardService implements OnDestroy {
           level: startMode.gameState?.level,
         });
         this.timerServ.start(startMode.gameState?.timestring);
-        this.historyServ.create(startMode.gameState?.history);
+        this.historyServ.add(startMode.gameState ? startMode.gameState.history : []);
 
         break;
       case GameStartType.NEW_GAME:
@@ -29,7 +29,7 @@ export class BoardService implements OnDestroy {
           level: this.gameStateServ.selectedLevel,
         }).setDefaultSelectedField();
         this.timerServ.start('00:00:00');
-        this.historyServ.create();
+        this.historyServ.add([]);
         break;
     }
     this.gameStateServ.setPauseState(false);
@@ -97,12 +97,13 @@ export class BoardService implements OnDestroy {
   ) {
     console.log('BoardService Constructor');
     this.registerSubscriptions();
+    this.historyServ.create();
   }
 
   ngOnDestroy(): void {
     console.log('BoardService Destroy');
-    // this.historyServ.destroy();
     this.unsubscribeSubscriptions();
+    this.historyServ.destroy();
   }
 
   private registerSubscriptions(): void {
@@ -134,7 +135,7 @@ export class BoardService implements OnDestroy {
       const isUserValue = this.board[addr.row][addr.col].isInitialValue === false;
       if (isUserValue) {
         const clearedField = new BoardBuilder({ board: this.board }).unselectAllFields().eraseField(addr).get();
-        this.historyServ.add(clearedField, this._selectedField);
+        this.historyServ.add([{board: clearedField, selectedField: this._selectedField}]);
         this.setBoard(clearedField);
         this.gameStateServ.onBoardFieldClick({ ...this._selectedField, ...{ value: 0, highlight: false } });
       }
@@ -164,7 +165,7 @@ export class BoardService implements OnDestroy {
           .selectFieldsByNumber(numberClickEvent.number)
           .get()
       );
-      this.historyServ.add(new BoardBuilder({ board: this._board }).unselectAllFields().get(), this._selectedField);
+      this.historyServ.add([{board: new BoardBuilder({ board: this._board }).unselectAllFields().get(), selectedField: this._selectedField}]);
       this.setSelectedField({ ...this._selectedField, value: numberClickEvent.number });
     } else if (!notNotesMode) {
       this.setBoard(
@@ -179,7 +180,7 @@ export class BoardService implements OnDestroy {
           .highlightFields(this._selectedField.address)
           .get()
       );
-      this.historyServ.add(new BoardBuilder({ board: this._board }).unselectAllFields().get(), this._selectedField);
+      this.historyServ.add([{board: new BoardBuilder({ board: this._board }).unselectAllFields().get(), selectedField: this._selectedField}]);
       this.setSelectedField({
         ...this._selectedField,
         notes: new NotesBuilder(this._selectedField.notes.filter((x) => x.active === true).map((x) => x.value))
