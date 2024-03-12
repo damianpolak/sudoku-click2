@@ -9,6 +9,7 @@ module.exports = {
         'fix',
         'docs',
         'config',
+        'comment',
         'chore',
         'style',
         'refactor',
