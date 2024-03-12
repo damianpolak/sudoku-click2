@@ -3,7 +3,7 @@ import { AppStateService } from '../shared/services/app-state.service';
 import { Subscription, tap } from 'rxjs';
 import { GameLevel, GameStateService } from '../shared/services/game-state.service';
 import { TimerService } from '../shared/services/timer.service';
-import { InputMode } from '../shared/services/game-state.types';
+import { GameStartType, InputMode } from '../shared/services/game-state.types';
 import { PauseModalActionType } from './pause/pause.types';
 
 @Component({
@@ -63,7 +63,9 @@ export class GamePage implements OnDestroy {
   onPauseModalDismiss(event: PauseModalActionType): void {
     switch (event) {
       case 'RESTART':
-        console.log('Game is restarted');
+        this.gameStateServ.setGameStartMode({
+          type: GameStartType.RESTART_GAME
+        });
         break;
       default:
         this.gameStateServ.setPauseState(false);

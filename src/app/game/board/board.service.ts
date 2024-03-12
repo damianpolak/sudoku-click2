@@ -6,34 +6,16 @@ import { Address, Field } from './field/field.types';
 import { BehaviorSubject, Observable, Subscription, combineLatest, from, map, tap, withLatestFrom } from 'rxjs';
 import { BoardBuilder } from 'src/app/shared/builders/board.builder';
 import { ControlsService, FeatureClickEvent, NumberClickEvent } from '../controls/controls.service';
-import { GameStartType, InputMode } from 'src/app/shared/services/game-state.types';
+import { GameStartMode, GameStartType, InputMode } from 'src/app/shared/services/game-state.types';
 import { HistoryService } from 'src/app/shared/services/history.service';
 import { NotesBuilder } from 'src/app/shared/builders/notes.builder';
 import { TimerService } from 'src/app/shared/services/timer.service';
 
 @Injectable()
 export class BoardService implements OnDestroy {
-  private gameStartModeSub$: Subscription = this.gameStateServ.getGameStartMode$().subscribe((startMode) => {
-    switch (startMode.type) {
-      case GameStartType.CONTINUE:
-        this.defaultBaseBoard = new BoardBuilder({
-          board: startMode.gameState?.board,
-          level: startMode.gameState?.level,
-        });
-        this.timerServ.start(startMode.gameState?.timestring);
-        this.historyServ.add(startMode.gameState ? startMode.gameState.history : []);
-
-        break;
-      case GameStartType.NEW_GAME:
-        this.defaultBaseBoard = new BoardBuilder({
-          level: this.gameStateServ.selectedLevel,
-        }).setDefaultSelectedField();
-        this.timerServ.start('00:00:00');
-        this.historyServ.add([]);
-        break;
-    }
-    this.gameStateServ.setPauseState(false);
-  });
+  private readonly gameStartModeSub$: Subscription = this.gameStateServ.getGameStartMode$().pipe(tap(_ => {
+    this.gameStartModeHandler(_);
+  })).subscribe();
 
   private defaultBaseBoard!: BoardBuilder;
 
@@ -55,9 +37,8 @@ export class BoardService implements OnDestroy {
     this.getBoard$(),
     this.getSelectedField$(),
     this.historyServ.get$(),
-    this.timerServ.getTimestring()
-  ])
-  .subscribe(([board, field, history, timestring]) => {
+    this.timerServ.getTimestring(),
+  ]).subscribe(([board, field, history, timestring]) => {
     this.gameStateServ.setGameState({
       board: board,
       selectedField: field,
@@ -135,7 +116,7 @@ export class BoardService implements OnDestroy {
       const isUserValue = this.board[addr.row][addr.col].isInitialValue === false;
       if (isUserValue) {
         const clearedField = new BoardBuilder({ board: this.board }).unselectAllFields().eraseField(addr).get();
-        this.historyServ.add([{board: clearedField, selectedField: this._selectedField}]);
+        this.historyServ.add([{ board: clearedField, selectedField: this._selectedField }]);
         this.setBoard(clearedField);
         this.gameStateServ.onBoardFieldClick({ ...this._selectedField, ...{ value: 0, highlight: false } });
       }
@@ -165,7 +146,12 @@ export class BoardService implements OnDestroy {
           .selectFieldsByNumber(numberClickEvent.number)
           .get()
       );
-      this.historyServ.add([{board: new BoardBuilder({ board: this._board }).unselectAllFields().get(), selectedField: this._selectedField}]);
+      this.historyServ.add([
+        {
+          board: new BoardBuilder({ board: this._board }).unselectAllFields().get(),
+          selectedField: this._selectedField,
+        },
+      ]);
       this.setSelectedField({ ...this._selectedField, value: numberClickEvent.number });
     } else if (!notNotesMode) {
       this.setBoard(
@@ -180,7 +166,12 @@ export class BoardService implements OnDestroy {
           .highlightFields(this._selectedField.address)
           .get()
       );
-      this.historyServ.add([{board: new BoardBuilder({ board: this._board }).unselectAllFields().get(), selectedField: this._selectedField}]);
+      this.historyServ.add([
+        {
+          board: new BoardBuilder({ board: this._board }).unselectAllFields().get(),
+          selectedField: this._selectedField,
+        },
+      ]);
       this.setSelectedField({
         ...this._selectedField,
         notes: new NotesBuilder(this._selectedField.notes.filter((x) => x.active === true).map((x) => x.value))
@@ -265,5 +256,47 @@ export class BoardService implements OnDestroy {
   setDefaultSelectedField(): void {
     this.setBoard(this._board);
     this.setSelectedField(this._selectedField);
+  }
+
+  private gameStartModeHandler(mode: GameStartMode): void {
+    switch (mode.type) {
+      case GameStartType.CONTINUE:
+        this.onContinueGame(mode);
+        break;
+      case GameStartType.NEW_GAME:
+      this.onNewGame(mode);
+        break;
+
+      case GameStartType.RESTART_GAME:
+      this.onRestartGame(mode);
+        break;
+    }
+    this.gameStateServ.setPauseState(false);
+  }
+
+  private onContinueGame(mode: GameStartMode): void {
+    console.log('=== Continue');
+    this.defaultBaseBoard = new BoardBuilder({
+      board: mode.gameState?.board,
+      level: mode.gameState?.level,
+    });
+    this.timerServ.start(mode.gameState?.timestring);
+    this.historyServ.add(mode.gameState ? mode.gameState.history : []);
+  }
+
+  private onNewGame(_mode: GameStartMode): void {
+    console.log('=== New game');
+    this.defaultBaseBoard = new BoardBuilder({
+      level: this.gameStateServ.selectedLevel,
+    }).setDefaultSelectedField();
+    this.timerServ.start('00:00:00');
+    this.historyServ.add([]);
+  }
+
+  private onRestartGame(mode: GameStartMode): void {
+    console.log('=== Restart game');
+    this.timerServ.start('00:00:00');
+    this.historyServ.clear();
+    this.setBoard(new BoardBuilder({level: this.gameStateServ.selectedLevel}).setDefaultSelectedField().get());
   }
 }

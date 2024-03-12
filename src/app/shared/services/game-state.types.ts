@@ -18,6 +18,7 @@ export type GameState = {
 export enum GameStartType {
   CONTINUE = 'CONTINUE',
   NEW_GAME = 'NEW_GAME',
+  RESTART_GAME = 'RESTART_GAME'
 }
 
 export type GameStartMode = {
