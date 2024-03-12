@@ -19,6 +19,7 @@ ng serve --port 1338
 
 ## Features to do:
 - Create tip feature
+- Change back to undo and add number of history saved
 - Show wrong numbers in cross selection (red tint backgrounds)
 - Restart game
 - Fix history when continue game
