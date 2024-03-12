@@ -20,6 +20,11 @@ export class PauseComponent implements AfterViewInit, OnDestroy {
 
   buttonsSize: 'small' | 'default' | 'large' = 'default';
 
+  /**
+   * @TODO INTEGRATE WITH OPTIONS
+   */
+  backdropDismissEnabled: boolean = false;
+
   constructor(private gameStateServ: GameStateService) {}
 
   ngAfterViewInit(): void {
