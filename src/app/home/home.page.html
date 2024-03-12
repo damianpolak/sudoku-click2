@@ -5,10 +5,7 @@
     <div class="buttons-section">
       @if(canContinue) {
       <div class="continue-info">
-        <small
-          >{{ continueOptions.level | firstUpper }} difficulty, {{ continueOptions.time}}, {{ continueOptions.mistakes +
-          '/3'}}</small
-        >
+        <small>{{ continueOptions.level | firstUpper }} {{ continueOptions.time}}</small>
       </div>
       }
       <ion-button expand="block" (click)="onContinue()" [disabled]="!canContinue">Continue</ion-button>
