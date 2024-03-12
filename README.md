@@ -21,13 +21,13 @@ ng serve --port 1338
 - Create tip feature
 - Change back to undo and add number of history saved
 - Show wrong numbers in cross selection (red tint backgrounds)
-- Restart game
-- Fix history when continue game
+- ~~Restart game~~
+- ~~Fix history when continue game~~
 - Create and change control icons for own custom
 - Change animation on number button
 - Create sudoku.click logo and icons
 - Create statistic/rank page
-- Change continue text
+- ~~Change continue text~~
 - Create three additional themes (light and two custom)
 - Make theme menu on app-header
 - Create capacitor splash screen
@@ -44,5 +44,8 @@ ng serve --port 1338
 - Mistakes handling and finishing game
 - Lock rotating screen on smartphones, enabled on tables
 
+## Options section:
+- fieldAnimation ON/OFF (field.component)
+- pause backdropDismiss ON/OFF (pause.component)
 ### Author
 Damian Polak @ 2023-2024
