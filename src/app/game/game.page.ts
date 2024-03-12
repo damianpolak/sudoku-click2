@@ -61,11 +61,7 @@ export class GamePage implements OnDestroy {
   }
 
   onPauseModalDismiss(event: PauseModalActionType): void {
-    // 'CONTINUE' | 'RESTART' | 'CANCELGAME' | 'DISMISS';
     switch (event) {
-      case 'CANCELGAME':
-        console.log('Game is cancelled');
-        break;
       case 'RESTART':
         console.log('Game is restarted');
         break;

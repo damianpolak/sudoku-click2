@@ -54,8 +54,4 @@ export class PauseComponent implements AfterViewInit, OnDestroy {
   async onRestartClick(): Promise<void> {
     await this.action('RESTART');
   }
-
-  async onCancelClick(): Promise<void> {
-    await this.action('CANCELGAME');
-  }
 }
