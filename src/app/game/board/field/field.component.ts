@@ -82,6 +82,7 @@ export class FieldComponent implements OnChanges, AfterViewInit, OnDestroy {
   constructor(private gameStateServ: GameStateService, private animationCtrl: AnimationController) {}
 
   ngAfterViewInit(): void {
+    // prettier-ignore
     this.fieldAnimation = this.animationCtrl
       .create()
       .addElement(this.fieldWrapper.nativeElement)
@@ -90,31 +91,9 @@ export class FieldComponent implements OnChanges, AfterViewInit, OnDestroy {
       .keyframes([
         { offset: 0, 'box-sizing': 'border-box', transform: 'scale(1)' },
         { offset: 0.2, 'box-sizing': 'border-box', transform: 'scale(1.05)' },
-        {
-          offset: 0.4,
-          'box-sizing': 'border-box',
-          border: this.field.isCorrectValue
-            ? '3px solid var(--ion-color-success)'
-            : '3px solid var(--ion-color-danger)',
-          transform: 'scale(1.08)',
-          opacity: 0.6,
-        },
-        {
-          offset: 0.6,
-          'box-sizing': 'border-box',
-          border: this.field.isCorrectValue
-            ? '3px solid var(--ion-color-success-tint)'
-            : '3px solid var(--ion-color-danger-tint)',
-          transform: 'scale(1.11)',
-          opacity: 0.7,
-        },
-        {
-          offset: 0.8,
-          'box-sizing': 'border-box',
-          border: '3px solid var(--ion-field-selected)',
-          transform: 'scale(1.15)',
-          opacity: 0.8,
-        },
+        { offset: 0.4, 'box-sizing': 'border-box', border: this.field.isCorrectValue ? '3px solid var(--ion-color-success)' : '3px solid var(--ion-color-danger)',transform: 'scale(1.08)',opacity: 0.6,},
+        { offset: 0.6,'box-sizing': 'border-box',border: this.field.isCorrectValue ? '3px solid var(--ion-color-success-tint)' : '3px solid var(--ion-color-danger-tint)', transform: 'scale(1.11)', opacity: 0.7,},
+        { offset: 0.8, 'box-sizing': 'border-box', border: '3px solid var(--ion-field-selected)', transform: 'scale(1.15)', opacity: 0.8,},
         { offset: 1, 'box-sizing': 'border-box', transform: 'scale(1)' },
       ]);
     this.viewReady$.next(true);
