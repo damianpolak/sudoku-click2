@@ -1,9 +1,7 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { Board } from 'src/app/game/board/board.types';
-import { Field } from 'src/app/game/board/field/field.types';
+import { Injectable } from '@angular/core';
 import { NotesBuilder } from '../builders/notes.builder';
 import { HistoryBoard } from './history.types';
-import { BehaviorSubject, Observable, ReplaySubject, Subject, Subscription, of } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
