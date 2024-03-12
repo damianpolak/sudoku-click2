@@ -22,6 +22,10 @@ export class HistoryService {
     this.historyBoard$.next([...this._historyBoard, ...history]);
   }
 
+  clear(): void {
+    this.historyBoard$.next([]);
+  }
+
   get$(): Observable<HistoryBoard[]> {
     return this.historyBoard$.asObservable();
   }
