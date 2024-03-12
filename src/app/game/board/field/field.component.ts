@@ -28,6 +28,10 @@ export class FieldComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   @ViewChild('fieldWrapper', { static: true }) fieldWrapper!: ElementRef;
   private fieldAnimation!: Animation;
+
+  /**
+   * @TODO INTEGRATE WITH OPTIONS
+   */
   private animationsEnabled: boolean = true;
 
   private readonly viewReady$ = new Subject<boolean>();
