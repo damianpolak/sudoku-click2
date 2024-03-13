@@ -4,6 +4,10 @@ ion-header {
   ion-toolbar {
     --background: inherit;
     --border-style: 0;
+
+    ion-title {
+      --color: var(--ion-color-primary);
+    }
   }
 }
 

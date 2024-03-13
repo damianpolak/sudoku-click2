@@ -12,11 +12,11 @@
     font-size: 0.9rem;
 
     & span:nth-child(1) {
-      color: var(--ion-color-primary);
+      color: var(--ion-text-color);
     }
 
     & span:nth-child(2) {
-      color: var(--ion-color-primary-shade);
+      color: var(--ion-text-color);
       font-weight: bold;
     }
   }
