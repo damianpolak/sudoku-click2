@@ -68,7 +68,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
 
   private featuresCreate(): FeatureControl[] {
     return [
-      { name: 'Back', type: 'click', feature: 'back', icon: 'arrow-back-circle-outline' },
+      { name: 'Undo', type: 'click', feature: 'back', icon: 'arrow-back-circle-outline' },
       { name: 'Erase', type: 'click', feature: 'erase', icon: 'close-circle-outline' },
       {
         name: 'Notes',
