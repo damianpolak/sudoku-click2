@@ -19,6 +19,7 @@ ng serve --port 1338
 
 ## Features to do:
 - ~~Set default selected field when continue game~~
+- Don't select animations when put number (only background)
 - Create modal banner with animation for start, end, win, lose, restart messages
 - Create tip feature
 - Change back to undo and add number of history saved
@@ -29,6 +30,7 @@ ng serve --port 1338
 - Create new native animation on control number button
 - ~~Create new native animation on number field click~~
 - ~~Create new native animations for new game/continue, restart game~~
+- Create new native square animate when fill all numbers
 - Create sudoku.click logo and icons
 - Create statistic/rank page
 - ~~Change continue text~~
