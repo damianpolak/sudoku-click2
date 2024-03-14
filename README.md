@@ -27,8 +27,8 @@ ng serve --port 1338
 - ~~Fix history when continue game~~
 - Create and change control icons for own custom
 - Create new native animation on control number button
-- Create new native animation on number field click
-- Create new native animations for new game/continue, restart game
+- ~~Create new native animation on number field click~~
+- ~~Create new native animations for new game/continue, restart game~~
 - Create sudoku.click logo and icons
 - Create statistic/rank page
 - ~~Change continue text~~
