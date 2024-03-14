@@ -18,6 +18,7 @@ ng serve --port 1338
 ```
 
 ## Features to do:
+- ~~Set default selected field when continue game~~
 - Create modal banner with animation for start, end, win, lose, restart messages
 - Create tip feature
 - Change back to undo and add number of history saved
