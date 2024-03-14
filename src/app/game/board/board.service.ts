@@ -279,7 +279,7 @@ export class BoardService implements OnDestroy {
     this.defaultBaseBoard = new BoardBuilder({
       board: mode.gameState?.board,
       level: mode.gameState?.level,
-    });
+    }).unselectAllFields().setDefaultSelectedField();
     this.timerServ.start(mode.gameState?.timestring);
     this.historyServ.add(mode.gameState ? mode.gameState.history : []);
   }
