@@ -8,7 +8,6 @@ import {
   OnChanges,
   OnDestroy,
   SimpleChanges,
-  ViewChild,
 } from '@angular/core';
 import { Observable, Subject, combineLatest, tap } from 'rxjs';
 import { GameStateService } from 'src/app/shared/services/game-state.service';
@@ -25,8 +24,6 @@ export class FieldComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() field!: Field;
   @Input() border!: string[];
   inputMode$: Observable<InputMode> = this.gameStateServ.getInputMode$();
-
-  @ViewChild('fieldWrapper', { static: true }) fieldWrapper!: ElementRef;
   private fieldAnimation!: Animation;
 
   /**
@@ -34,11 +31,11 @@ export class FieldComponent implements OnChanges, AfterViewInit, OnDestroy {
    */
   private animationsEnabled: boolean = true;
 
-  private readonly viewReady$ = new Subject<boolean>();
+  private readonly viewReady$ = new Subject<void>();
   private readonly animate$ = new Subject<Field>();
   private readonly animateSub$ = combineLatest([this.animate$.asObservable(), this.viewReady$.asObservable()])
     .pipe(
-      tap(([field, ready]) => {
+      tap(([field]) => {
         if (field.value !== 0) {
           if (this.animationsEnabled) {
             this.fieldAnimation.play();
@@ -79,24 +76,14 @@ export class FieldComponent implements OnChanges, AfterViewInit, OnDestroy {
     });
   }
 
-  constructor(private gameStateServ: GameStateService, private animationCtrl: AnimationController) {}
+  constructor(
+    private gameStateServ: GameStateService,
+    private animationCtrl: AnimationController,
+    private ref: ElementRef
+  ) {}
 
   ngAfterViewInit(): void {
-    // prettier-ignore
-    this.fieldAnimation = this.animationCtrl
-      .create()
-      .addElement(this.fieldWrapper.nativeElement)
-      .fill('none')
-      .duration(650)
-      .keyframes([
-        { offset: 0, 'box-sizing': 'border-box', transform: 'scale(1)' },
-        { offset: 0.2, 'box-sizing': 'border-box', transform: 'scale(1.05)' },
-        { offset: 0.4, 'box-sizing': 'border-box', border: this.field.isCorrectValue ? '3px solid var(--ion-color-success)' : '3px solid var(--ion-color-danger)',transform: 'scale(1.08)',opacity: 0.6,},
-        { offset: 0.6,'box-sizing': 'border-box',border: this.field.isCorrectValue ? '3px solid var(--ion-color-success-tint)' : '3px solid var(--ion-color-danger-tint)', transform: 'scale(1.11)', opacity: 0.7,},
-        { offset: 0.8, 'box-sizing': 'border-box', border: '3px solid var(--ion-field-selected)', transform: 'scale(1.15)', opacity: 0.8,},
-        { offset: 1, 'box-sizing': 'border-box', transform: 'scale(1)' },
-      ]);
-    this.viewReady$.next(true);
+    this.setAnimation();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -110,6 +97,32 @@ export class FieldComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.animateSub$.unsubscribe();
+  }
+
+  setAnimation(): void {
+    setTimeout(() => {
+      const borderSize = Math.floor((this.ref.nativeElement as HTMLElement).clientWidth * 0.15);
+      // prettier-ignore
+      this.fieldAnimation = this.animationCtrl
+      .create()
+      .addElement(this.ref.nativeElement)
+      .fill('none')
+      .duration(550)
+      .keyframes([
+        { offset: 0.0, transform: 'scale(1.00)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
+        { offset: 0.1, transform: 'scale(1.10)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
+        { offset: 0.2, transform: 'scale(1.20)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
+        { offset: 0.3, transform: 'scale(1.30)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
+        { offset: 0.4, transform: 'scale(1.20)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
+        { offset: 0.5, transform: 'scale(1.10)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
+        { offset: 0.6, transform: 'scale(1.00)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
+        { offset: 0.7, transform: 'scale(1.10)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
+        { offset: 0.8, transform: 'scale(1.20)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
+        { offset: 0.9, transform: 'scale(1.30)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
+        { offset: 1.0, transform: 'scale(1.00)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
+      ]);
+      this.viewReady$.next();
+    }, 1000);
   }
 
   getFieldValueClass(field: Field) {
