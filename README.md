@@ -18,18 +18,21 @@ ng serve --port 1338
 ```
 
 ## Features to do:
+- Create modal banner with animation for start, end, win, lose, restart messages
 - Create tip feature
 - Change back to undo and add number of history saved
 - Show wrong numbers in cross selection (red tint backgrounds)
 - ~~Restart game~~
 - ~~Fix history when continue game~~
 - Create and change control icons for own custom
-- Change animation on number button
+- Create new native animation on control number button
+- Create new native animation on number field click
+- Create new native animations for new game/continue, restart game
 - Create sudoku.click logo and icons
 - Create statistic/rank page
 - ~~Change continue text~~
 - Create three additional themes (light and two custom)
-- Make theme menu on app-header
+- Make theme menu and icon on app-header
 - Create capacitor splash screen
 - Change color and background of numbered buttons when change input mode (notes enabled/disabled)
 - Option for enable/disable opacity or hidden/visible numbered button when all available numbers have been used
@@ -46,6 +49,7 @@ ng serve --port 1338
 
 ## Options section:
 - fieldAnimation ON/OFF (field.component)
+- boardAnimation ON/OFF
 - pause backdropDismiss ON/OFF (pause.component)
 ### Author
 Damian Polak @ 2023-2024
