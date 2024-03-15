@@ -8,6 +8,7 @@ import { BoardService } from './board.service';
 import { Animation, AnimationController } from '@ionic/angular';
 import { Animated } from 'src/app/shared/interfaces/core.interface';
 import { GameStartMode, GameStartType } from 'src/app/shared/services/game-state.types';
+import { Banner } from 'src/app/shared/components/banner/banner.types';
 
 @Component({
   selector: 'app-board',
@@ -21,11 +22,23 @@ export class BoardComponent implements Animated, OnInit, OnDestroy, AfterViewIni
   private borderSquares: Array<Record<string, string>> = [];
   private startBoardAnimation!: Animation;
   private restartBoardAnimation!: Animation;
+
+  messageBanner: Banner = {
+    show: false,
+    title: '',
+    message: '',
+  };
+
   animationsEnabled: boolean = true;
+
   private boardSub$: Subscription = this.boardServ.getBoard$().subscribe((board) => (this._board = board));
   private readonly gameStartModeSub$: Subscription = this.gameStateServ
     .getGameStartMode$()
-    .pipe(tap((gameStartMode) => this.animationHandler(gameStartMode)))
+    .pipe(
+      tap((gameStartMode) => {
+        this.animationHandler(gameStartMode);
+      })
+    )
     .subscribe();
 
   get board() {
@@ -107,12 +120,14 @@ export class BoardComponent implements Animated, OnInit, OnDestroy, AfterViewIni
       if (gameStartMode.type === GameStartType.RESTART_GAME) {
         setTimeout(async () => {
           await this.restartBoardAnimation.play();
+          this.showBanner('Restart game', 'Good luck!');
         }, 100);
       } else if (gameStartMode.type === GameStartType.NEW_GAME || gameStartMode.type === GameStartType.CONTINUE) {
         this.renderer2.setStyle(this.ref.nativeElement, 'transform', 'scale(0)');
         setTimeout(async () => {
           await this.startBoardAnimation.play();
           this.renderer2.setStyle(this.ref.nativeElement, 'transform', 'scale(1)');
+          this.showBanner(`${gameStartMode.type === GameStartType.NEW_GAME ? 'New game' : 'Continue'}`, 'Good luck!');
         }, 300);
       }
     }
@@ -158,5 +173,20 @@ export class BoardComponent implements Animated, OnInit, OnDestroy, AfterViewIni
         { offset: 0.9, transform: 'rotate(0.9turn) scale(0.9)', filter: 'blur(1.5px)' },
         { offset: 1.0, transform: 'rotate(1.0turn) scale(1.0)', filter: 'blur(0px)' },
       ]);
+  }
+
+  showBanner(title: string, message: string): void {
+    this.messageBanner = {
+      show: true,
+      title: title,
+      message: message,
+    };
+  }
+
+  onBannerClose(): void {
+    this.messageBanner = {
+      ...this.messageBanner,
+      ...{ show: false },
+    };
   }
 }

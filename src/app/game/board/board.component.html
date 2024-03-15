@@ -1,3 +1,9 @@
 @for (field of board.flat(); track trackFieldByAddress) {
 <app-field [field]="field" [border]="getBorderSquareForAddr(field.address)"></app-field>
 } @empty { Empty }
+<app-banner
+  [show]="messageBanner.show"
+  [title]="messageBanner.title"
+  [message]="messageBanner.message"
+  (bannerCloseEvent)="onBannerClose()"
+></app-banner>

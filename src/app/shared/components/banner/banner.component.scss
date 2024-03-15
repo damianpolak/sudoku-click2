@@ -1,0 +1,31 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  z-index: 9;
+
+  .window {
+    text-align: center;
+    background-color: var(--ion-color-primary-tint);
+    width: 70%;
+    padding: 1rem;
+    border-radius: 7px;
+    -webkit-box-shadow: 8px 8px 24px 7px var(--ion-banner-window-shadow);
+    -moz-box-shadow: 8px 8px 24px 7px var(--ion-banner-window-shadow);
+    box-shadow: 8px 8px 24px 7px var(--ion-banner-window-shadow);
+
+    & .title {
+      font-size: 1.3em;
+      color: var(--ion-color-primary);
+    }
+
+    & .message {
+      font-size: 1em;
+      color: var(--ion-color-text);
+    }
+  }
+}
