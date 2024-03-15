@@ -143,7 +143,7 @@ export class BoardService implements OnDestroy {
           .unselectAllFields()
           .updateFieldInBoard({ address: this._selectedField.address, value: numberClickEvent.number })
           .highlightFields(this._selectedField.address)
-          .selectFieldsByNumber(numberClickEvent.number)
+          .selectFieldsByNumber(numberClickEvent.number, { isAnimated: false })
           .get()
       );
       this.historyServ.add([
