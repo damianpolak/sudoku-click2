@@ -21,14 +21,12 @@ export class BoardComponent implements Animated, OnInit, OnDestroy, AfterViewIni
   private borderSquares: Array<Record<string, string>> = [];
   private startBoardAnimation!: Animation;
   private restartBoardAnimation!: Animation;
-
+  animationsEnabled: boolean = true;
   private boardSub$: Subscription = this.boardServ.getBoard$().subscribe((board) => (this._board = board));
   private readonly gameStartModeSub$: Subscription = this.gameStateServ
     .getGameStartMode$()
     .pipe(tap((gameStartMode) => this.animationHandler(gameStartMode)))
     .subscribe();
-
-
 
   get board() {
     return this._board;
@@ -105,16 +103,18 @@ export class BoardComponent implements Animated, OnInit, OnDestroy, AfterViewIni
   }
 
   private animationHandler(gameStartMode: GameStartMode): void {
-    if (gameStartMode.type === GameStartType.RESTART_GAME) {
-      setTimeout(async () => {
-        await this.restartBoardAnimation.play();
-      }, 100);
-    } else if (gameStartMode.type === GameStartType.NEW_GAME || gameStartMode.type === GameStartType.CONTINUE) {
-      this.renderer2.setStyle(this.ref.nativeElement, 'transform', 'scale(0)');
-      setTimeout(async () => {
-        await this.startBoardAnimation.play();
-        this.renderer2.setStyle(this.ref.nativeElement, 'transform', 'scale(1)');
-      }, 300);
+    if (this.animationsEnabled) {
+      if (gameStartMode.type === GameStartType.RESTART_GAME) {
+        setTimeout(async () => {
+          await this.restartBoardAnimation.play();
+        }, 100);
+      } else if (gameStartMode.type === GameStartType.NEW_GAME || gameStartMode.type === GameStartType.CONTINUE) {
+        this.renderer2.setStyle(this.ref.nativeElement, 'transform', 'scale(0)');
+        setTimeout(async () => {
+          await this.startBoardAnimation.play();
+          this.renderer2.setStyle(this.ref.nativeElement, 'transform', 'scale(1)');
+        }, 300);
+      }
     }
   }
 

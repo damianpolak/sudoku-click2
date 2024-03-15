@@ -14,13 +14,14 @@ import { GameStateService } from 'src/app/shared/services/game-state.service';
 import { InputMode } from 'src/app/shared/services/game-state.types';
 import { Field } from './field.types';
 import { Animation, AnimationController } from '@ionic/angular';
+import { Animated } from 'src/app/shared/interfaces/core.interface';
 
 @Component({
   selector: 'app-field',
   templateUrl: './field.component.html',
   styleUrls: ['./field.component.scss'],
 })
-export class FieldComponent implements OnChanges, AfterViewInit, OnDestroy {
+export class FieldComponent implements Animated, OnChanges, AfterViewInit, OnDestroy {
   @Input() field!: Field;
   @Input() border!: string[];
   inputMode$: Observable<InputMode> = this.gameStateServ.getInputMode$();
@@ -29,7 +30,7 @@ export class FieldComponent implements OnChanges, AfterViewInit, OnDestroy {
   /**
    * @TODO INTEGRATE WITH OPTIONS
    */
-  private animationsEnabled: boolean = true;
+  animationsEnabled: boolean = true;
 
   private readonly viewReady$ = new Subject<void>();
   private readonly animate$ = new Subject<Field>();
