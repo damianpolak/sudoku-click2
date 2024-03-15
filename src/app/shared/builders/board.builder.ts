@@ -22,6 +22,7 @@ export class BoardBuilder {
         selected: false,
         highlight: false,
         isInitialValue: false,
+        isAnimated: true,
       }).getGrid();
 
       for (let row = 0; row <= payload.level.rows - 1; row++) {
@@ -79,12 +80,13 @@ export class BoardBuilder {
     return this;
   }
 
-  selectFieldsByNumber(value: number): this {
+  selectFieldsByNumber(value: number, options: { isAnimated: boolean } = { isAnimated: true }): this {
     const address = this.getFieldsByNumber(value).map((x) => x.address);
     this._board = structuredClone(this._board).map((row) => {
       return row.map((field) => {
         if (address.some((x) => this.isAddressEqual(field.address, x))) {
           field.selected = true;
+          field.isAnimated = options.isAnimated;
         }
         return field;
       });

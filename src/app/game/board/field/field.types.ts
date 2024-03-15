@@ -9,6 +9,7 @@ export type Field = {
   highlight: boolean;
   isInitialValue: boolean;
   isCorrectValue?: boolean;
+  isAnimated: boolean;
 };
 
 export type Address = {
