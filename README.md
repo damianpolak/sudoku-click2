@@ -6,26 +6,28 @@
 
 ## Usage
 
-###Global installation:
+### Global installation:
+
 ```bash
 npm install -g @ionic/cli
 ```
 
 ### Project installation:
+
 ```bash
 npm install
 ng serve --port 1338
 ```
 
 ## Features to do:
+
 - ~~Set default selected field when continue game~~
 - ~~Don't run animations when put number (only background)~~
-- Create modal banner with animation for start, end, win, lose, restart messages
+- ~~Create modal banner with animation for start, end, win, lose, restart messages~~
 - Create tip feature
-- Change back to undo and add number of history saved
+- ~~Change back to undo~~
 - Show wrong numbers in cross selection (red tint backgrounds)
 - ~~Restart game~~
-- ~~Fix history when continue game~~
 - Create and change control icons for own custom
 - Create new native animation on control number button
 - ~~Create new native animation on number field click~~
@@ -37,11 +39,11 @@ ng serve --port 1338
 - Create three additional themes (light and two custom)
 - Make theme menu and icon on app-header
 - Create capacitor splash screen
-- Change color and background of numbered buttons when change input mode (notes enabled/disabled)
+- ~~Change color and background of numbered buttons when change input mode (notes enabled/disabled)~~
 - Option for enable/disable opacity or hidden/visible numbered button when all available numbers have been used
 - Set larger font size on app-status-bar (top info bar)
 - Set larger controls icons and labels
-- Create preference menu 
+- Create preference menu
 - Change data saving from localStorage to ionic storage (or capacitor preferences)
 - Create a haptics service
 - Create an audio service
@@ -50,9 +52,18 @@ ng serve --port 1338
 - Mistakes handling and finishing game
 - Lock rotating screen on smartphones, enabled on tables
 
+## Bugs:
+
+- Border color when first number was wrong and second propertly then border is red
+- ~~No history when continue game~~
+- Sometimes when player click back then we can see rotate animation
+
 ## Options section:
+
 - fieldAnimation ON/OFF (field.component)
 - boardAnimation ON/OFF
 - pause backdropDismiss ON/OFF (pause.component)
+
 ### Author
+
 Damian Polak @ 2023-2024
