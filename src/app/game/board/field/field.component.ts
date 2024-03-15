@@ -37,7 +37,7 @@ export class FieldComponent implements Animated, OnChanges, AfterViewInit, OnDes
   private readonly animateSub$ = combineLatest([this.animate$.asObservable(), this.viewReady$.asObservable()])
     .pipe(
       tap(([field]) => {
-        if (field.value !== 0) {
+        if (field.value !== 0 && field.isAnimated) {
           if (this.animationsEnabled) {
             this.fieldAnimation.play();
           }
