@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription, of } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Address } from 'src/app/game/board/field/field.types';
 import { ServiceStore } from '../abstracts/service-store.abstract';
 
@@ -27,10 +27,14 @@ export class MistakeService extends ServiceStore<Mistake> {
   }
 
   getPresentMistakes(): Observable<PresentMistake> {
-    return of({
-      value: this._store.length,
-      limit: this.limitEnabled ? MistakeService.MISTAKE_LIMIT : 0,
-    });
+    return this.emitter$.pipe(
+      map((x) => {
+        return {
+          value: x.length,
+          limit: this.limitEnabled ? MistakeService.MISTAKE_LIMIT : 0,
+        };
+      })
+    );
   }
 
   constructor() {
