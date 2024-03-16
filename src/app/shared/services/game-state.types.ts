@@ -3,6 +3,7 @@ import { GameLevel } from './game-state.service';
 import { HistoryBoard } from './history.types';
 import { Timestring } from './timer.types';
 import { Field } from 'src/app/game/board/field/field.types';
+import { Mistake } from './mistake.service';
 
 export type InputMode = 'value' | 'notes';
 
@@ -11,14 +12,14 @@ export type GameState = {
   timestring: Timestring;
   history: HistoryBoard[];
   board: Board;
-  mistakes: number;
+  mistakes: Mistake[];
   selectedField: Field;
 };
 
 export enum GameStartType {
   CONTINUE = 'CONTINUE',
   NEW_GAME = 'NEW_GAME',
-  RESTART_GAME = 'RESTART_GAME'
+  RESTART_GAME = 'RESTART_GAME',
 }
 
 export type GameStartMode = {

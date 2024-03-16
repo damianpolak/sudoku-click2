@@ -8,5 +8,7 @@
 </div>
 <div class="score-object">
   <span>Mistakes</span>
-  <span>0/3</span>
+  <span
+    >{{ (mistakes | async)?.value }}{{ (mistakes | async)?.limit !== 0 ? '/' + (mistakes | async)?.limit : '' }}</span
+  >
 </div>

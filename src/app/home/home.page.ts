@@ -10,7 +10,7 @@ type ContinueOptions = {
   level: string;
   time: Timestring;
   mistakes: number;
-}
+};
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -26,9 +26,8 @@ export class HomePage implements OnInit, OnDestroy {
   private _gameState!: GameState;
   private gameStateSub$: Subscription = combineLatest([
     this.gameStateServ.getPauseState$(),
-    this.gameStateServ.getGameState$()
-  ])
-  .subscribe(([pauseState, gameState]) => {
+    this.gameStateServ.getGameState$(),
+  ]).subscribe(([pauseState, gameState]) => {
     this.canContinue = true;
     this._gameState = gameState;
     this.gameStateServ.saveGameState(this._gameState);
@@ -48,7 +47,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   private loadGameStateFromStorage(): void {
     const gameState = this.gameStateServ.loadGameState();
-    if(gameState) {
+    if (gameState) {
       this.canContinue = true;
       this._gameState = gameState;
       this.setContinueOptions(gameState);
@@ -64,9 +63,9 @@ export class HomePage implements OnInit, OnDestroy {
   private setContinueOptions(gamestate: GameState): void {
     this.continueOptions = {
       level: gamestate.level.name,
-      mistakes: gamestate.mistakes,
+      mistakes: gamestate.mistakes.length,
       time: gamestate.timestring,
-    }
+    };
   }
 
   onContinue(): void {
@@ -80,7 +79,7 @@ export class HomePage implements OnInit, OnDestroy {
   onNewGame(): void {
     this.gameStateServ.clearGameState();
     this.gameStateServ.setGameStartMode({
-      type: GameStartType.NEW_GAME
+      type: GameStartType.NEW_GAME,
     });
     this.navCtrl.navigateForward('game');
   }

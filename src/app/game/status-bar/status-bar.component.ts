@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { AppStateService } from 'src/app/shared/services/app-state.service';
 import { BasicOrientationType } from 'src/app/shared/services/app-state.types';
 import { GameLevel, GameStateService } from 'src/app/shared/services/game-state.service';
+import { MistakeService, PresentMistake } from 'src/app/shared/services/mistake.service';
 import { ResizeObservableService } from 'src/app/shared/services/resize-observable.service';
 import { TimerService } from 'src/app/shared/services/timer.service';
 import { ConversionUtil } from 'src/app/shared/utils/conversion.util';
@@ -13,7 +14,6 @@ import { ConversionUtil } from 'src/app/shared/utils/conversion.util';
   styleUrls: ['./status-bar.component.scss'],
 })
 export class StatusBarComponent {
-
   get levelName() {
     return ConversionUtil.firstUpper(this.gameStateServ.selectedLevel.name);
   }
@@ -22,7 +22,13 @@ export class StatusBarComponent {
     return this.timerServ.getTimestring();
   }
 
-  constructor(private gameStateServ: GameStateService, private timerServ: TimerService) {
-    // this.time = this.timerServ.timestring;
+  get mistakes() {
+    return this.mistakeServ.getPresentMistakes();
   }
+
+  constructor(
+    private gameStateServ: GameStateService,
+    private timerServ: TimerService,
+    private mistakeServ: MistakeService
+  ) {}
 }
