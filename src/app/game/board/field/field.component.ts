@@ -84,12 +84,13 @@ export class FieldComponent implements Animated, OnChanges, AfterViewInit, OnDes
   ) {}
 
   ngAfterViewInit(): void {
-    this.setAnimation();
+    this.viewReady$.next();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if ('field' in changes) {
       const field = changes['field'].currentValue as Field;
+      this.setAnimation();
       if (field.selected) {
         this.animate$.next(field);
       }
@@ -101,29 +102,26 @@ export class FieldComponent implements Animated, OnChanges, AfterViewInit, OnDes
   }
 
   setAnimation(): void {
-    setTimeout(() => {
-      const borderSize = Math.floor((this.ref.nativeElement as HTMLElement).clientWidth * 0.15);
-      // prettier-ignore
-      this.fieldAnimation = this.animationCtrl
+    const borderSize = Math.floor((this.ref.nativeElement as HTMLElement).clientWidth * 0.15);
+    // prettier-ignore
+    this.fieldAnimation = this.animationCtrl
       .create()
       .addElement(this.ref.nativeElement)
       .fill('none')
       .duration(550)
       .keyframes([
-        { offset: 0.0, transform: 'scale(1.00)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
-        { offset: 0.1, transform: 'scale(1.10)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
-        { offset: 0.2, transform: 'scale(1.20)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
-        { offset: 0.3, transform: 'scale(1.30)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
-        { offset: 0.4, transform: 'scale(1.20)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
-        { offset: 0.5, transform: 'scale(1.10)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
-        { offset: 0.6, transform: 'scale(1.00)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
-        { offset: 0.7, transform: 'scale(1.10)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
-        { offset: 0.8, transform: 'scale(1.20)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
-        { offset: 0.9, transform: 'scale(1.30)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
-        { offset: 1.0, transform: 'scale(1.00)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
+        { offset: 0.0, transform: 'scale(1.00)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue === true ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
+        { offset: 0.1, transform: 'scale(1.10)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue === true ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
+        { offset: 0.2, transform: 'scale(1.20)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue === true ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
+        { offset: 0.3, transform: 'scale(1.30)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue === true ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
+        { offset: 0.4, transform: 'scale(1.20)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue === true ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
+        { offset: 0.5, transform: 'scale(1.10)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue === true ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
+        { offset: 0.6, transform: 'scale(1.00)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue === true ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
+        { offset: 0.7, transform: 'scale(1.10)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue === true ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
+        { offset: 0.8, transform: 'scale(1.20)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue === true ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
+        { offset: 0.9, transform: 'scale(1.30)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue === true ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
+        { offset: 1.0, transform: 'scale(1.00)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue === true ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
       ]);
-      this.viewReady$.next();
-    }, 1000);
   }
 
   getFieldValueClass(field: Field) {
