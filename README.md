@@ -51,6 +51,8 @@ ng serve --port 1338
 - Create scoring feature
 - Mistakes handling and finishing game
 - Lock rotating screen on smartphones, enabled on tables
+- Move level class and types from game-state.service.ts to dedicated file
+- Refactor animations, replace setTimeout instead native animation delay
 
 ## Bugs:
 
@@ -63,6 +65,7 @@ ng serve --port 1338
 - fieldAnimation ON/OFF (field.component)
 - boardAnimation ON/OFF
 - pause backdropDismiss ON/OFF (pause.component)
+- mistakes limit to 3 ON/OFF
 
 ### Author
 
