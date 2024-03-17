@@ -102,7 +102,7 @@ export class FieldComponent implements Animated, OnChanges, AfterViewInit, OnDes
   }
 
   setAnimation(): void {
-    const borderSize = Math.floor((this.ref.nativeElement as HTMLElement).clientWidth * 0.15);
+    const borderSize = Math.floor((this.ref.nativeElement as HTMLElement).clientWidth * 0.12);
     // prettier-ignore
     this.fieldAnimation = this.animationCtrl
       .create()
