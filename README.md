@@ -56,9 +56,10 @@ ng serve --port 1338
 
 ## Bugs:
 
-- Border color when first number was wrong and second propertly then border is red
+- ~~Border color when first number was wrong and second propertly then border is red~~
 - ~~No history when continue game~~
 - Sometimes when player click back then we can see rotate animation
+- When put many wrong values in one field and back then it launch animation
 
 ## Options section:
 
