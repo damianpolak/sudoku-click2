@@ -343,6 +343,11 @@ export class BoardService implements OnDestroy {
     this.timerServ.start('00:00:00');
     this.historyServ.clear();
     this.mistakeServ.clear();
-    this.setBoard(new BoardBuilder({ level: this.gameStateServ.selectedLevel }).setDefaultSelectedField().get());
+    this.setBoard(
+      new BoardBuilder({ level: this.gameStateServ.selectedLevel, board: this._board })
+        .setDefaults()
+        .setDefaultSelectedField()
+        .get()
+    );
   }
 }
