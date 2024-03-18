@@ -22,7 +22,7 @@ import { Animated } from '../../interfaces/core.interface';
   styleUrls: ['./fullscreen-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FullscreenViewComponent implements Animated, OnInit, OnDestroy, OnChanges, AfterViewInit {
+export class FullscreenViewComponent implements Animated, OnInit, OnDestroy, OnChanges {
   @Input() isOpen: boolean = true;
   @Input() title: string = '';
   @Input() description: string = '';
@@ -43,11 +43,6 @@ export class FullscreenViewComponent implements Animated, OnInit, OnDestroy, OnC
   animationsEnabled: boolean = true;
   private bannerAnimation!: Animation;
 
-  async ngAfterViewInit(): Promise<void> {
-    console.log('=== fullscreen after view init');
-    // this.setAnimation();
-  }
-
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
     this.setAnimation();
     if ('isOpen' in changes) {
@@ -61,7 +56,6 @@ export class FullscreenViewComponent implements Animated, OnInit, OnDestroy, OnC
   }
 
   getFinishGameClassType() {
-    console.log('=== finishType', this.finishType);
     switch (this.finishType) {
       case FinishGameType.VICTORY:
         return 'victory-background';
@@ -73,7 +67,6 @@ export class FullscreenViewComponent implements Animated, OnInit, OnDestroy, OnC
   }
 
   onClose(): void {
-    console.log('click on close');
     this.isOpen = false;
     this.closeEvent.emit();
   }

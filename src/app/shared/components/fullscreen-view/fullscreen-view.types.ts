@@ -3,3 +3,8 @@ export enum FinishGameType {
   VICTORY = 'VICTORY',
   LOSS = 'LOSS',
 }
+export type FinishGame = {
+  title: string;
+  description: string;
+  finishType?: FinishGameType;
+};

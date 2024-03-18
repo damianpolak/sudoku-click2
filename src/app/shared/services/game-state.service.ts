@@ -69,6 +69,7 @@ export class GameStateService {
   private readonly missingNumbers$ = new Subject<MissingNumber[]>();
   private readonly gameState$ = new Subject<GameState>();
   private readonly fieldClick$ = new Subject<Field>();
+  private readonly win$ = new BehaviorSubject<boolean>(false);
 
   private _selectedLevel: GameLevel;
 
@@ -131,6 +132,14 @@ export class GameStateService {
 
   setMissingNumbers(value: MissingNumber[]): void {
     this.missingNumbers$.next(value);
+  }
+
+  setWin(): void {
+    this.win$.next(true);
+  }
+
+  getWin$(): Observable<boolean> {
+    return this.win$.asObservable();
   }
 
   saveGameState(gamestate: GameState): void {

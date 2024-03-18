@@ -21,14 +21,19 @@
       </div>
       <div class="controls">
         @if((orientation$ | async) === 'landscape') {
-          <app-status-bar></app-status-bar>
+        <app-status-bar></app-status-bar>
         }
         <app-controls></app-controls>
       </div>
     </div>
   </div>
 </ion-content>
-<app-pause
-  [isOpen]="isPaused"
-  (actionEvent)="onPauseModalDismiss($event)"
-></app-pause>
+<app-pause [isOpen]="isPaused" (actionEvent)="onPauseModalDismiss($event)"></app-pause>
+
+<app-fullscreen-view
+  [isOpen]="isFinalViewOpen"
+  (closeEvent)="onFinishGameScreenClose()"
+  [title]="gameFinished.title"
+  [description]="gameFinished.description"
+  [finishType]="gameFinished.finishType"
+></app-fullscreen-view>

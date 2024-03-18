@@ -3,7 +3,7 @@ import { SudokuUtil } from 'src/app/shared/utils/sudoku.util';
 import { Board, BoardSet } from './board.types';
 import { GameLevel, GameStateService } from 'src/app/shared/services/game-state.service';
 import { Address, Field } from './field/field.types';
-import { BehaviorSubject, Observable, Subscription, combineLatest, from, map, tap, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, combineLatest, every, from, map, tap, withLatestFrom } from 'rxjs';
 import { BoardBuilder } from 'src/app/shared/builders/board.builder';
 import { ControlsService, FeatureClickEvent, NumberClickEvent } from '../controls/controls.service';
 import { GameStartMode, GameStartType, InputMode } from 'src/app/shared/services/game-state.types';
@@ -33,10 +33,16 @@ export class BoardService implements OnDestroy {
   private readonly selectedField$ = new BehaviorSubject<Field>(this.defaultBaseBoard.getSelectedFields()[0]);
   private readonly board$ = new BehaviorSubject<Board>(this.defaultBaseBoard.get());
 
-  private boardSub$: Subscription = combineLatest([this.getBoard$(), this.getSelectedField$(), this.historyServ.get$()])
-    .pipe(withLatestFrom(this.timerServ.getTimestring()))
-    .subscribe(([[board, field, history], timestring]) => {
-      this._board = board;
+  private boardSub$: Subscription = this.getBoard$()
+    .pipe(
+      tap((_) => {
+        if (_.flat().every((x) => x.isCorrectValue)) {
+          this.gameStateServ.setWin();
+        }
+      })
+    )
+    .subscribe((v) => {
+      this._board = v;
     });
 
   private progressSub$: Subscription = combineLatest([

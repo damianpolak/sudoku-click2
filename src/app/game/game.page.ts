@@ -1,10 +1,12 @@
 import { Component, OnDestroy } from '@angular/core';
 import { AppStateService } from '../shared/services/app-state.service';
-import { Subscription, tap } from 'rxjs';
+import { Subscription, combineLatest, distinctUntilChanged, filter, map, merge, race, switchMap, tap } from 'rxjs';
 import { GameLevel, GameStateService } from '../shared/services/game-state.service';
 import { TimerService } from '../shared/services/timer.service';
 import { GameStartType, InputMode } from '../shared/services/game-state.types';
 import { PauseModalActionType } from './pause/pause.types';
+import { MistakeService } from '../shared/services/mistake.service';
+import { FinishGame, FinishGameType } from '../shared/components/fullscreen-view/fullscreen-view.types';
 
 @Component({
   selector: 'app-game',
@@ -15,6 +17,7 @@ export class GamePage implements OnDestroy {
   orientation$ = this.appStateServ.getScreenOrientation$();
   inputMode!: InputMode;
   isPaused!: boolean;
+  isFinalViewOpen: boolean = false;
   level!: GameLevel;
   title: string = 'Sudoku.click';
 
@@ -37,10 +40,44 @@ export class GamePage implements OnDestroy {
       this.isPaused = pause;
     });
 
+  gameFinished: FinishGame = { title: '', description: '' };
+
+  private finishGameSub$: Subscription = combineLatest([
+    this.gameStateServ.getWin$(),
+    this.mistakeServ.getPresentMistakes(),
+  ])
+    .pipe(
+      map(([x, v]) => {
+        return x === true ? FinishGameType.VICTORY : v.value >= v.limit ? FinishGameType.LOSS : undefined;
+      })
+    )
+    .subscribe((finishGameType) => {
+      if (finishGameType === FinishGameType.VICTORY) {
+        this.onFinishGameScreen({
+          title: 'Congratulations',
+          description: 'You found the solution!',
+          finishType: FinishGameType.VICTORY,
+        });
+      } else if (finishGameType === FinishGameType.LOSS) {
+        this.onFinishGameScreen({
+          title: 'Game over',
+          description: 'You made 3 mistakes!',
+          finishType: FinishGameType.LOSS,
+        });
+      }
+    });
+
+  private onFinishGameScreen(finishGameObj: FinishGame): void {
+    this.timerServ.stop();
+    this.isFinalViewOpen = true;
+    this.gameFinished = { ...finishGameObj };
+  }
+
   constructor(
     private appStateServ: AppStateService,
     private gameStateServ: GameStateService,
-    private timerServ: TimerService
+    private timerServ: TimerService,
+    private mistakeServ: MistakeService
   ) {
     this.level = this.gameStateServ.selectedLevel;
   }
@@ -49,6 +86,7 @@ export class GamePage implements OnDestroy {
     console.log('GamePage Destroy');
     this.inputModeSubs$.unsubscribe();
     this.pauseStateSub$.unsubscribe();
+    this.finishGameSub$.unsubscribe();
   }
 
   back(event: void): void {
@@ -64,11 +102,15 @@ export class GamePage implements OnDestroy {
     switch (event) {
       case 'RESTART':
         this.gameStateServ.setGameStartMode({
-          type: GameStartType.RESTART_GAME
+          type: GameStartType.RESTART_GAME,
         });
         break;
       default:
         this.gameStateServ.setPauseState(false);
     }
+  }
+
+  onFinishGameScreenClose(): void {
+    this.isFinalViewOpen = false;
   }
 }
