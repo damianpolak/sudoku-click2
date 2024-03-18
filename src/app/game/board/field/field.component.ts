@@ -26,6 +26,11 @@ export class FieldComponent implements Animated, OnChanges, AfterViewInit, OnDes
   @Input() border!: string[];
   inputMode$: Observable<InputMode> = this.gameStateServ.getInputMode$();
   private fieldAnimation!: Animation;
+  private readonly _debugMode: boolean = true;
+
+  get debugMode(): boolean {
+    return this._debugMode;
+  }
 
   /**
    * @TODO INTEGRATE WITH OPTIONS

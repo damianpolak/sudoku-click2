@@ -29,6 +29,11 @@
     font-size: 1.2em;
   }
 
+  & .field-value-debug {
+    font-size: 0.8;
+    color: var(--ion-text-color);
+  }
+
   & .notes-grid {
     display: grid;
     grid-template-rows: repeat(3, 1fr);

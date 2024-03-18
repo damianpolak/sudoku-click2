@@ -2,8 +2,10 @@
 <div class="field-value" [ngClass]="getFieldValueClass(field)">{{ field.value }}</div>
 } @else if(field.value === 0) {
 <div class="notes-grid">
-  @for (item of field.notes; track item) {
+  @if(!debugMode) { @for (item of field.notes; track item) {
   <div class="notes-grid-field">{{ item.active ? item.value : '' }}</div>
-  } @empty {}
+  } @empty {} } @else {
+  <div class="field-value-debug">{{ field.finalValue }}</div>
+  }
 </div>
 }
