@@ -1,6 +1,18 @@
 // Ionic Variables and Theming. For more info, please see:
 // http://ionicframework.com/docs/theming/
 
+body {
+  --victory-color1: #ffd534;
+  --victory-color2: #ff4961;
+  --victory-color3: #6b91d6;
+  --victory-color4: #2fdf75;
+
+  --loss-color1: #6b91d6;
+  --loss-color2: #243b55;
+  --loss-color3: #af2626;
+  --loss-color4: #2fdf75;
+}
+
 /** Ionic CSS Variables **/
 body.light {
   /** primary **/
@@ -91,6 +103,8 @@ body.dark {
   --ion-color-primary-contrast-rgb: 207, 207, 207;
   --ion-color-primary-shade: #6083c1;
   --ion-color-primary-tint: #405780;
+  --ion-color-primary-tint-alpha: #40578088;
+
 
   --ion-color-secondary: #212433;
   --ion-color-secondary-rgb: 33, 36, 51;
