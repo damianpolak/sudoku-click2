@@ -168,6 +168,25 @@ export class BoardBuilder {
     return this;
   }
 
+  setDefaults(): this {
+    this._board = structuredClone(this._board).map((row) => {
+      return row.map((field) => {
+        return {
+          ...field,
+          ...{
+            isAnimated: false,
+            isCorrectValue: field.isInitialValue ? true : false,
+            notes: new NotesBuilder().get(),
+            value: field.isInitialValue ? field.finalValue : 0,
+            highlight: false,
+            selected: false,
+          },
+        };
+      });
+    });
+    return this;
+  }
+
   private getRandomEmptyFieldAddress(board: Board): Address {
     const address = {
       row: Math.floor(Math.random() * board.length),
