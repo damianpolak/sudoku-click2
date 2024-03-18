@@ -5,10 +5,11 @@ import { IonicModule } from '@ionic/angular';
 import { NumberButtonComponent } from './components/number-button/number-button.component';
 import { FirstUpperPipe } from './pipes/first-upper.pipe';
 import { BannerComponent } from './components/banner/banner.component';
+import { FullscreenViewComponent } from './components/fullscreen-view/fullscreen-view.component';
 
 @NgModule({
-  declarations: [HeaderComponent, NumberButtonComponent, BannerComponent, FirstUpperPipe],
+  declarations: [HeaderComponent, NumberButtonComponent, BannerComponent, FullscreenViewComponent, FirstUpperPipe],
   imports: [CommonModule, IonicModule],
-  exports: [HeaderComponent, NumberButtonComponent, BannerComponent, FirstUpperPipe],
+  exports: [HeaderComponent, NumberButtonComponent, BannerComponent, FullscreenViewComponent, FirstUpperPipe],
 })
 export class SharedModule {}

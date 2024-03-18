@@ -1,0 +1,41 @@
+<div class="container" [ngClass]="getFinishGameClassType()">
+  <div class="box">
+    <div class="top">
+      <h1>{{ title }}</h1>
+      <h3 (click)="onClose()">{{ description }}</h3>
+    </div>
+
+    @if(finishType === 'LOSS') {
+      <div class="statistics">
+        <div class="statistics-score">
+          <h1>Score 15 005</h1>
+        </div>
+      </div>
+      <div class="buttons">
+        <ion-button expand="block">Second chance</ion-button>
+        <div class="buttons-row">
+          <ion-button expand="block">New game</ion-button>
+          <ion-button expand="block">Restart</ion-button>
+        </div>
+      </div>
+    }
+
+    @if(finishType === 'VICTORY') {
+      <div class="statistics">
+        <div class="statistics-general-info">
+          <p>Difficulty: Easy</p>
+          <p>Time: 00:10:34</p>
+        </div>
+        <div class="statistics-score">
+          <h1>Score 15 005</h1>
+        </div>
+      </div>
+      <div class="buttons">
+        <div class="buttons-row">
+          <ion-button expand="block">New game</ion-button>
+          <ion-button expand="block">Statistics</ion-button>
+        </div>
+      </div>
+    }
+  </div>
+</div>
