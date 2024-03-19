@@ -67,12 +67,6 @@ export class GamePage implements OnDestroy {
       }
     });
 
-  private onFinishGameScreen(finishGameObj: FinishGame): void {
-    this.timerServ.stop();
-    this.isFinalViewOpen = true;
-    this.gameFinished = { ...finishGameObj };
-  }
-
   constructor(
     private appStateServ: AppStateService,
     private gameStateServ: GameStateService,
@@ -112,5 +106,11 @@ export class GamePage implements OnDestroy {
 
   onFinishGameScreenClose(): void {
     this.isFinalViewOpen = false;
+  }
+
+  private onFinishGameScreen(finishGameObj: FinishGame): void {
+    this.timerServ.stop();
+    this.isFinalViewOpen = true;
+    this.gameFinished = { ...finishGameObj };
   }
 }
