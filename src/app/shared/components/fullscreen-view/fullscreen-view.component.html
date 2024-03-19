@@ -8,14 +8,14 @@
     @if(finishType === 'LOSS') {
       <div class="statistics">
         <div class="statistics-score">
-          <h1>Score 15 005</h1>
+          <h1>Score 00 000</h1>
         </div>
       </div>
       <div class="buttons">
         <ion-button expand="block">Second chance</ion-button>
         <div class="buttons-row">
-          <ion-button expand="block">New game</ion-button>
-          <ion-button expand="block">Restart</ion-button>
+          <ion-button expand="block" (click)="onNewGame()">New game</ion-button>
+          <ion-button expand="block" (click)="onRestartGame()">Restart</ion-button>
         </div>
       </div>
     }

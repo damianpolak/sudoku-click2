@@ -12,9 +12,12 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { Animation, AnimationController, ModalController } from '@ionic/angular';
+import { Animation, AnimationController, ModalController, NavController } from '@ionic/angular';
 import { FinishGameType } from './fullscreen-view.types';
 import { Animated } from '../../interfaces/core.interface';
+import { GameStateService } from '../../services/game-state.service';
+import { GameStartType } from '../../services/game-state.types';
+import { Subscription, tap } from 'rxjs';
 
 @Component({
   selector: 'app-fullscreen-view',
@@ -33,15 +36,33 @@ export class FullscreenViewComponent implements Animated, OnInit, OnDestroy, OnC
   @HostBinding('class.hide') get isHidden() {
     return !this.isOpen;
   }
-  constructor(private animationCtrl: AnimationController, private ref: ElementRef) {}
+
+  animationsEnabled: boolean = true;
+  private bannerAnimation!: Animation;
+
+  private readonly gameStartModeSub$: Subscription = this.gameStateServ
+    .getGameStartMode$()
+    .pipe(
+      tap((gameStartMode) => {
+        this.onClose();
+      })
+    )
+    .subscribe();
+
+  constructor(
+    private animationCtrl: AnimationController,
+    private gameStateServ: GameStateService,
+    private ref: ElementRef,
+    private navCtrl: NavController
+  ) {}
+
   ngOnDestroy(): void {
     console.log('=== fullscreen view destroy');
+    this.gameStartModeSub$.unsubscribe();
   }
   ngOnInit(): void {
     console.log('=== fullscreen view init');
   }
-  animationsEnabled: boolean = true;
-  private bannerAnimation!: Animation;
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
     this.setAnimation();
@@ -69,6 +90,16 @@ export class FullscreenViewComponent implements Animated, OnInit, OnDestroy, OnC
   onClose(): void {
     this.isOpen = false;
     this.closeEvent.emit();
+  }
+
+  onRestartGame(): void {
+    this.gameStateServ.setGameStartMode({
+      type: GameStartType.RESTART_GAME,
+    });
+  }
+
+  onNewGame(): void {
+    this.navCtrl.navigateBack('home');
   }
 
   setAnimation(): void {
