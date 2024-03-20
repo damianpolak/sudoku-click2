@@ -102,6 +102,14 @@ export class FullscreenViewComponent implements Animated, OnInit, OnDestroy, OnC
     this.navCtrl.navigateBack('home');
   }
 
+  onStatistics(): void {
+    console.log('Open stats');
+  }
+
+  onSecondChance(): void {
+    console.log('Second chance');
+  }
+
   setAnimation(): void {
     this.bannerAnimation = this.animationCtrl
       .create()

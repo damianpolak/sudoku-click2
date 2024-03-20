@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="buttons">
-        <ion-button expand="block">Second chance</ion-button>
+        <ion-button expand="block" (click)="onSecondChance()">Second chance</ion-button>
         <div class="buttons-row">
           <ion-button expand="block" (click)="onNewGame()">New game</ion-button>
           <ion-button expand="block" (click)="onRestartGame()">Restart</ion-button>
@@ -32,8 +32,8 @@
       </div>
       <div class="buttons">
         <div class="buttons-row">
-          <ion-button expand="block">New game</ion-button>
-          <ion-button expand="block">Statistics</ion-button>
+          <ion-button expand="block" (click)="onNewGame()">New game</ion-button>
+          <ion-button expand="block" (click)="onStatistics()">Statistics</ion-button>
         </div>
       </div>
     }
