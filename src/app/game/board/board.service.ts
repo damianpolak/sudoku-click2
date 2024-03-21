@@ -1,7 +1,7 @@
-import { Inject, Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { SudokuUtil } from 'src/app/shared/utils/sudoku.util';
-import { Board, BoardSet } from './board.types';
-import { GameLevel, GameStateService } from 'src/app/shared/services/game-state.service';
+import { Board } from './board.types';
+import { GameStateService } from 'src/app/shared/services/game-state.service';
 import { Address, Field } from './field/field.types';
 import { BehaviorSubject, Observable, Subscription, combineLatest, every, from, map, tap, withLatestFrom } from 'rxjs';
 import { BoardBuilder } from 'src/app/shared/builders/board.builder';

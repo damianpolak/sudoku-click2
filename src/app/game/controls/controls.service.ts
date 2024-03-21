@@ -1,6 +1,5 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { Observable, Subject, Subscription } from 'rxjs';
-import { GameStateService } from 'src/app/shared/services/game-state.service';
+import { Injectable } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 import { InputMode } from 'src/app/shared/services/game-state.types';
 
 export type NumberClickEvent = {

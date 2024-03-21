@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActionSheetButton, ActionSheetOptions, NavController } from '@ionic/angular';
+import { Component } from '@angular/core';
+import { ActionSheetButton, NavController } from '@ionic/angular';
 import { GameStateService, Levels } from '../shared/services/game-state.service';
 import { ConversionUtil } from '../shared/utils/conversion.util';
 import { Subscription, combineLatest } from 'rxjs';

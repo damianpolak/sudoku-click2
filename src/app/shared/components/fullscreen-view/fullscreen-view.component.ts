@@ -11,7 +11,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { Animation, AnimationController, ModalController, NavController } from '@ionic/angular';
+import { Animation, AnimationController, NavController } from '@ionic/angular';
 import { FinishGameType } from './fullscreen-view.types';
 import { Animated } from '../../interfaces/core.interface';
 import { GameStateService } from '../../services/game-state.service';

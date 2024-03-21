@@ -9,7 +9,7 @@ import {
   HostBinding,
   EventEmitter,
 } from '@angular/core';
-import { Animation, AnimationController, AnimationFill } from '@ionic/angular';
+import { Animation, AnimationController } from '@ionic/angular';
 import { Animated } from '../../interfaces/core.interface';
 import { Banner } from './banner.types';
 

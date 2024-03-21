@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostBinding, Input, OnDestroy } from '@angular/core';
+import { Directive, HostBinding, OnDestroy } from '@angular/core';
 import { AppStateService } from '../services/app-state.service';
 
 @Directive({

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ControlsService, FeatureClickEvent, Features } from './controls.service';
+import { ControlsService, FeatureClickEvent } from './controls.service';
 import { GameStateService } from 'src/app/shared/services/game-state.service';
-import { Subscription, map, tap } from 'rxjs';
+import { Subscription, map } from 'rxjs';
 import { InputMode } from 'src/app/shared/services/game-state.types';
 
 type NumberControl = {
@@ -23,16 +23,21 @@ type FeatureControl = FeatureClickEvent & {
 export class ControlsComponent implements OnInit, OnDestroy {
   inputMode!: InputMode;
   private inputModeSubs$!: Subscription;
-  private numberSub$: Subscription = this.gameStateServ.getMissingNumbers$().pipe(map(x => {
-    return x.map(i => {
-      return {
-        value: i.id,
-        missingValue: i.value
-      }
-    })
-  })).subscribe(v => {
-    this._numbers = v;
-  });
+  private numberSub$: Subscription = this.gameStateServ
+    .getMissingNumbers$()
+    .pipe(
+      map((x) => {
+        return x.map((i) => {
+          return {
+            value: i.id,
+            missingValue: i.value,
+          };
+        });
+      })
+    )
+    .subscribe((v) => {
+      this._numbers = v;
+    });
 
   private _numbers: NumberControl[] = [];
 
@@ -40,7 +45,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
     return this._numbers;
   }
 
-  features!: FeatureControl[]
+  features!: FeatureControl[];
   constructor(private controlsServ: ControlsService, private gameStateServ: GameStateService) {}
 
   ngOnInit() {
@@ -82,11 +87,11 @@ export class ControlsComponent implements OnInit, OnDestroy {
   }
 
   getFeatureToggleStyle(toggle: boolean | undefined) {
-    if(typeof toggle === 'undefined') {
+    if (typeof toggle === 'undefined') {
       return {
         color: 'inherit',
-      }
+      };
     }
-    return {'color':toggle === true ? 'var(--ion-color-primary)' : 'inherit' }
+    return { color: toggle === true ? 'var(--ion-color-primary)' : 'inherit' };
   }
 }

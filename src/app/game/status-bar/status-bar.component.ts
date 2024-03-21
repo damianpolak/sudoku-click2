@@ -1,10 +1,6 @@
-import { AfterViewInit, Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { AppStateService } from 'src/app/shared/services/app-state.service';
-import { BasicOrientationType } from 'src/app/shared/services/app-state.types';
-import { GameLevel, GameStateService } from 'src/app/shared/services/game-state.service';
-import { MistakeService, PresentMistake } from 'src/app/shared/services/mistake.service';
-import { ResizeObservableService } from 'src/app/shared/services/resize-observable.service';
+import { Component } from '@angular/core';
+import { GameStateService } from 'src/app/shared/services/game-state.service';
+import { MistakeService } from 'src/app/shared/services/mistake.service';
 import { TimerService } from 'src/app/shared/services/timer.service';
 import { ConversionUtil } from 'src/app/shared/utils/conversion.util';
 

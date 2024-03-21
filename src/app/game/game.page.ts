@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { AppStateService } from '../shared/services/app-state.service';
-import { Subscription, combineLatest, map, tap, throttleTime } from 'rxjs';
+import { Subscription, combineLatest, map, tap } from 'rxjs';
 import { GameLevel, GameStateService } from '../shared/services/game-state.service';
 import { TimerService } from '../shared/services/timer.service';
 import { GameStartType, InputMode } from '../shared/services/game-state.types';
