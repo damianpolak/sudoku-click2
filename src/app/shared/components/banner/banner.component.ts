@@ -55,7 +55,7 @@ export class BannerComponent implements Banner, Animated, OnChanges, AfterViewIn
       .fill('none')
       .duration(this.durationTime)
       .fromTo('transform', 'scale(0)', 'scale(1)')
-      .delay(1200)
+      .delay(1000)
       .keyframes([
         { offset: 0.0, opacity: '1.0' },
         { offset: 0.5, opacity: '0.5' },
