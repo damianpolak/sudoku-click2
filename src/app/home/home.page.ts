@@ -24,20 +24,22 @@ export class HomePage {
   menuLevelButtons = this.createActionSheetMenu();
 
   private _gameState!: GameState;
-  private gameStateSub$: Subscription = combineLatest([
-    this.gameStateServ.getPauseState$(),
-    this.gameStateServ.getGameState$(),
-  ]).subscribe(([pauseState, gameState]) => {
-    this.canContinue = true;
-    this._gameState = gameState;
-    this.gameStateServ.saveGameState(this._gameState);
-    this.setContinueOptions(gameState);
-  });
+  private gameStateSub$!: Subscription;
 
   constructor(private navCtrl: NavController, private gameStateServ: GameStateService) {}
 
   ionViewDidEnter(): void {
     console.log('=== HomePageDidEnter');
+    this.gameStateSub$ = combineLatest([
+      this.gameStateServ.getPauseState$(),
+      this.gameStateServ.getGameState$(),
+    ]).subscribe(([pauseState, gameState]) => {
+      this.canContinue = true;
+      this._gameState = gameState;
+      this.gameStateServ.saveGameState(this._gameState);
+      this.setContinueOptions(gameState);
+    });
+
     this.loadGameStateFromStorage();
   }
 
