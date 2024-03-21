@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, ReplaySubject, map } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject, map } from 'rxjs';
 import { BasicOrientationType } from './app-state.types';
 import { ConversionUtil } from '../utils/conversion.util';
 
@@ -8,6 +8,7 @@ import { ConversionUtil } from '../utils/conversion.util';
 })
 export class AppStateService {
   private readonly screenOrientation$ = new ReplaySubject<OrientationType>(5);
+  private readonly appDevMode$ = new BehaviorSubject<boolean>(false);
 
   setScreenOrientation(orientation: OrientationType): void {
     this.screenOrientation$.next(orientation);
@@ -19,6 +20,14 @@ export class AppStateService {
         return ConversionUtil.basicOrientationType(i);
       })
     );
+  }
+
+  getAppDevMode$(): Observable<boolean> {
+    return this.appDevMode$.asObservable();
+  }
+
+  setAppDevMode(value: boolean): void {
+    this.appDevMode$.next(value);
   }
 
   constructor() {}

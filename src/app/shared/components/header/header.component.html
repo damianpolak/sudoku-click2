@@ -5,14 +5,30 @@
         <ion-icon slot="icon-only" ios="chevron-back-outline" md="chevron-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
+    <!-- dev mode -->
+    <ion-buttons slot="end">
+      <ion-button (click)="onAppDevModeToggle()">
+        <!-- <ion-icon slot="icon-only" ios="chevron-back-outline" md="chevron-back-outline"></ion-icon> -->
+        <ion-icon slot="icon-only" name="bug-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <!-- end dev mode -->
     <ion-buttons *ngIf="showPause" slot="end">
       <ion-button (click)="onPause()">
-        <ion-icon slot="icon-only" [ios]="isPaused ? 'play-circle-outline' : 'pause-circle-outline'" [md]="isPaused ? 'play-circle-outline' : 'pause-circle-outline'"></ion-icon>
+        <ion-icon
+          slot="icon-only"
+          [ios]="isPaused ? 'play-circle-outline' : 'pause-circle-outline'"
+          [md]="isPaused ? 'play-circle-outline' : 'pause-circle-outline'"
+        ></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-buttons *ngIf="showOptions" slot="end">
       <ion-button (click)="onOptions()">
-        <ion-icon slot="icon-only" ios="ellipsis-horizontal-circle-outline" md="ellipsis-horizontal-circle-outline"></ion-icon>
+        <ion-icon
+          slot="icon-only"
+          ios="ellipsis-horizontal-circle-outline"
+          md="ellipsis-horizontal-circle-outline"
+        ></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-title>{{ title }}</ion-title>
