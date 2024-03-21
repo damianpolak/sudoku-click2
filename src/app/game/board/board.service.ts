@@ -231,7 +231,11 @@ export class BoardService implements OnDestroy {
 
   private mistakeUpdateHandler(numberClickEvent: NumberClickEvent): void {
     if (numberClickEvent.mode === 'value') {
-      if (!this.isCorrectValue(numberClickEvent.number)) {
+      if (
+        !this.isCorrectValue(numberClickEvent.number) &&
+        !this.isCorrectValue(this._selectedField.value) &&
+        !this._selectedField.isInitialValue
+      ) {
         this.mistakeServ.add([
           {
             address: this._selectedField.address,
