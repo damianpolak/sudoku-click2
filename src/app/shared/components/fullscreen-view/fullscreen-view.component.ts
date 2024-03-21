@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -25,7 +24,7 @@ import { Subscription, tap } from 'rxjs';
   styleUrls: ['./fullscreen-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FullscreenViewComponent implements Animated, OnInit, OnDestroy, OnChanges {
+export class FullscreenViewComponent implements Animated, OnDestroy, OnChanges {
   @Input() isOpen: boolean = true;
   @Input() title: string = '';
   @Input() description: string = '';
@@ -57,21 +56,15 @@ export class FullscreenViewComponent implements Animated, OnInit, OnDestroy, OnC
   ) {}
 
   ngOnDestroy(): void {
-    console.log('=== fullscreen view destroy');
     this.gameStartModeSub$.unsubscribe();
-  }
-  ngOnInit(): void {
-    console.log('=== fullscreen view init');
   }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
     this.setAnimation();
     if ('isOpen' in changes) {
       if (this.isOpen) {
-        console.log('isOpen is', this.isOpen);
         await this.bannerAnimation.play();
         this.bannerAnimation.stop();
-        console.log('end of animation');
       }
     }
   }
@@ -98,7 +91,7 @@ export class FullscreenViewComponent implements Animated, OnInit, OnDestroy, OnC
     });
   }
 
-  onNewGame(): void {
+  navigateHome(): void {
     this.navCtrl.navigateBack('home');
   }
 

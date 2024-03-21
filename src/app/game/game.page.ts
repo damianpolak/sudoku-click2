@@ -1,12 +1,13 @@
 import { Component, OnDestroy } from '@angular/core';
 import { AppStateService } from '../shared/services/app-state.service';
-import { Subscription, combineLatest, distinctUntilChanged, filter, map, merge, race, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, map, tap } from 'rxjs';
 import { GameLevel, GameStateService } from '../shared/services/game-state.service';
 import { TimerService } from '../shared/services/timer.service';
 import { GameStartType, InputMode } from '../shared/services/game-state.types';
 import { PauseModalActionType } from './pause/pause.types';
 import { MistakeService } from '../shared/services/mistake.service';
 import { FinishGame, FinishGameType } from '../shared/components/fullscreen-view/fullscreen-view.types';
+import { HistoryService } from '../shared/services/history.service';
 
 @Component({
   selector: 'app-game',
@@ -47,8 +48,12 @@ export class GamePage implements OnDestroy {
     this.mistakeServ.getPresentMistakes(),
   ])
     .pipe(
-      map(([x, v]) => {
-        return x === true ? FinishGameType.VICTORY : v.value >= v.limit ? FinishGameType.LOSS : undefined;
+      map(([isWin, presentMistake]) => {
+        return isWin === true
+          ? FinishGameType.VICTORY
+          : presentMistake.value >= presentMistake.limit
+          ? FinishGameType.LOSS
+          : undefined;
       })
     )
     .subscribe((finishGameType) => {
@@ -71,6 +76,7 @@ export class GamePage implements OnDestroy {
     private appStateServ: AppStateService,
     private gameStateServ: GameStateService,
     private timerServ: TimerService,
+    private historyServ: HistoryService,
     private mistakeServ: MistakeService
   ) {
     this.level = this.gameStateServ.selectedLevel;
@@ -81,6 +87,9 @@ export class GamePage implements OnDestroy {
     this.inputModeSubs$.unsubscribe();
     this.pauseStateSub$.unsubscribe();
     this.finishGameSub$.unsubscribe();
+    this.mistakeServ.clear();
+    this.historyServ.clear();
+    this.timerServ.stop();
   }
 
   back(event: void): void {
