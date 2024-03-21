@@ -32,13 +32,13 @@
 
 @media (orientation: portrait) {
   html {
-    font-size: calc(8px + 1.5vw);
+    font-size: calc(10px + 1.3vw);
   }
 }
 
 @media (orientation: landscape) {
   html {
-    font-size: calc(8px + 1.5vh);
+    font-size: calc(10px + 1.3vh);
   }
 }
 
