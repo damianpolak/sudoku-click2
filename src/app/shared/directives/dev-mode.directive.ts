@@ -13,9 +13,7 @@ export class DevModeDirective implements OnDestroy {
   @HostBinding('style.display') display!: string;
   @HostBinding('style.color') color!: string;
 
-  constructor(private appStateServ: AppStateService) {
-    console.log('Directive init');
-  }
+  constructor(private appStateServ: AppStateService) {}
 
   ngOnDestroy(): void {
     this.appDevModeSub$.unsubscribe();
