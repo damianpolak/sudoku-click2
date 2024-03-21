@@ -16,7 +16,7 @@ type ContinueOptions = {
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage implements OnInit, OnDestroy {
+export class HomePage {
   isMenuLevelOpen = false;
   canContinue: boolean = false;
   continueOptions!: ContinueOptions;
@@ -36,12 +36,13 @@ export class HomePage implements OnInit, OnDestroy {
 
   constructor(private navCtrl: NavController, private gameStateServ: GameStateService) {}
 
-  ngOnInit(): void {
-    console.log('HomePage OnInit');
+  ionViewDidEnter(): void {
+    console.log('=== HomePageDidEnter');
     this.loadGameStateFromStorage();
   }
 
-  ngOnDestroy(): void {
+  ionViewDidLeave(): void {
+    console.log('=== HomePageDidLeave');
     this.gameStateSub$.unsubscribe();
   }
 
