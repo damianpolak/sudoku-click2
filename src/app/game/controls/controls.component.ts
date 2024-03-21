@@ -3,6 +3,7 @@ import { ControlsService, FeatureClickEvent } from './controls.service';
 import { GameStateService } from 'src/app/shared/services/game-state.service';
 import { Subscription, map } from 'rxjs';
 import { InputMode } from 'src/app/shared/services/game-state.types';
+import { BaseComponent } from 'src/app/shared/abstracts/base-component.abstract';
 
 type NumberControl = {
   value: number;
@@ -20,7 +21,7 @@ type FeatureControl = FeatureClickEvent & {
   templateUrl: './controls.component.html',
   styleUrls: ['./controls.component.scss'],
 })
-export class ControlsComponent implements OnInit, OnDestroy {
+export class ControlsComponent extends BaseComponent implements OnInit, OnDestroy {
   inputMode!: InputMode;
   private inputModeSubs$!: Subscription;
   private numberSub$: Subscription = this.gameStateServ
@@ -46,18 +47,20 @@ export class ControlsComponent implements OnInit, OnDestroy {
   }
 
   features!: FeatureControl[];
-  constructor(private controlsServ: ControlsService, private gameStateServ: GameStateService) {}
+  constructor(private controlsServ: ControlsService, private gameStateServ: GameStateService) {
+    super();
+  }
 
   ngOnInit() {
     this.inputModeSubs$ = this.gameStateServ.getInputMode$().subscribe((mode) => {
       this.inputMode = mode;
       this.features = this.featuresCreate();
     });
+    this.registerSubscriptions([this.inputModeSubs$, this.numberSub$]);
   }
 
   ngOnDestroy(): void {
-    this.inputModeSubs$.unsubscribe();
-    this.numberSub$.unsubscribe();
+    this.unsubscribeSubscriptions();
   }
 
   onFeatureClick(value: FeatureClickEvent): void {

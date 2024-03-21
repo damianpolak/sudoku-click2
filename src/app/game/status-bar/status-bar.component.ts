@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { BaseComponent } from 'src/app/shared/abstracts/base-component.abstract';
 import { GameStateService } from 'src/app/shared/services/game-state.service';
 import { MistakeService } from 'src/app/shared/services/mistake.service';
 import { TimerService } from 'src/app/shared/services/timer.service';
@@ -9,7 +10,7 @@ import { ConversionUtil } from 'src/app/shared/utils/conversion.util';
   templateUrl: './status-bar.component.html',
   styleUrls: ['./status-bar.component.scss'],
 })
-export class StatusBarComponent {
+export class StatusBarComponent extends BaseComponent {
   get levelName() {
     return ConversionUtil.firstUpper(this.gameStateServ.selectedLevel.name);
   }
@@ -26,5 +27,7 @@ export class StatusBarComponent {
     private gameStateServ: GameStateService,
     private timerServ: TimerService,
     private mistakeServ: MistakeService
-  ) {}
+  ) {
+    super();
+  }
 }

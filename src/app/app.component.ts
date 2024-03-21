@@ -1,17 +1,19 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, fromEvent } from 'rxjs';
 import { AppStateService } from './shared/services/app-state.service';
+import { BaseComponent } from './shared/abstracts/base-component.abstract';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
   private readonly autoThemeMode: boolean = false;
   private screenOrientationSubs$: Subscription;
 
   constructor(private appStateServ: AppStateService) {
+    super();
     this.themeToggler();
     this.appStateServ.setScreenOrientation(screen.orientation.type);
     this.screenOrientationSubs$ = fromEvent(screen.orientation, 'change').subscribe((x) => {
@@ -19,6 +21,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.appStateServ.setScreenOrientation(orientation);
       this.setHeaderSize(orientation, '0px', '44px');
     });
+    this.registerSubscriptions([this.screenOrientationSubs$]);
   }
 
   ngOnInit(): void {
@@ -26,7 +29,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.screenOrientationSubs$.unsubscribe();
+    this.unsubscribeSubscriptions();
   }
 
   private themeToggler(): void {

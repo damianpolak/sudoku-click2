@@ -15,13 +15,14 @@ import { InputMode } from 'src/app/shared/services/game-state.types';
 import { Field } from './field.types';
 import { Animation, AnimationController } from '@ionic/angular';
 import { Animated } from 'src/app/shared/interfaces/core.interface';
+import { BaseComponent } from 'src/app/shared/abstracts/base-component.abstract';
 
 @Component({
   selector: 'app-field',
   templateUrl: './field.component.html',
   styleUrls: ['./field.component.scss'],
 })
-export class FieldComponent implements Animated, OnChanges, AfterViewInit, OnDestroy {
+export class FieldComponent extends BaseComponent implements Animated, OnChanges, AfterViewInit, OnDestroy {
   @Input() field!: Field;
   @Input() border!: string[];
   inputMode$: Observable<InputMode> = this.gameStateServ.getInputMode$();
@@ -86,7 +87,10 @@ export class FieldComponent implements Animated, OnChanges, AfterViewInit, OnDes
     private gameStateServ: GameStateService,
     private animationCtrl: AnimationController,
     private ref: ElementRef
-  ) {}
+  ) {
+    super();
+    this.registerSubscriptions([this.animateSub$]);
+  }
 
   ngAfterViewInit(): void {
     this.viewReady$.next();
@@ -103,7 +107,7 @@ export class FieldComponent implements Animated, OnChanges, AfterViewInit, OnDes
   }
 
   ngOnDestroy(): void {
-    this.animateSub$.unsubscribe();
+    this.unsubscribeSubscriptions();
   }
 
   setAnimation(): void {

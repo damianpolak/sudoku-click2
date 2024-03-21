@@ -13,13 +13,14 @@ import { Animation, AnimationController } from '@ionic/angular';
 import { GameStateService } from '../../services/game-state.service';
 import { InputMode } from '../../services/game-state.types';
 import { Subscription, tap } from 'rxjs';
+import { BaseComponent } from '../../abstracts/base-component.abstract';
 
 @Component({
   selector: 'app-number-button',
   templateUrl: './number-button.component.html',
   styleUrls: ['./number-button.component.scss'],
 })
-export class NumberButtonComponent implements Animated, OnDestroy, AfterViewInit {
+export class NumberButtonComponent extends BaseComponent implements Animated, OnDestroy, AfterViewInit {
   private readonly inputModeSub$: Subscription = this.gameStateServ
     .getInputMode$()
     .pipe(
@@ -50,10 +51,13 @@ export class NumberButtonComponent implements Animated, OnDestroy, AfterViewInit
     private ref: ElementRef,
     private animationCtrl: AnimationController,
     private gameStateServ: GameStateService
-  ) {}
+  ) {
+    super();
+    this.registerSubscriptions([this.inputModeSub$]);
+  }
 
   ngOnDestroy(): void {
-    this.inputModeSub$.unsubscribe();
+    this.unsubscribeSubscriptions();
   }
 
   ngAfterViewInit(): void {

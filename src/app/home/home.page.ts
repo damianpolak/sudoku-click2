@@ -5,6 +5,7 @@ import { ConversionUtil } from '../shared/utils/conversion.util';
 import { Subscription, combineLatest } from 'rxjs';
 import { GameStartType, GameState } from '../shared/services/game-state.types';
 import { Timestring } from '../shared/services/timer.types';
+import { BaseComponent } from '../shared/abstracts/base-component.abstract';
 
 type ContinueOptions = {
   level: string;
@@ -16,7 +17,7 @@ type ContinueOptions = {
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePage extends BaseComponent {
   isMenuLevelOpen = false;
   canContinue: boolean = false;
   continueOptions!: ContinueOptions;
@@ -26,7 +27,9 @@ export class HomePage {
   private _gameState!: GameState;
   private gameStateSub$!: Subscription;
 
-  constructor(private navCtrl: NavController, private gameStateServ: GameStateService) {}
+  constructor(private navCtrl: NavController, private gameStateServ: GameStateService) {
+    super();
+  }
 
   ionViewDidEnter(): void {
     console.log('=== HomePageDidEnter');
@@ -34,17 +37,18 @@ export class HomePage {
       this.gameStateServ.getPauseState$(),
       this.gameStateServ.getGameState$(),
     ]).subscribe(([pauseState, gameState]) => {
+      console.log('=== ionViewDidEnter');
       this.canContinue = true;
       this._gameState = gameState;
       this.setContinueOptions(gameState);
     });
-
+    this.registerSubscriptions([this.gameStateSub$]);
     this.loadGameStateFromStorage();
   }
 
   ionViewDidLeave(): void {
     console.log('=== HomePageDidLeave');
-    this.gameStateSub$.unsubscribe();
+    this.unsubscribeSubscriptions();
   }
 
   private loadGameStateFromStorage(): void {
