@@ -36,7 +36,6 @@ export class HomePage {
     ]).subscribe(([pauseState, gameState]) => {
       this.canContinue = true;
       this._gameState = gameState;
-      this.gameStateServ.saveGameState(this._gameState);
       this.setContinueOptions(gameState);
     });
 
@@ -54,10 +53,6 @@ export class HomePage {
       this.canContinue = true;
       this._gameState = gameState;
       this.setContinueOptions(gameState);
-      this.gameStateServ.setGameStartMode({
-        type: GameStartType.CONTINUE,
-        gameState: gameState,
-      });
     } else {
       this.canContinue = false;
     }

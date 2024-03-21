@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { AppStateService } from '../shared/services/app-state.service';
-import { Subscription, combineLatest, map, tap } from 'rxjs';
+import { Subscription, combineLatest, map, tap, throttleTime } from 'rxjs';
 import { GameLevel, GameStateService } from '../shared/services/game-state.service';
 import { TimerService } from '../shared/services/timer.service';
 import { GameStartType, InputMode } from '../shared/services/game-state.types';
@@ -21,6 +21,10 @@ export class GamePage implements OnDestroy {
   isFinalViewOpen: boolean = false;
   level!: GameLevel;
   title: string = 'Sudoku.click';
+
+  private gameStateSub$: Subscription = this.gameStateServ
+    .getGameState$()
+    .subscribe((gameState) => this.gameStateServ.saveGameState(gameState));
 
   private inputModeSubs$: Subscription = this.gameStateServ.getInputMode$().subscribe((mode) => {
     this.inputMode = mode;
@@ -87,6 +91,7 @@ export class GamePage implements OnDestroy {
     this.inputModeSubs$.unsubscribe();
     this.pauseStateSub$.unsubscribe();
     this.finishGameSub$.unsubscribe();
+    this.gameStateSub$.unsubscribe();
     this.mistakeServ.clear();
     this.historyServ.clear();
     this.timerServ.stop();
