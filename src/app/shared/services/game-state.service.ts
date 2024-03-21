@@ -134,8 +134,8 @@ export class GameStateService {
     this.missingNumbers$.next(value);
   }
 
-  setWin(): void {
-    this.win$.next(true);
+  setWin(value: boolean): void {
+    this.win$.next(value);
   }
 
   getWin$(): Observable<boolean> {

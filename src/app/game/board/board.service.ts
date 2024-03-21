@@ -37,7 +37,7 @@ export class BoardService implements OnDestroy {
     .pipe(
       tap((_) => {
         if (_.flat().every((x) => x.isCorrectValue)) {
-          this.gameStateServ.setWin();
+          this.gameStateServ.setWin(true);
         }
       })
     )
@@ -334,8 +334,8 @@ export class BoardService implements OnDestroy {
       level: this.gameStateServ.selectedLevel,
     }).setDefaultSelectedField();
     this.timerServ.start('00:00:00');
-    this.historyServ.add([]);
-    this.mistakeServ.add([]);
+    this.historyServ.clear();
+    this.mistakeServ.clear();
   }
 
   private onRestartGame(mode: GameStartMode): void {
