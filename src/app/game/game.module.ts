@@ -13,15 +13,18 @@ import { BoardComponent } from './board/board.component';
 import { FieldComponent } from './board/field/field.component';
 import { ControlsComponent } from './controls/controls.component';
 import { PauseComponent } from './pause/pause.component';
+import { DevModeDirective } from '../shared/directives/dev-mode.directive';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    SharedModule,
-    GamePageRoutingModule
+  imports: [CommonModule, FormsModule, IonicModule, SharedModule, GamePageRoutingModule],
+  declarations: [
+    GamePage,
+    StatusBarComponent,
+    BoardComponent,
+    FieldComponent,
+    ControlsComponent,
+    PauseComponent,
+    DevModeDirective,
   ],
-  declarations: [GamePage, StatusBarComponent, BoardComponent, FieldComponent, ControlsComponent, PauseComponent]
 })
 export class GamePageModule {}
