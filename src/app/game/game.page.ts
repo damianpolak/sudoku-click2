@@ -8,13 +8,14 @@ import { PauseModalActionType } from './pause/pause.types';
 import { MistakeService } from '../shared/services/mistake.service';
 import { FinishGame, FinishGameType } from '../shared/components/fullscreen-view/fullscreen-view.types';
 import { HistoryService } from '../shared/services/history.service';
+import { BaseComponent } from '../shared/abstracts/base-component.abstract';
 
 @Component({
   selector: 'app-game',
   templateUrl: './game.page.html',
   styleUrls: ['./game.page.scss'],
 })
-export class GamePage implements OnDestroy {
+export class GamePage extends BaseComponent implements OnDestroy {
   orientation$ = this.appStateServ.getScreenOrientation$();
   inputMode!: InputMode;
   isPaused!: boolean;
@@ -83,15 +84,14 @@ export class GamePage implements OnDestroy {
     private historyServ: HistoryService,
     private mistakeServ: MistakeService
   ) {
+    super();
+    this.registerSubscriptions([this.inputModeSubs$, this.pauseStateSub$, this.finishGameSub$, this.gameStateSub$]);
     this.level = this.gameStateServ.selectedLevel;
   }
 
   ngOnDestroy(): void {
     console.log('GamePage Destroy');
-    this.inputModeSubs$.unsubscribe();
-    this.pauseStateSub$.unsubscribe();
-    this.finishGameSub$.unsubscribe();
-    this.gameStateSub$.unsubscribe();
+    this.unsubscribeSubscriptions();
     this.mistakeServ.clear();
     this.historyServ.clear();
     this.timerServ.stop();

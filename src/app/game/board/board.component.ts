@@ -9,6 +9,8 @@ import { Animation, AnimationController } from '@ionic/angular';
 import { Animated } from 'src/app/shared/interfaces/core.interface';
 import { GameStartMode, GameStartType } from 'src/app/shared/services/game-state.types';
 import { Banner } from 'src/app/shared/components/banner/banner.types';
+import { BaseClass } from 'src/app/shared/abstracts/base-class.abstract';
+import { BaseComponent } from 'src/app/shared/abstracts/base-component.abstract';
 
 @Component({
   selector: 'app-board',
@@ -16,7 +18,7 @@ import { Banner } from 'src/app/shared/components/banner/banner.types';
   styleUrls: ['./board.component.scss'],
   providers: [BoardService],
 })
-export class BoardComponent implements Animated, OnInit, OnDestroy, AfterViewInit {
+export class BoardComponent extends BaseComponent implements Animated, OnInit, OnDestroy, AfterViewInit {
   private _board: Board = [];
   private level!: GameLevel;
   private borderSquares: Array<Record<string, string>> = [];
@@ -51,7 +53,10 @@ export class BoardComponent implements Animated, OnInit, OnDestroy, AfterViewIni
     private animationCtrl: AnimationController,
     private renderer2: Renderer2,
     private ref: ElementRef
-  ) {}
+  ) {
+    super();
+    this.registerSubscriptions([this.boardSub$, this.gameStartModeSub$]);
+  }
 
   ngOnInit() {
     this.loadLevelProperties();
@@ -60,8 +65,7 @@ export class BoardComponent implements Animated, OnInit, OnDestroy, AfterViewIni
   }
 
   ngOnDestroy(): void {
-    this.boardSub$.unsubscribe();
-    this.gameStartModeSub$.unsubscribe();
+    this.unsubscribeSubscriptions();
   }
 
   ngAfterViewInit(): void {

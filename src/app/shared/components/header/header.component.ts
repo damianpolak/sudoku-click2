@@ -2,13 +2,14 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { NavController } from '@ionic/angular';
 import { GameStateService } from '../../services/game-state.service';
 import { AppStateService } from '../../services/app-state.service';
+import { BaseComponent } from '../../abstracts/base-component.abstract';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit, OnDestroy {
+export class HeaderComponent extends BaseComponent implements OnInit, OnDestroy {
   @Input() showOptions: boolean = true;
   @Input() showPause: boolean = false;
   @Input() showBack: boolean = false;
@@ -24,18 +25,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private appDevMode: boolean = false;
 
   private readonly appDevModeSub$ = this.appStateServ.getAppDevMode$().subscribe((v) => (this.appDevMode = v));
-  constructor(
-    private navCtrl: NavController,
-    private appStateServ: AppStateService,
-    private gameStateServ: GameStateService
-  ) {}
+  constructor(private navCtrl: NavController, private appStateServ: AppStateService) {
+    super();
+    this.registerSubscriptions([this.appDevModeSub$]);
+  }
 
   ngOnInit(): void {
     console.log('Header on init');
   }
 
   ngOnDestroy(): void {
-    this.appDevModeSub$.unsubscribe();
+    this.unsubscribeSubscriptions();
   }
 
   onBack(): void {

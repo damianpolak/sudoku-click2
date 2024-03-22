@@ -17,6 +17,7 @@ import { Animated } from '../../interfaces/core.interface';
 import { GameStateService } from '../../services/game-state.service';
 import { GameStartType } from '../../services/game-state.types';
 import { Subscription, tap } from 'rxjs';
+import { BaseComponent } from '../../abstracts/base-component.abstract';
 
 @Component({
   selector: 'app-fullscreen-view',
@@ -24,7 +25,7 @@ import { Subscription, tap } from 'rxjs';
   styleUrls: ['./fullscreen-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FullscreenViewComponent implements Animated, OnDestroy, OnChanges {
+export class FullscreenViewComponent extends BaseComponent implements Animated, OnDestroy, OnChanges {
   @Input() isOpen: boolean = true;
   @Input() title: string = '';
   @Input() description: string = '';
@@ -53,10 +54,13 @@ export class FullscreenViewComponent implements Animated, OnDestroy, OnChanges {
     private gameStateServ: GameStateService,
     private ref: ElementRef,
     private navCtrl: NavController
-  ) {}
+  ) {
+    super();
+    this.registerSubscriptions([this.gameStartModeSub$]);
+  }
 
   ngOnDestroy(): void {
-    this.gameStartModeSub$.unsubscribe();
+    this.unsubscribeSubscriptions();
   }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {

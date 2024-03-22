@@ -11,9 +11,10 @@ import { HistoryService } from 'src/app/shared/services/history.service';
 import { NotesBuilder } from 'src/app/shared/builders/notes.builder';
 import { TimerService } from 'src/app/shared/services/timer.service';
 import { MistakeService } from 'src/app/shared/services/mistake.service';
+import { BaseService } from 'src/app/shared/abstracts/base-service.abstract';
 
 @Injectable()
-export class BoardService implements OnDestroy {
+export class BoardService extends BaseService implements OnDestroy {
   private readonly gameStartModeSub$: Subscription = this.gameStateServ
     .getGameStartMode$()
     .pipe(
@@ -28,7 +29,6 @@ export class BoardService implements OnDestroy {
   private inputMode: InputMode = 'value';
   private _selectedField!: Field;
   private _board!: Board;
-  private subscriptions$: Subscription[] = [];
 
   private readonly selectedField$ = new BehaviorSubject<Field>(this.defaultBaseBoard.getSelectedFields()[0]);
   private readonly board$ = new BehaviorSubject<Board>(this.defaultBaseBoard.get());
@@ -97,8 +97,18 @@ export class BoardService implements OnDestroy {
     private readonly timerServ: TimerService,
     private readonly mistakeServ: MistakeService
   ) {
+    super();
     console.log('BoardService Constructor');
-    this.registerSubscriptions();
+    this.registerSubscriptions([
+      this.boardSub$,
+      this.inputModeSub$,
+      this.fieldClickSub$,
+      this.numberClickSub$,
+      this.featureClickSub$,
+      this.selectedFieldSub$,
+      this.gameStartModeSub$,
+      this.progressSub$,
+    ]);
     this.historyServ.create();
     this.mistakeServ.create();
   }
@@ -108,25 +118,6 @@ export class BoardService implements OnDestroy {
     this.unsubscribeSubscriptions();
     this.historyServ.destroy();
     this.mistakeServ.destroy();
-  }
-
-  private registerSubscriptions(): void {
-    this.subscriptions$ = [
-      ...this.subscriptions$,
-      this.boardSub$,
-      this.inputModeSub$,
-      this.fieldClickSub$,
-      this.numberClickSub$,
-      this.featureClickSub$,
-      this.selectedFieldSub$,
-      this.gameStartModeSub$,
-      this.progressSub$,
-    ];
-  }
-
-  private unsubscribeSubscriptions(): void {
-    this.subscriptions$.forEach((sub) => sub.unsubscribe());
-    this.subscriptions$ = [];
   }
 
   private onFeatureClick(featureClickEvent: FeatureClickEvent): void {
