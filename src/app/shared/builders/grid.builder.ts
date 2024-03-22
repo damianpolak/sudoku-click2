@@ -1,8 +1,4 @@
-export abstract class Grid<TGrid> {
-  protected rows!: number;
-  protected cols!: number;
-  protected grid: TGrid[][] = [];
-}
+import { Grid } from '../abstracts/grid.abstract';
 
 export class GridBuilder<TGrid> extends Grid<TGrid> {
   constructor(rows: number, cols: number, value: TGrid) {
