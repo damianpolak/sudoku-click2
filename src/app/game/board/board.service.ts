@@ -59,6 +59,7 @@ export class BoardService extends BaseService implements OnDestroy {
       level: this.gameStateServ.selectedLevel,
       timestring: timestring,
       mistakes: mistake,
+      state: 'pending',
     });
   });
 

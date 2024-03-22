@@ -14,6 +14,7 @@ export type GameState = {
   board: Board;
   mistakes: Mistake[];
   selectedField: Field;
+  state: 'pending' | 'finished';
 };
 
 export enum GameStartType {
