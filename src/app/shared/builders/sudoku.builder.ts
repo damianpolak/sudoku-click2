@@ -1,5 +1,6 @@
+import { Grid } from '../abstracts/grid.abstract';
 import { SudokuUtil } from '../utils/sudoku.util';
-import { Grid, GridBuilder } from './grid.builder';
+import { GridBuilder } from './grid.builder';
 
 export class SudokuBuilder extends Grid<number> {
   private squareRoot: number;
