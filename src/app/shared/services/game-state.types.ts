@@ -5,6 +5,12 @@ import { Timestring } from './timer.types';
 import { Field } from 'src/app/game/board/field/field.types';
 import { Mistake } from './mistake.service';
 
+export enum GameStatusType {
+  PENDING = 'PENDING',
+  VICTORY = 'VICTORY',
+  LOSS = 'LOSS',
+}
+
 export type InputMode = 'value' | 'notes';
 
 export type GameState = {
@@ -14,7 +20,7 @@ export type GameState = {
   board: Board;
   mistakes: Mistake[];
   selectedField: Field;
-  state: 'pending' | 'finished';
+  state: GameStatusType;
 };
 
 export enum GameStartType {

@@ -3,7 +3,7 @@ import { AppStateService } from '../shared/services/app-state.service';
 import { Subscription, combineLatest, map, tap } from 'rxjs';
 import { GameLevel, GameStateService } from '../shared/services/game-state.service';
 import { TimerService } from '../shared/services/timer.service';
-import { GameStartType, InputMode } from '../shared/services/game-state.types';
+import { GameStartType, GameStatusType, InputMode } from '../shared/services/game-state.types';
 import { PauseModalActionType } from './pause/pause.types';
 import { MistakeService } from '../shared/services/mistake.service';
 import { FinishGame, FinishGameType } from '../shared/components/fullscreen-view/fullscreen-view.types';
@@ -48,34 +48,21 @@ export class GamePage extends BaseComponent implements OnDestroy {
 
   gameFinished: FinishGame = { title: '', description: '' };
 
-  private finishGameSub$: Subscription = combineLatest([
-    this.gameStateServ.getWin$(),
-    this.mistakeServ.getPresentMistakes(),
-  ])
-    .pipe(
-      map(([isWin, presentMistake]) => {
-        return isWin === true
-          ? FinishGameType.VICTORY
-          : presentMistake.value >= presentMistake.limit
-          ? FinishGameType.LOSS
-          : undefined;
-      })
-    )
-    .subscribe((finishGameType) => {
-      if (finishGameType === FinishGameType.VICTORY) {
-        this.onFinishGameScreen({
-          title: 'Congratulations',
-          description: 'You found the solution!',
-          finishType: FinishGameType.VICTORY,
-        });
-      } else if (finishGameType === FinishGameType.LOSS) {
-        this.onFinishGameScreen({
-          title: 'Game over',
-          description: 'You made 3 mistakes!',
-          finishType: FinishGameType.LOSS,
-        });
-      }
-    });
+  private finishGameSub$: Subscription = this.gameStateServ.getGameStatus$().subscribe((finishGameType) => {
+    if (finishGameType === GameStatusType.VICTORY) {
+      this.onFinishGameScreen({
+        title: 'Congratulations',
+        description: 'You found the solution!',
+        finishType: FinishGameType.VICTORY,
+      });
+    } else if (finishGameType === GameStatusType.LOSS) {
+      this.onFinishGameScreen({
+        title: 'Game over',
+        description: 'You made 3 mistakes!',
+        finishType: FinishGameType.LOSS,
+      });
+    }
+  });
 
   constructor(
     private appStateServ: AppStateService,

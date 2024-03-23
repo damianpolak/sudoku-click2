@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { GameStartMode, GameStartType, GameState, InputMode } from './game-state.types';
+import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
+import { GameStartMode, GameStartType, GameState, GameStatusType, InputMode } from './game-state.types';
 import { MissingNumber } from 'src/app/game/board/board.types';
 import { Field } from 'src/app/game/board/field/field.types';
 
@@ -20,7 +20,7 @@ interface Level {
 }
 
 const levelList: Level[] = [
-  { rows: 9, cols: 9, name: Levels.EASY, givenNumbers: 50 },
+  { rows: 9, cols: 9, name: Levels.EASY, givenNumbers: 75 },
   { rows: 9, cols: 9, name: Levels.MEDIUM, givenNumbers: 44 },
   { rows: 9, cols: 9, name: Levels.HARD, givenNumbers: 38 },
   { rows: 9, cols: 9, name: Levels.EXPERT, givenNumbers: 28 },
@@ -69,7 +69,7 @@ export class GameStateService {
   private readonly missingNumbers$ = new Subject<MissingNumber[]>();
   private readonly gameState$ = new Subject<GameState>();
   private readonly fieldClick$ = new Subject<Field>();
-  private readonly win$ = new BehaviorSubject<boolean>(false);
+  private readonly gameStatus$ = new Subject<GameStatusType>();
 
   private _selectedLevel: GameLevel;
 
@@ -84,6 +84,17 @@ export class GameStateService {
 
   getGameState$(): Observable<GameState> {
     return this.gameState$.asObservable();
+  }
+
+  updateGameState(gameState: Partial<GameState>): void {
+    this.getGameState$()
+      .pipe(first())
+      .subscribe((v) =>
+        this.gameState$.next({
+          ...v,
+          ...gameState,
+        })
+      );
   }
 
   setPauseState(pause: boolean): void {
@@ -134,12 +145,12 @@ export class GameStateService {
     this.missingNumbers$.next(value);
   }
 
-  setWin(value: boolean): void {
-    this.win$.next(value);
+  setGameStatus(value: GameStatusType): void {
+    this.gameStatus$.next(value);
   }
 
-  getWin$(): Observable<boolean> {
-    return this.win$.asObservable();
+  getGameStatus$(): Observable<GameStatusType> {
+    return this.gameStatus$.asObservable();
   }
 
   saveGameState(gamestate: GameState): void {

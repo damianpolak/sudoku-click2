@@ -3,7 +3,7 @@ import { ActionSheetButton, NavController } from '@ionic/angular';
 import { GameStateService, Levels } from '../shared/services/game-state.service';
 import { ConversionUtil } from '../shared/utils/conversion.util';
 import { Subscription, combineLatest } from 'rxjs';
-import { GameStartType, GameState } from '../shared/services/game-state.types';
+import { GameStartType, GameState, GameStatusType } from '../shared/services/game-state.types';
 import { Timestring } from '../shared/services/timer.types';
 import { BaseComponent } from '../shared/abstracts/base-component.abstract';
 
@@ -43,7 +43,7 @@ export class HomePage extends BaseComponent {
       this.setContinueOptions(gameState);
     });
     this.registerSubscriptions([this.gameStateSub$]);
-    this.loadGameStateFromStorage();
+    this.loadGameState();
   }
 
   ionViewDidLeave(): void {
@@ -51,15 +51,21 @@ export class HomePage extends BaseComponent {
     this.unsubscribeSubscriptions();
   }
 
-  private loadGameStateFromStorage(): void {
+  private loadGameState(): void {
     const gameState = this.gameStateServ.loadGameState();
-    if (gameState) {
+    if (gameState && this.isGamePlayable(gameState)) {
       this.canContinue = true;
       this._gameState = gameState;
       this.setContinueOptions(gameState);
+    } else if (gameState && !this.isGamePlayable(gameState)) {
+      this.gameStateServ.clearGameState();
     } else {
       this.canContinue = false;
     }
+  }
+
+  private isGamePlayable(gameState: GameState): boolean {
+    return gameState.state === GameStatusType.PENDING;
   }
 
   private setContinueOptions(gamestate: GameState): void {
