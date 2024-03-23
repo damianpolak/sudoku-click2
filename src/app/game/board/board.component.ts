@@ -12,6 +12,7 @@ import { Banner } from 'src/app/shared/components/banner/banner.types';
 import { BaseComponent } from 'src/app/shared/abstracts/base-component.abstract';
 import { BoardStartAnimation } from 'src/app/shared/animations/board-start.animation';
 import { BoardRestartAnimation } from 'src/app/shared/animations/board-restart.animation';
+import { BoardSecondChanceAnimation } from 'src/app/shared/animations/board-second-chance.animation';
 
 @Component({
   selector: 'app-board',
@@ -145,7 +146,7 @@ export class BoardComponent extends BaseComponent implements Animated, OnInit, O
   setAnimation(): void {
     this.startAnimation = new BoardStartAnimation(this.ref.nativeElement).getAnimation();
     this.restartAnimation = new BoardRestartAnimation(this.ref.nativeElement).getAnimation();
-    this.secondChanceAnimation = new BoardRestartAnimation(this.ref.nativeElement).getAnimation();
+    this.secondChanceAnimation = new BoardSecondChanceAnimation(this.ref.nativeElement).getAnimation();
   }
 
   showBanner(title: string, message: string): void {
