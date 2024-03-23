@@ -21,6 +21,7 @@ ng serve --port 1338
 
 ## Features to do:
 
+- Set 3 sec press button to enable entering the selected number
 - ~~Set default selected field when continue game~~
 - ~~Don't run animations when put number (only background)~~
 - ~~Create modal banner with animation for start, end, win, lose, restart messages~~
@@ -51,7 +52,6 @@ ng serve --port 1338
 - Create scoring feature
 - ~~Mistakes handling and finishing game~~
 - Lock rotating screen on smartphones, enabled on tables
-
 - ~~Refactor animations, replace setTimeout instead native animation delay~~
 
 ## Refactoring:
