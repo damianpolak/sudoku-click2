@@ -65,9 +65,8 @@ export class NumberButtonComponent extends BaseComponent implements Animated, On
   }
 
   setAnimation(): void {
-    setTimeout(() => {
-      // prettier-ignore
-      this.buttonAnimation = this.animationCtrl
+    // prettier-ignore
+    this.buttonAnimation = this.animationCtrl
       .create()
       .addElement(this.ref.nativeElement)
       .fill('none')
@@ -78,6 +77,5 @@ export class NumberButtonComponent extends BaseComponent implements Animated, On
         { offset: 0.5, transform: 'scale(1.15)', 'z-index': '10'},
         { offset: 1.0, transform: 'scale(1.00)', 'z-index': '10'},
       ]);
-    }, 500);
   }
 }
