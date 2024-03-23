@@ -26,6 +26,7 @@ ng serve --port 1338
 - ~~Create modal banner with animation for start, end, win, lose, restart messages~~
 - Create tip feature
 - ~~Change back to undo~~
+- Implement chance used
 - Show wrong numbers in cross selection (red tint backgrounds)
 - ~~Restart game~~
 - Create and change control icons for own custom
@@ -49,10 +50,10 @@ ng serve --port 1338
 - Create an audio service
 - Create finish game menu
 - Create scoring feature
-- Mistakes handling and finishing game
+- ~~Mistakes handling and finishing game~~
 - Lock rotating screen on smartphones, enabled on tables
 - Move level class and types from game-state.service.ts to dedicated file
-- Refactor animations, replace setTimeout instead native animation delay
+- ~~Refactor animations, replace setTimeout instead native animation delay~~
 
 ## Bugs:
 
