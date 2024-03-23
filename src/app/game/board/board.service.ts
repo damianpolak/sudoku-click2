@@ -6,11 +6,11 @@ import { Address, Field } from './field/field.types';
 import { BehaviorSubject, Observable, Subscription, combineLatest, every, from, map, tap, withLatestFrom } from 'rxjs';
 import { BoardBuilder } from 'src/app/shared/builders/board.builder';
 import { ControlsService, FeatureClickEvent, NumberClickEvent } from '../controls/controls.service';
-import { GameStartMode, GameStartType, InputMode } from 'src/app/shared/services/game-state.types';
+import { GameStartMode, GameStartType, GameStatusType, InputMode } from 'src/app/shared/services/game-state.types';
 import { HistoryService } from 'src/app/shared/services/history.service';
 import { NotesBuilder } from 'src/app/shared/builders/notes.builder';
 import { TimerService } from 'src/app/shared/services/timer.service';
-import { MistakeService } from 'src/app/shared/services/mistake.service';
+import { MistakeService, PresentMistake } from 'src/app/shared/services/mistake.service';
 import { BaseService } from 'src/app/shared/abstracts/base-service.abstract';
 
 @Injectable()
@@ -33,35 +33,53 @@ export class BoardService extends BaseService implements OnDestroy {
   private readonly selectedField$ = new BehaviorSubject<Field>(this.defaultBaseBoard.getSelectedFields()[0]);
   private readonly board$ = new BehaviorSubject<Board>(this.defaultBaseBoard.get());
 
-  private boardSub$: Subscription = this.getBoard$()
-    .pipe(
-      tap((_) => {
-        if (_.flat().every((x) => x.isCorrectValue)) {
-          this.gameStateServ.setWin(true);
-        }
-      })
-    )
+  private boardSub$: Subscription = combineLatest([this.mistakeServ.getPresentMistakes(), this.getBoard$()])
+    .pipe(map(([p, b]) => b))
     .subscribe((v) => {
       this._board = v;
     });
 
   private progressSub$: Subscription = combineLatest([
     this.getBoard$(),
+    this.mistakeServ.getPresentMistakes(),
     this.getSelectedField$(),
     this.historyServ.get$(),
     this.timerServ.getTimestring(),
     this.mistakeServ.get$(),
-  ]).subscribe(([board, field, history, timestring, mistake]) => {
-    this.gameStateServ.setGameState({
-      board: board,
-      selectedField: field,
-      history: history,
-      level: this.gameStateServ.selectedLevel,
-      timestring: timestring,
-      mistakes: mistake,
-      state: 'pending',
+  ])
+    .pipe(
+      map(([board, presentMistake, field, history, timestring, mistake]) => {
+        return { board, presentMistake, field, history, timestring, mistake };
+      })
+    )
+    .pipe(
+      map((x) => ({
+        ...x,
+        state: this.statusRecognize(x.presentMistake, x.board),
+      }))
+    )
+    .pipe(tap((_) => this.gameStateServ.setGameStatus(_.state)))
+    .subscribe((v) => {
+      this.gameStateServ.setGameState({
+        board: v.board,
+        selectedField: v.field,
+        history: v.history,
+        level: this.gameStateServ.selectedLevel,
+        timestring: v.timestring,
+        mistakes: v.mistake,
+        state: v.state,
+      });
     });
-  });
+
+  private statusRecognize(presentMistake: PresentMistake, board: Board): GameStatusType {
+    if (presentMistake.value >= presentMistake.limit) {
+      return GameStatusType.LOSS;
+    } else if (board.flat().every((x) => x.isCorrectValue)) {
+      return GameStatusType.VICTORY;
+    } else {
+      return GameStatusType.PENDING;
+    }
+  }
 
   private selectedFieldSub$: Subscription = this.getSelectedField$().subscribe((field) => {
     this._selectedField = field;
