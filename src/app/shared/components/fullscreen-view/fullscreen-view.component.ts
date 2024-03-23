@@ -15,9 +15,13 @@ import { Animation, AnimationController, NavController } from '@ionic/angular';
 import { FinishGameType } from './fullscreen-view.types';
 import { Animated } from '../../interfaces/core.interface';
 import { GameStateService } from '../../services/game-state.service';
-import { GameStartType } from '../../services/game-state.types';
+import { GameStartType, GameStatusType } from '../../services/game-state.types';
 import { Subscription, tap } from 'rxjs';
 import { BaseComponent } from '../../abstracts/base-component.abstract';
+import { MistakeService } from '../../services/mistake.service';
+import { TimerService } from '../../services/timer.service';
+import { HistoryService } from '../../services/history.service';
+import { ControlsService } from 'src/app/game/controls/controls.service';
 
 @Component({
   selector: 'app-fullscreen-view',
@@ -53,7 +57,11 @@ export class FullscreenViewComponent extends BaseComponent implements Animated, 
     private animationCtrl: AnimationController,
     private gameStateServ: GameStateService,
     private ref: ElementRef,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private mistakeServ: MistakeService,
+    private historyServ: HistoryService,
+    private timerServ: TimerService,
+    private controlsServ: ControlsService
   ) {
     super();
     this.registerSubscriptions([this.gameStartModeSub$]);
@@ -95,6 +103,20 @@ export class FullscreenViewComponent extends BaseComponent implements Animated, 
     });
   }
 
+  onSecondChance(): void {
+    this.mistakeServ.secondChance();
+    this.controlsServ.onFeatureClick({
+      type: 'click',
+      feature: 'back',
+    });
+    this.timerServ.start();
+    this.gameStateServ.setGameStartMode({
+      type: GameStartType.SECOND_CHANCE,
+    });
+    // this.gameStateServ.setGameStatus(GameStatusType.PENDING);
+    console.log('Second chance');
+  }
+
   navigateHome(): void {
     this.gameStateServ.clearGameState();
     this.navCtrl.navigateBack('home');
@@ -102,10 +124,6 @@ export class FullscreenViewComponent extends BaseComponent implements Animated, 
 
   onStatistics(): void {
     console.log('Open stats');
-  }
-
-  onSecondChance(): void {
-    console.log('Second chance');
   }
 
   setAnimation(): void {

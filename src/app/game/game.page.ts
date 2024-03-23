@@ -61,6 +61,11 @@ export class GamePage extends BaseComponent implements OnDestroy {
         description: 'You made 3 mistakes!',
         finishType: FinishGameType.LOSS,
       });
+    } else if (finishGameType === GameStatusType.PENDING) {
+      if (this.isFinalViewOpen) {
+        this.timerServ.stop();
+        this.isFinalViewOpen = false;
+      }
     }
   });
 

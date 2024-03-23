@@ -22,8 +22,9 @@ export class BoardComponent extends BaseComponent implements Animated, OnInit, O
   private _board: Board = [];
   private level!: GameLevel;
   private borderSquares: Array<Record<string, string>> = [];
-  private startBoardAnimation!: Animation;
-  private restartBoardAnimation!: Animation;
+  private startAnimation!: Animation;
+  private restartAnimation!: Animation;
+  private secondChanceAnimation!: Animation;
 
   messageBanner: Banner = {
     show: false,
@@ -119,31 +120,42 @@ export class BoardComponent extends BaseComponent implements Animated, OnInit, O
     document.documentElement.style.setProperty('--board-size', size.toString());
   }
 
-  private animationHandler(gameStartMode: GameStartMode): void {
-    if (this.animationsEnabled) {
-      if (gameStartMode.type === GameStartType.RESTART_GAME) {
-        setTimeout(async () => {
-          await this.restartBoardAnimation.play();
-          this.showBanner('Restart game', 'Good luck!');
-        }, 100);
-      } else if (gameStartMode.type === GameStartType.NEW_GAME || gameStartMode.type === GameStartType.CONTINUE) {
-        this.renderer2.setStyle(this.ref.nativeElement, 'transform', 'scale(0)');
-        setTimeout(async () => {
-          await this.startBoardAnimation.play();
-          this.renderer2.setStyle(this.ref.nativeElement, 'transform', 'scale(1)');
-          this.showBanner(`${gameStartMode.type === GameStartType.NEW_GAME ? 'New game' : 'Continue'}`, 'Good luck!');
-        }, 300);
+  private async animationHandler(gameStartMode: GameStartMode): Promise<void> {
+    setTimeout(async () => {
+      if (this.animationsEnabled) {
+        switch (gameStartMode.type) {
+          case GameStartType.RESTART_GAME:
+            this.showAnimation(this.restartAnimation, 'Restart game', 'Good luck!');
+            break;
+          case GameStartType.SECOND_CHANCE:
+            console.log("I've got second chance");
+            this.showAnimation(this.secondChanceAnimation, 'Second chance', 'Good luck!');
+            break;
+          default:
+            this.showAnimation(
+              this.startAnimation,
+              `${gameStartMode.type === GameStartType.NEW_GAME ? 'New game' : 'Continue'}`,
+              'Good luck!'
+            );
+        }
       }
-    }
+    }, 100);
+  }
+
+  private async showAnimation(animation: Animation, title: string, message: string): Promise<void> {
+    await animation.play();
+    this.showBanner(title, message);
   }
 
   setAnimation(): void {
     // prettier-ignore
-    this.startBoardAnimation = this.animationCtrl
+    this.startAnimation = this.animationCtrl
       .create()
       .addElement(this.ref.nativeElement)
       .fill('none')
+      .delay(200)
       .duration(350)
+      .afterStyles({'transform': 'scale(1)'})
       .keyframes([
         { offset: 0.0, transform: 'scale(0.0) rotate(0.0turn)', filter: 'blur(0px)' },
         { offset: 0.1, transform: 'scale(0.1) rotate(0.1turn)', filter: 'blur(1.5px)' },
@@ -159,7 +171,7 @@ export class BoardComponent extends BaseComponent implements Animated, OnInit, O
       ]);
 
     // prettier-ignore
-    this.restartBoardAnimation = this.animationCtrl
+    this.restartAnimation = this.animationCtrl
       .create()
       .addElement(this.ref.nativeElement)
       .fill('none')
@@ -176,6 +188,26 @@ export class BoardComponent extends BaseComponent implements Animated, OnInit, O
         { offset: 0.8, transform: 'rotate(0.8turn) scale(0.8)', filter: 'blur(2.5px)' },
         { offset: 0.9, transform: 'rotate(0.9turn) scale(0.9)', filter: 'blur(1.5px)' },
         { offset: 1.0, transform: 'rotate(1.0turn) scale(1.0)', filter: 'blur(0px)' },
+      ]);
+
+    // prettier-ignore
+    this.secondChanceAnimation = this.animationCtrl
+      .create()
+      .addElement(this.ref.nativeElement)
+      .fill('none')
+      .duration(550)
+      .keyframes([
+        { offset: 0.0, filter: 'blur(0px)' },
+        { offset: 0.1, filter: 'blur(1.5px)' },
+        { offset: 0.2, filter: 'blur(2.5px)' },
+        { offset: 0.3, filter: 'blur(3.5px)' },
+        { offset: 0.4, filter: 'blur(4.5px)' },
+        { offset: 0.5, filter: 'blur(5px)' },
+        { offset: 0.6, filter: 'blur(4.5px)' },
+        { offset: 0.7, filter: 'blur(3.5px)' },
+        { offset: 0.8, filter: 'blur(2.5px)' },
+        { offset: 0.9, filter: 'blur(1.5px)' },
+        { offset: 1.0, filter: 'blur(0px)' },
       ]);
   }
 
