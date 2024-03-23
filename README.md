@@ -38,22 +38,27 @@ ng serve --port 1338
 - Create statistic/rank page
 - ~~Change continue text~~
 - Create three additional themes (light and two custom)
-- Make theme menu and icon on app-header
+- Create themes menu and icon on app-header
 - Create capacitor splash screen
 - ~~Change color and background of numbered buttons when change input mode (notes enabled/disabled)~~
 - Option for enable/disable opacity or hidden/visible numbered button when all available numbers have been used
 - Set larger font size on app-status-bar (top info bar)
 - Set larger controls icons and labels
 - Create preference menu
-- Change data saving from localStorage to ionic storage (or capacitor preferences)
 - Create a haptics service
 - Create an audio service
-- Create finish game menu
+- ~~Create finish game menu~~
 - Create scoring feature
 - ~~Mistakes handling and finishing game~~
 - Lock rotating screen on smartphones, enabled on tables
-- Move level class and types from game-state.service.ts to dedicated file
+
 - ~~Refactor animations, replace setTimeout instead native animation delay~~
+
+## Refactoring:
+
+- Move level class and types from game-state.service.ts to dedicated file
+- Move save storage from game-state.service.ts to dedicated file
+- Change data saving from localStorage to ionic storage (or capacitor preferences)
 
 ## Bugs:
 
@@ -62,6 +67,9 @@ ng serve --port 1338
 - Sometimes when player click back then we can see rotate animation
 - When put many wrong values in one field and back then it launch animation
 - ~~Currently available type number in field where is properly or initial number~~
+- When restart application and continue then game level is set to master
+- Slow board click on iOS
+- Notes/Value input mode should be cleared after new game, restart or continue
 
 ## Options section:
 
