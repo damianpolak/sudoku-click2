@@ -27,6 +27,7 @@ export enum GameStartType {
   CONTINUE = 'CONTINUE',
   NEW_GAME = 'NEW_GAME',
   RESTART_GAME = 'RESTART_GAME',
+  SECOND_CHANCE = 'SECOND_CHANCE',
 }
 
 export type GameStartMode = {
