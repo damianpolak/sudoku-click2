@@ -13,9 +13,10 @@ import { Observable, Subject, combineLatest, tap } from 'rxjs';
 import { GameStateService } from 'src/app/shared/services/game-state.service';
 import { InputMode } from 'src/app/shared/services/game-state.types';
 import { Field } from './field.types';
-import { Animation, AnimationController } from '@ionic/angular';
+import { Animation } from '@ionic/angular';
 import { Animated } from 'src/app/shared/interfaces/core.interface';
 import { BaseComponent } from 'src/app/shared/abstracts/base-component.abstract';
+import { FieldAnimation } from 'src/app/shared/animations/field.animation';
 
 @Component({
   selector: 'app-field',
@@ -83,11 +84,7 @@ export class FieldComponent extends BaseComponent implements Animated, OnChanges
     });
   }
 
-  constructor(
-    private gameStateServ: GameStateService,
-    private animationCtrl: AnimationController,
-    private ref: ElementRef
-  ) {
+  constructor(private gameStateServ: GameStateService, private ref: ElementRef) {
     super();
     this.registerSubscriptions([this.animateSub$]);
   }
@@ -112,25 +109,11 @@ export class FieldComponent extends BaseComponent implements Animated, OnChanges
 
   setAnimation(): void {
     const borderSize = Math.floor((this.ref.nativeElement as HTMLElement).clientWidth * 0.12);
-    // prettier-ignore
-    this.fieldAnimation = this.animationCtrl
-      .create()
-      .addElement(this.ref.nativeElement)
-      .fill('none')
-      .duration(550)
-      .keyframes([
-        { offset: 0.0, transform: 'scale(1.00)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue === true ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
-        { offset: 0.1, transform: 'scale(1.10)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue === true ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
-        { offset: 0.2, transform: 'scale(1.20)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue === true ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
-        { offset: 0.3, transform: 'scale(1.30)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue === true ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
-        { offset: 0.4, transform: 'scale(1.20)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue === true ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
-        { offset: 0.5, transform: 'scale(1.10)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue === true ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
-        { offset: 0.6, transform: 'scale(1.00)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue === true ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
-        { offset: 0.7, transform: 'scale(1.10)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue === true ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
-        { offset: 0.8, transform: 'scale(1.20)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue === true ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
-        { offset: 0.9, transform: 'scale(1.30)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue === true ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
-        { offset: 1.0, transform: 'scale(1.00)', 'box-sizing': 'border-box', border: `${borderSize}px solid ${this.field.isCorrectValue === true ? 'var(--ion-field-animate-border)' : 'var(--ion-field-animate-border-wrong)'} `},
-      ]);
+    const isCorrectValue = this.field.isCorrectValue;
+    this.fieldAnimation = new FieldAnimation(this.ref.nativeElement, {
+      borderSize,
+      isCorrectValue,
+    }).getAnimation();
   }
 
   getFieldValueClass(field: Field) {

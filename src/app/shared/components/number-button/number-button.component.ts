@@ -9,11 +9,12 @@ import {
   OnInit,
 } from '@angular/core';
 import { Animated } from '../../interfaces/core.interface';
-import { Animation, AnimationController } from '@ionic/angular';
+import { Animation } from '@ionic/angular';
 import { GameStateService } from '../../services/game-state.service';
 import { InputMode } from '../../services/game-state.types';
 import { Subscription, tap } from 'rxjs';
 import { BaseComponent } from '../../abstracts/base-component.abstract';
+import { NumberButtonAnimation } from '../../animations/number-button.animation';
 
 @Component({
   selector: 'app-number-button',
@@ -47,11 +48,7 @@ export class NumberButtonComponent extends BaseComponent implements Animated, On
     }
   }
 
-  constructor(
-    private ref: ElementRef,
-    private animationCtrl: AnimationController,
-    private gameStateServ: GameStateService
-  ) {
+  constructor(private ref: ElementRef, private gameStateServ: GameStateService) {
     super();
     this.registerSubscriptions([this.inputModeSub$]);
   }
@@ -65,17 +62,6 @@ export class NumberButtonComponent extends BaseComponent implements Animated, On
   }
 
   setAnimation(): void {
-    // prettier-ignore
-    this.buttonAnimation = this.animationCtrl
-      .create()
-      .addElement(this.ref.nativeElement)
-      .fill('none')
-      .duration(250)
-      .easing('ease-out')
-      .keyframes([
-        { offset: 0.0, transform: 'scale(1.00)', 'z-index': '10'},
-        { offset: 0.5, transform: 'scale(1.15)', 'z-index': '10'},
-        { offset: 1.0, transform: 'scale(1.00)', 'z-index': '10'},
-      ]);
+    this.buttonAnimation = new NumberButtonAnimation(this.ref.nativeElement).getAnimation();
   }
 }
