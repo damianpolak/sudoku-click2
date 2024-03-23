@@ -68,8 +68,9 @@ ng serve --port 1338
 - When put many wrong values in one field and back then it launch animation
 - ~~Currently available type number in field where is properly or initial number~~
 - When restart application and continue then game level is set to master
-- Slow board click on iOS
+- Slow board click on iOS (cause: ngOnChange set animations, a lot of checks)
 - Notes/Value input mode should be cleared after new game, restart or continue
+- When put notes numbers and clear and put number again then all numbers back
 
 ## Options section:
 
