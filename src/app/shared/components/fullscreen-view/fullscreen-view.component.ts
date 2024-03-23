@@ -11,7 +11,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { Animation, AnimationController, NavController } from '@ionic/angular';
+import { Animation, NavController } from '@ionic/angular';
 import { FinishGameType } from './fullscreen-view.types';
 import { Animated } from '../../interfaces/core.interface';
 import { GameStateService } from '../../services/game-state.service';
@@ -22,6 +22,7 @@ import { MistakeService } from '../../services/mistake.service';
 import { TimerService } from '../../services/timer.service';
 import { HistoryService } from '../../services/history.service';
 import { ControlsService } from 'src/app/game/controls/controls.service';
+import { FullscreenViewAnimation } from '../../animations/fullscreen-view.animation';
 
 @Component({
   selector: 'app-fullscreen-view',
@@ -42,7 +43,7 @@ export class FullscreenViewComponent extends BaseComponent implements Animated, 
   }
 
   animationsEnabled: boolean = true;
-  private bannerAnimation!: Animation;
+  private animation!: Animation;
 
   private readonly gameStartModeSub$: Subscription = this.gameStateServ
     .getGameStartMode$()
@@ -54,7 +55,6 @@ export class FullscreenViewComponent extends BaseComponent implements Animated, 
     .subscribe();
 
   constructor(
-    private animationCtrl: AnimationController,
     private gameStateServ: GameStateService,
     private ref: ElementRef,
     private navCtrl: NavController,
@@ -75,8 +75,8 @@ export class FullscreenViewComponent extends BaseComponent implements Animated, 
     this.setAnimation();
     if ('isOpen' in changes) {
       if (this.isOpen) {
-        await this.bannerAnimation.play();
-        this.bannerAnimation.stop();
+        await this.animation.play();
+        this.animation.stop();
       }
     }
   }
@@ -127,17 +127,9 @@ export class FullscreenViewComponent extends BaseComponent implements Animated, 
   }
 
   setAnimation(): void {
-    this.bannerAnimation = this.animationCtrl
-      .create()
-      .addElement(this.ref.nativeElement)
-      .fill('none')
-      .duration(this.durationTime)
-      .fromTo('transform', 'scale(0)', 'scale(1)')
-      .beforeAddClass(this.getFinishGameClassType())
-      .keyframes([
-        { offset: 0.0, opacity: '0.0' },
-        { offset: 0.5, opacity: '0.5' },
-        { offset: 1.0, opacity: '1.0' },
-      ]);
+    this.animation = new FullscreenViewAnimation(this.ref.nativeElement, {
+      duration: this.durationTime,
+      beforeAddClass: this.getFinishGameClassType(),
+    }).getAnimation();
   }
 }

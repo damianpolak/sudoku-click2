@@ -9,9 +9,10 @@ import {
   HostBinding,
   EventEmitter,
 } from '@angular/core';
-import { Animation, AnimationController } from '@ionic/angular';
+import { Animation } from '@ionic/angular';
 import { Animated } from '../../interfaces/core.interface';
 import { Banner } from './banner.types';
+import { BannerAnimation } from '../../animations/banner.animation';
 
 @Component({
   selector: 'app-banner',
@@ -29,10 +30,10 @@ export class BannerComponent implements Banner, Animated, OnChanges, AfterViewIn
     return !this.show;
   }
 
-  private bannerAnimation!: Animation;
+  private animation!: Animation;
   animationsEnabled: boolean = true;
 
-  constructor(private ref: ElementRef, private animationCtrl: AnimationController) {}
+  constructor(private ref: ElementRef) {}
 
   async ngAfterViewInit(): Promise<void> {
     this.setAnimation();
@@ -41,25 +42,14 @@ export class BannerComponent implements Banner, Animated, OnChanges, AfterViewIn
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
     if ('show' in changes) {
       if (this.show) {
-        await this.bannerAnimation.play();
-        this.bannerAnimation.stop();
+        await this.animation.play();
+        this.animation.stop();
         this.bannerCloseEvent.emit();
       }
     }
   }
 
   setAnimation(): void {
-    this.bannerAnimation = this.animationCtrl
-      .create()
-      .addElement(this.ref.nativeElement)
-      .fill('none')
-      .duration(this.durationTime)
-      .fromTo('transform', 'scale(0)', 'scale(1)')
-      .delay(1000)
-      .keyframes([
-        { offset: 0.0, opacity: '1.0' },
-        { offset: 0.5, opacity: '0.5' },
-        { offset: 1.0, opacity: '0.0' },
-      ]);
+    this.animation = new BannerAnimation(this.ref.nativeElement, { duration: this.durationTime }).getAnimation();
   }
 }
