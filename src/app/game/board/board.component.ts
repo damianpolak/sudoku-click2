@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { GameLevel, GameStateService } from 'src/app/shared/services/game-state.service';
 import { Address, Field } from './field/field.types';
 import { Board } from './board.types';
@@ -124,7 +124,6 @@ export class BoardComponent extends BaseComponent implements Animated, OnInit, O
             this.showAnimation(this.restartAnimation, 'Restart game', 'Good luck!');
             break;
           case GameStartType.SECOND_CHANCE:
-            console.log("I've got second chance");
             this.showAnimation(this.secondChanceAnimation, 'Second chance', 'Good luck!');
             break;
           default:

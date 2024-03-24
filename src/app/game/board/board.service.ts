@@ -3,19 +3,7 @@ import { SudokuUtil } from 'src/app/shared/utils/sudoku.util';
 import { Board } from './board.types';
 import { GameStateService } from 'src/app/shared/services/game-state.service';
 import { Address, Field } from './field/field.types';
-import {
-  BehaviorSubject,
-  Observable,
-  Subscription,
-  combineLatest,
-  every,
-  from,
-  iif,
-  map,
-  mergeMap,
-  tap,
-  withLatestFrom,
-} from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, combineLatest, from, map, tap, withLatestFrom } from 'rxjs';
 import { BoardBuilder } from 'src/app/shared/builders/board.builder';
 import {
   ControlsService,
@@ -115,14 +103,12 @@ export class BoardService extends BaseService implements OnDestroy {
   ]).subscribe(([input, burst]) => {
     this.inputMode = input;
     this.burstMode = burst;
-    console.log('INTERRACTION', this.inputMode, this.burstMode);
   });
 
   private fieldClickSub$: Subscription = this.gameStateServ
     .getBoardFieldClick$()
     .pipe(withLatestFrom(this.gameStateServ.getSelectedBurstNumber$()))
     .subscribe(([f, n]) => {
-      console.log('=== selected burst number', n);
       this.onFieldClick(f);
       if (this.burstMode === BurstModeType.BURST) {
         this.controlsServ.onNumberClick({
@@ -131,34 +117,12 @@ export class BoardService extends BaseService implements OnDestroy {
           number: n ? n : 1,
         });
       }
-      // thi
     });
-  // private fieldClickSub$: Subscription = combineLatest([
-  //   this.gameStateServ.getBoardFieldClick$(),
-  //   this.gameStateServ.getSelectedBurstNumber$(),
-  // ]).subscribe(([f, n]) => {
-  //   console.log('=== selected burst number', n);
-  //   this.onFieldClick(f);
-  //   if (this.burstMode === BurstModeType.BURST) {
-  //     this.controlsServ.onNumberClick({
-  //       source: NumberClickEventSource.FIELD,
-  //       mode: InputModeType.VALUE,
-  //       number: n ? n : 1,
-  //     });
-  //   }
-  //   // thi
-  // });
-
-  // private fieldClickSub$: Subscription = this.gameStateServ
-  //   .getBoardFieldClick$()
-  //   .subscribe((v) => this.onFieldClick(v));
 
   private numberClickSub$: Subscription = this.controlsServ
     .getNumberClick$()
     .pipe(
       tap((_) => {
-        console.log('=== numberClickSub$', _, this.burstMode);
-
         if (
           this.burstMode === BurstModeType.NORMAL ||
           (this.burstMode === BurstModeType.BURST && _.source === NumberClickEventSource.FIELD)
@@ -171,18 +135,6 @@ export class BoardService extends BaseService implements OnDestroy {
       })
     )
     .subscribe();
-
-  // private numberClickSub$: Subscription = this.controlsServ
-  //   .getNumberClick$()
-  //   .pipe(
-  //     tap((_) => {
-  //       this.gameStateServ.setSelectedBurstNumber(_.number);
-  //       this.mistakeUpdateHandler(_);
-  //     })
-  //   )
-  //   .subscribe((v) => {
-  //     this.onNumberClick(v);
-  //   });
 
   private featureClickSub$: Subscription = this.controlsServ
     .getFeatureClick$()
@@ -331,7 +283,6 @@ export class BoardService extends BaseService implements OnDestroy {
   }
 
   private mistakeUpdateHandler(numberClickEvent: NumberClickEvent): void {
-    console.log('=== mistakeUpdateHandler', numberClickEvent);
     if (numberClickEvent.mode === InputModeType.VALUE) {
       if (
         !this.isCorrectValue(numberClickEvent.number) &&
