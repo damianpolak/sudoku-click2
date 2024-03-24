@@ -75,7 +75,7 @@ export class GameStateService {
   private readonly inputMode$ = new BehaviorSubject<InputModeType>(InputModeType.VALUE);
   private readonly burstMode$ = new BehaviorSubject<BurstModeType>(BurstModeType.NORMAL);
   private readonly missingNumbers$ = new Subject<MissingNumber[]>();
-  private readonly selectedBurstNumber$ = new BehaviorSubject<number | undefined>(undefined);
+  private readonly selectedBurstNumber$ = new BehaviorSubject<number | undefined>(5);
   private readonly gameState$ = new Subject<GameState>();
   private readonly fieldClick$ = new Subject<Field>();
   private readonly gameStatus$ = new Subject<GameStatusType>();
