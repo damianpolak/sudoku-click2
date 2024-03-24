@@ -37,7 +37,7 @@ export class FieldComponent extends BaseComponent implements Animated, OnChanges
   /**
    * @TODO INTEGRATE WITH OPTIONS
    */
-  animationsEnabled: boolean = true;
+  animationsEnabled: boolean = false;
 
   private readonly viewReady$ = new Subject<void>();
   private readonly animate$ = new Subject<Field>();
@@ -93,14 +93,15 @@ export class FieldComponent extends BaseComponent implements Animated, OnChanges
     this.viewReady$.next();
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnChanges(changes: SimpleChanges): void {
-    if ('field' in changes) {
-      const field = changes['field'].currentValue as Field;
-      this.setAnimation();
-      if (field.selected) {
-        this.animate$.next(field);
-      }
-    }
+    // if ('field' in changes) {
+    //   const field = changes['field'].currentValue as Field;
+    //   this.setAnimation();
+    //   if (field.selected) {
+    //     this.animate$.next(field);
+    //   }
+    // }
   }
 
   ngOnDestroy(): void {
