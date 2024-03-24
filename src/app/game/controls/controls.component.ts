@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ControlsService, FeatureClickEvent } from './controls.service';
+import { ControlsService, FeatureClickEvent, NumberClickEventSource } from './controls.service';
 import { GameStateService } from 'src/app/shared/services/game-state.service';
 import { Subscription, combineLatest, map } from 'rxjs';
 import { BurstModeType, InputModeType } from 'src/app/shared/services/game-state.types';
@@ -72,10 +72,11 @@ export class ControlsComponent extends BaseComponent implements OnInit, OnDestro
     this.controlsServ.onFeatureClick(value);
   }
 
-  onNumberClick(value: number): void {
+  onNumberClick(value: number, source: NumberClickEventSource = NumberClickEventSource.NUMBER): void {
     this.controlsServ.onNumberClick({
       mode: this.inputMode,
       number: value,
+      source,
     });
   }
 

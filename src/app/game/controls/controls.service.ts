@@ -2,7 +2,13 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { InputModeType } from 'src/app/shared/services/game-state.types';
 
+export enum NumberClickEventSource {
+  FIELD = 'FIELD',
+  NUMBER = 'NUMBER',
+}
+
 export type NumberClickEvent = {
+  source: NumberClickEventSource;
   mode: InputModeType;
   number: number;
 };
