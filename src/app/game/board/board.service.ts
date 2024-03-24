@@ -3,10 +3,21 @@ import { SudokuUtil } from 'src/app/shared/utils/sudoku.util';
 import { Board } from './board.types';
 import { GameStateService } from 'src/app/shared/services/game-state.service';
 import { Address, Field } from './field/field.types';
-import { BehaviorSubject, Observable, Subscription, combineLatest, every, from, map, tap, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, combineLatest, from, map, tap, withLatestFrom } from 'rxjs';
 import { BoardBuilder } from 'src/app/shared/builders/board.builder';
-import { ControlsService, FeatureClickEvent, NumberClickEvent } from '../controls/controls.service';
-import { GameStartMode, GameStartType, GameStatusType, InputMode } from 'src/app/shared/services/game-state.types';
+import {
+  ControlsService,
+  FeatureClickEvent,
+  NumberClickEvent,
+  NumberClickEventSource,
+} from '../controls/controls.service';
+import {
+  BurstModeType,
+  GameStartMode,
+  GameStartType,
+  GameStatusType,
+  InputModeType,
+} from 'src/app/shared/services/game-state.types';
 import { HistoryService } from 'src/app/shared/services/history.service';
 import { NotesBuilder } from 'src/app/shared/builders/notes.builder';
 import { TimerService } from 'src/app/shared/services/timer.service';
@@ -26,7 +37,8 @@ export class BoardService extends BaseService implements OnDestroy {
 
   private defaultBaseBoard!: BoardBuilder;
 
-  private inputMode: InputMode = 'value';
+  private inputMode: InputModeType = InputModeType.VALUE;
+  private burstMode: BurstModeType = BurstModeType.NORMAL;
   private _selectedField!: Field;
   private _board!: Board;
 
@@ -85,21 +97,44 @@ export class BoardService extends BaseService implements OnDestroy {
     this._selectedField = field;
   });
 
-  private inputModeSub$: Subscription = this.gameStateServ.getInputMode$().subscribe((x) => (this.inputMode = x));
+  private inputInterractionSub$: Subscription = combineLatest([
+    this.gameStateServ.getInputMode$(),
+    this.gameStateServ.getBurstMode$(),
+  ]).subscribe(([input, burst]) => {
+    this.inputMode = input;
+    this.burstMode = burst;
+  });
+
   private fieldClickSub$: Subscription = this.gameStateServ
     .getBoardFieldClick$()
-    .subscribe((v) => this.onFieldClick(v));
+    .pipe(withLatestFrom(this.gameStateServ.getSelectedBurstNumber$()))
+    .subscribe(([f, n]) => {
+      this.onFieldClick(f);
+      if (this.burstMode === BurstModeType.BURST) {
+        this.controlsServ.onNumberClick({
+          source: NumberClickEventSource.FIELD,
+          mode: this.inputMode,
+          number: n ? n : 1,
+        });
+      }
+    });
 
   private numberClickSub$: Subscription = this.controlsServ
     .getNumberClick$()
     .pipe(
       tap((_) => {
-        this.mistakeUpdateHandler(_);
+        if (
+          this.burstMode === BurstModeType.NORMAL ||
+          (this.burstMode === BurstModeType.BURST && _.source === NumberClickEventSource.FIELD)
+        ) {
+          this.mistakeUpdateHandler(_);
+          this.onNumberClick(_);
+        } else if (this.burstMode === BurstModeType.BURST && _.source === NumberClickEventSource.NUMBER) {
+          this.gameStateServ.setSelectedBurstNumber(_.number);
+        }
       })
     )
-    .subscribe((v) => {
-      this.onNumberClick(v);
-    });
+    .subscribe();
 
   private featureClickSub$: Subscription = this.controlsServ
     .getFeatureClick$()
@@ -120,7 +155,7 @@ export class BoardService extends BaseService implements OnDestroy {
     console.log('BoardService Constructor');
     this.registerSubscriptions([
       this.boardSub$,
-      this.inputModeSub$,
+      this.inputInterractionSub$,
       this.fieldClickSub$,
       this.numberClickSub$,
       this.featureClickSub$,
@@ -141,7 +176,15 @@ export class BoardService extends BaseService implements OnDestroy {
 
   private onFeatureClick(featureClickEvent: FeatureClickEvent): void {
     if (featureClickEvent.feature === 'notes') {
-      this.gameStateServ.setInputMode(this.inputMode === 'value' ? 'notes' : 'value');
+      this.gameStateServ.setInputMode(
+        this.inputMode === InputModeType.VALUE ? InputModeType.NOTES : InputModeType.VALUE
+      );
+    }
+
+    if (featureClickEvent.feature === 'burst') {
+      this.gameStateServ.setBurstMode(
+        this.burstMode === BurstModeType.NORMAL ? BurstModeType.BURST : BurstModeType.NORMAL
+      );
     }
 
     if (featureClickEvent.feature === 'erase') {
@@ -169,7 +212,7 @@ export class BoardService extends BaseService implements OnDestroy {
     const notInitialValue = !this._selectedField.isInitialValue;
     const notCorrectValue =
       !this.board[this._selectedField.address.row][this._selectedField.address.col].isCorrectValue;
-    const notNotesMode = this.inputMode !== 'notes';
+    const notNotesMode = this.inputMode !== InputModeType.NOTES;
     if (notInitialValue && notCorrectValue && notNotesMode) {
       this.setBoard(
         new BoardBuilder({ board: this._board })
@@ -240,7 +283,7 @@ export class BoardService extends BaseService implements OnDestroy {
   }
 
   private mistakeUpdateHandler(numberClickEvent: NumberClickEvent): void {
-    if (numberClickEvent.mode === 'value') {
+    if (numberClickEvent.mode === InputModeType.VALUE) {
       if (
         !this.isCorrectValue(numberClickEvent.number) &&
         !this.isCorrectValue(this._selectedField.value) &&

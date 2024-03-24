@@ -3,7 +3,7 @@ import { AppStateService } from '../shared/services/app-state.service';
 import { Subscription, combineLatest, map, tap } from 'rxjs';
 import { GameLevel, GameStateService } from '../shared/services/game-state.service';
 import { TimerService } from '../shared/services/timer.service';
-import { GameStartType, GameStatusType, InputMode } from '../shared/services/game-state.types';
+import { GameStartType, GameStatusType, InputModeType } from '../shared/services/game-state.types';
 import { PauseModalActionType } from './pause/pause.types';
 import { MistakeService } from '../shared/services/mistake.service';
 import { FinishGame, FinishGameType } from '../shared/components/fullscreen-view/fullscreen-view.types';
@@ -17,7 +17,7 @@ import { BaseComponent } from '../shared/abstracts/base-component.abstract';
 })
 export class GamePage extends BaseComponent implements OnDestroy {
   orientation$ = this.appStateServ.getScreenOrientation$();
-  inputMode!: InputMode;
+  inputMode!: InputModeType;
   isPaused!: boolean;
   isFinalViewOpen: boolean = false;
   level!: GameLevel;

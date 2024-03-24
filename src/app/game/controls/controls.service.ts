@@ -1,9 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { InputMode } from 'src/app/shared/services/game-state.types';
+import { InputModeType } from 'src/app/shared/services/game-state.types';
+
+export enum NumberClickEventSource {
+  FIELD = 'FIELD',
+  NUMBER = 'NUMBER',
+}
 
 export type NumberClickEvent = {
-  mode: InputMode;
+  source: NumberClickEventSource;
+  mode: InputModeType;
   number: number;
 };
 
@@ -15,7 +21,7 @@ export type FeatureClickEvent = {
 
 type FeatureClickType = 'click' | 'toggle';
 
-export type Features = 'back' | 'erase' | 'notes' | 'tip';
+export type Features = 'back' | 'erase' | 'notes' | 'tip' | 'burst';
 
 @Injectable({
   providedIn: 'root',

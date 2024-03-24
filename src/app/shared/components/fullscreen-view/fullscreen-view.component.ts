@@ -15,7 +15,7 @@ import { Animation, NavController } from '@ionic/angular';
 import { FinishGameType } from './fullscreen-view.types';
 import { Animated } from '../../interfaces/core.interface';
 import { GameStateService } from '../../services/game-state.service';
-import { GameStartType, GameStatusType } from '../../services/game-state.types';
+import { BurstModeType, GameStartType, GameStatusType, InputModeType } from '../../services/game-state.types';
 import { Subscription, tap } from 'rxjs';
 import { BaseComponent } from '../../abstracts/base-component.abstract';
 import { MistakeService } from '../../services/mistake.service';
@@ -105,6 +105,8 @@ export class FullscreenViewComponent extends BaseComponent implements Animated, 
 
   onSecondChance(): void {
     this.mistakeServ.secondChance();
+    this.gameStateServ.setInputMode(InputModeType.VALUE);
+    this.gameStateServ.setBurstMode(BurstModeType.NORMAL);
     this.controlsServ.onFeatureClick({
       type: 'click',
       feature: 'back',
@@ -113,8 +115,6 @@ export class FullscreenViewComponent extends BaseComponent implements Animated, 
     this.gameStateServ.setGameStartMode({
       type: GameStartType.SECOND_CHANCE,
     });
-    // this.gameStateServ.setGameStatus(GameStatusType.PENDING);
-    console.log('Second chance');
   }
 
   navigateHome(): void {

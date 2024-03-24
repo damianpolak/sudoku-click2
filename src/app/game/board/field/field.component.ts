@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { Observable, Subject, combineLatest, tap } from 'rxjs';
 import { GameStateService } from 'src/app/shared/services/game-state.service';
-import { InputMode } from 'src/app/shared/services/game-state.types';
+import { InputModeType } from 'src/app/shared/services/game-state.types';
 import { Field } from './field.types';
 import { Animation } from '@ionic/angular';
 import { Animated } from 'src/app/shared/interfaces/core.interface';
@@ -26,7 +26,7 @@ import { FieldAnimation } from 'src/app/shared/animations/field.animation';
 export class FieldComponent extends BaseComponent implements Animated, OnChanges, AfterViewInit, OnDestroy {
   @Input() field!: Field;
   @Input() border!: string[];
-  inputMode$: Observable<InputMode> = this.gameStateServ.getInputMode$();
+  inputMode$: Observable<InputModeType> = this.gameStateServ.getInputMode$();
   private fieldAnimation!: Animation;
   private readonly _debugMode: boolean = true;
 

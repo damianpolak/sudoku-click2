@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
-import { GameStartMode, GameStartType, GameState, GameStatusType, InputMode } from './game-state.types';
+import {
+  BurstModeType,
+  GameStartMode,
+  GameStartType,
+  GameState,
+  GameStatusType,
+  InputModeType,
+} from './game-state.types';
 import { MissingNumber } from 'src/app/game/board/board.types';
 import { Field } from 'src/app/game/board/field/field.types';
 
@@ -65,8 +72,10 @@ export class GameStateService {
       : { type: GameStartType.NEW_GAME }
   );
   private readonly pauseState$ = new Subject<boolean>();
-  private readonly inputMode$ = new BehaviorSubject<InputMode>('value');
+  private readonly inputMode$ = new BehaviorSubject<InputModeType>(InputModeType.VALUE);
+  private readonly burstMode$ = new BehaviorSubject<BurstModeType>(BurstModeType.NORMAL);
   private readonly missingNumbers$ = new Subject<MissingNumber[]>();
+  private readonly selectedBurstNumber$ = new BehaviorSubject<number | undefined>(5);
   private readonly gameState$ = new Subject<GameState>();
   private readonly fieldClick$ = new Subject<Field>();
   private readonly gameStatus$ = new Subject<GameStatusType>();
@@ -121,12 +130,20 @@ export class GameStateService {
     this.gameStartMode$.next(value);
   }
 
-  setInputMode(mode: InputMode): void {
+  setInputMode(mode: InputModeType): void {
     this.inputMode$.next(mode);
   }
 
-  getInputMode$(): Observable<InputMode> {
+  getInputMode$(): Observable<InputModeType> {
     return this.inputMode$.asObservable();
+  }
+
+  setBurstMode(value: BurstModeType): void {
+    this.burstMode$.next(value);
+  }
+
+  getBurstMode$(): Observable<BurstModeType> {
+    return this.burstMode$.asObservable();
   }
 
   onBoardFieldClick(field: Field): void {
@@ -143,6 +160,14 @@ export class GameStateService {
 
   setMissingNumbers(value: MissingNumber[]): void {
     this.missingNumbers$.next(value);
+  }
+
+  getSelectedBurstNumber$(): Observable<number | undefined> {
+    return this.selectedBurstNumber$.asObservable();
+  }
+
+  setSelectedBurstNumber(value: number | undefined): void {
+    this.selectedBurstNumber$.next(value);
   }
 
   setGameStatus(value: GameStatusType): void {

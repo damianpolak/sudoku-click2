@@ -2,6 +2,6 @@
   {{ value }}
 </div>
 
-<div class="missing" [ngStyle]="{ visibility: +missingValue <= 0 || inputMode === 'notes' ? 'hidden' : 'visible' }">
+<div class="missing" [ngStyle]="{ visibility: +missingValue <= 0 || inputMode === 'NOTES' ? 'hidden' : 'visible' }">
   {{ missingValue }}
 </div>
