@@ -44,8 +44,16 @@
 
   ion-button {
     width: 100%;
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     --color: var(--ion-color-secondary-contrast);
+    --padding-start: 0;
+    --padding-end: 0;
+    --padding-top: 0;
+    --padding-bottom: 0;
+
+    ion-icon {
+      font-size: 1.6rem;
+    }
   }
 
   @include numbers-buttons();
