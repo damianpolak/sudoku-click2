@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
-import { GameStartMode, GameStartType, GameState, GameStatusType, InputMode } from './game-state.types';
+import { BurstModeType, GameStartMode, GameStartType, GameState, GameStatusType, InputMode } from './game-state.types';
 import { MissingNumber } from 'src/app/game/board/board.types';
 import { Field } from 'src/app/game/board/field/field.types';
 
@@ -66,6 +66,7 @@ export class GameStateService {
   );
   private readonly pauseState$ = new Subject<boolean>();
   private readonly inputMode$ = new BehaviorSubject<InputMode>('value');
+  private readonly burstMode$ = new BehaviorSubject<BurstModeType>(BurstModeType.NORMAL);
   private readonly missingNumbers$ = new Subject<MissingNumber[]>();
   private readonly gameState$ = new Subject<GameState>();
   private readonly fieldClick$ = new Subject<Field>();
@@ -127,6 +128,14 @@ export class GameStateService {
 
   getInputMode$(): Observable<InputMode> {
     return this.inputMode$.asObservable();
+  }
+
+  setBurstMode(value: BurstModeType): void {
+    this.burstMode$.next(value);
+  }
+
+  getBurstMode$(): Observable<BurstModeType> {
+    return this.burstMode$.asObservable();
   }
 
   onBoardFieldClick(field: Field): void {

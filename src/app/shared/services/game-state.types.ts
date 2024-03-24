@@ -12,6 +12,10 @@ export enum GameStatusType {
 }
 
 export type InputMode = 'value' | 'notes';
+export enum BurstModeType {
+  NORMAL = 'NORMAL',
+  BURST = 'BURST',
+}
 
 export type GameState = {
   level: GameLevel;

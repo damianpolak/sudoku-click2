@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ControlsService, FeatureClickEvent } from './controls.service';
 import { GameStateService } from 'src/app/shared/services/game-state.service';
-import { Subscription, map } from 'rxjs';
-import { InputMode } from 'src/app/shared/services/game-state.types';
+import { Subscription, combineLatest, map } from 'rxjs';
+import { BurstModeType, InputMode } from 'src/app/shared/services/game-state.types';
 import { BaseComponent } from 'src/app/shared/abstracts/base-component.abstract';
 
 type NumberControl = {
@@ -22,8 +22,9 @@ type FeatureControl = FeatureClickEvent & {
   styleUrls: ['./controls.component.scss'],
 })
 export class ControlsComponent extends BaseComponent implements OnInit, OnDestroy {
-  inputMode!: InputMode;
-  private inputModeSubs$!: Subscription;
+  private inputMode!: InputMode;
+  private burstMode!: BurstModeType;
+  private interractionModeSub$!: Subscription;
   private numberSub$: Subscription = this.gameStateServ
     .getMissingNumbers$()
     .pipe(
@@ -52,11 +53,15 @@ export class ControlsComponent extends BaseComponent implements OnInit, OnDestro
   }
 
   ngOnInit() {
-    this.inputModeSubs$ = this.gameStateServ.getInputMode$().subscribe((mode) => {
-      this.inputMode = mode;
+    this.interractionModeSub$ = combineLatest([
+      this.gameStateServ.getInputMode$(),
+      this.gameStateServ.getBurstMode$(),
+    ]).subscribe(([input, burst]) => {
+      this.inputMode = input;
+      this.burstMode = burst;
       this.features = this.featuresCreate();
     });
-    this.registerSubscriptions([this.inputModeSubs$, this.numberSub$]);
+    this.registerSubscriptions([this.interractionModeSub$, this.numberSub$]);
   }
 
   ngOnDestroy(): void {
@@ -86,6 +91,13 @@ export class ControlsComponent extends BaseComponent implements OnInit, OnDestro
         toggle: this.inputMode === 'notes',
       },
       { name: 'Tip', type: 'click', feature: 'tip', icon: 'bulb-outline' },
+      {
+        name: 'Burst',
+        type: 'toggle',
+        feature: 'burst',
+        icon: this.burstMode === BurstModeType.NORMAL ? 'square-outline' : 'apps-outline',
+        toggle: this.burstMode === BurstModeType.BURST,
+      },
     ];
   }
 
