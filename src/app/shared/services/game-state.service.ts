@@ -75,6 +75,7 @@ export class GameStateService {
   private readonly inputMode$ = new BehaviorSubject<InputModeType>(InputModeType.VALUE);
   private readonly burstMode$ = new BehaviorSubject<BurstModeType>(BurstModeType.NORMAL);
   private readonly missingNumbers$ = new Subject<MissingNumber[]>();
+  private readonly selectedBurstNumber$ = new BehaviorSubject<number | undefined>(undefined);
   private readonly gameState$ = new Subject<GameState>();
   private readonly fieldClick$ = new Subject<Field>();
   private readonly gameStatus$ = new Subject<GameStatusType>();
@@ -159,6 +160,14 @@ export class GameStateService {
 
   setMissingNumbers(value: MissingNumber[]): void {
     this.missingNumbers$.next(value);
+  }
+
+  getSelectedBurstNumber$(): Observable<number | undefined> {
+    return this.selectedBurstNumber$.asObservable();
+  }
+
+  setSelectedBurstNumber(value: number | undefined): void {
+    this.selectedBurstNumber$.next(value);
   }
 
   setGameStatus(value: GameStatusType): void {
