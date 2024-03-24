@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ControlsService, FeatureClickEvent } from './controls.service';
 import { GameStateService } from 'src/app/shared/services/game-state.service';
 import { Subscription, combineLatest, map } from 'rxjs';
-import { BurstModeType, InputMode } from 'src/app/shared/services/game-state.types';
+import { BurstModeType, InputModeType } from 'src/app/shared/services/game-state.types';
 import { BaseComponent } from 'src/app/shared/abstracts/base-component.abstract';
 
 type NumberControl = {
@@ -22,7 +22,7 @@ type FeatureControl = FeatureClickEvent & {
   styleUrls: ['./controls.component.scss'],
 })
 export class ControlsComponent extends BaseComponent implements OnInit, OnDestroy {
-  private inputMode!: InputMode;
+  private inputMode!: InputModeType;
   private burstMode!: BurstModeType;
   private interractionModeSub$!: Subscription;
   private numberSub$: Subscription = this.gameStateServ
@@ -87,8 +87,8 @@ export class ControlsComponent extends BaseComponent implements OnInit, OnDestro
         name: 'Notes',
         type: 'toggle',
         feature: 'notes',
-        icon: this.inputMode === 'value' ? 'document-outline' : 'document-text-outline',
-        toggle: this.inputMode === 'notes',
+        icon: this.inputMode === InputModeType.VALUE ? 'document-outline' : 'document-text-outline',
+        toggle: this.inputMode === InputModeType.NOTES,
       },
       { name: 'Tip', type: 'click', feature: 'tip', icon: 'bulb-outline' },
       {

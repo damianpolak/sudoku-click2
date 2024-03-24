@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { InputMode } from 'src/app/shared/services/game-state.types';
+import { InputModeType } from 'src/app/shared/services/game-state.types';
 
 export type NumberClickEvent = {
-  mode: InputMode;
+  mode: InputModeType;
   number: number;
 };
 

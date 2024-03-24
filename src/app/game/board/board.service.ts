@@ -11,7 +11,7 @@ import {
   GameStartMode,
   GameStartType,
   GameStatusType,
-  InputMode,
+  InputModeType,
 } from 'src/app/shared/services/game-state.types';
 import { HistoryService } from 'src/app/shared/services/history.service';
 import { NotesBuilder } from 'src/app/shared/builders/notes.builder';
@@ -32,7 +32,7 @@ export class BoardService extends BaseService implements OnDestroy {
 
   private defaultBaseBoard!: BoardBuilder;
 
-  private inputMode: InputMode = 'value';
+  private inputMode: InputModeType = InputModeType.VALUE;
   private burstMode: BurstModeType = BurstModeType.NORMAL;
   private _selectedField!: Field;
   private _board!: Board;
@@ -155,7 +155,9 @@ export class BoardService extends BaseService implements OnDestroy {
 
   private onFeatureClick(featureClickEvent: FeatureClickEvent): void {
     if (featureClickEvent.feature === 'notes') {
-      this.gameStateServ.setInputMode(this.inputMode === 'value' ? 'notes' : 'value');
+      this.gameStateServ.setInputMode(
+        this.inputMode === InputModeType.VALUE ? InputModeType.NOTES : InputModeType.VALUE
+      );
     }
 
     if (featureClickEvent.feature === 'burst') {
@@ -189,7 +191,7 @@ export class BoardService extends BaseService implements OnDestroy {
     const notInitialValue = !this._selectedField.isInitialValue;
     const notCorrectValue =
       !this.board[this._selectedField.address.row][this._selectedField.address.col].isCorrectValue;
-    const notNotesMode = this.inputMode !== 'notes';
+    const notNotesMode = this.inputMode !== InputModeType.NOTES;
     if (notInitialValue && notCorrectValue && notNotesMode) {
       this.setBoard(
         new BoardBuilder({ board: this._board })
@@ -260,7 +262,7 @@ export class BoardService extends BaseService implements OnDestroy {
   }
 
   private mistakeUpdateHandler(numberClickEvent: NumberClickEvent): void {
-    if (numberClickEvent.mode === 'value') {
+    if (numberClickEvent.mode === InputModeType.VALUE) {
       if (
         !this.isCorrectValue(numberClickEvent.number) &&
         !this.isCorrectValue(this._selectedField.value) &&

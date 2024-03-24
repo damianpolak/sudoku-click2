@@ -11,7 +11,7 @@ import {
 import { Animated } from '../../interfaces/core.interface';
 import { Animation } from '@ionic/angular';
 import { GameStateService } from '../../services/game-state.service';
-import { InputMode } from '../../services/game-state.types';
+import { InputModeType } from '../../services/game-state.types';
 import { Subscription, tap } from 'rxjs';
 import { BaseComponent } from '../../abstracts/base-component.abstract';
 import { NumberButtonAnimation } from '../../animations/number-button.animation';
@@ -26,17 +26,17 @@ export class NumberButtonComponent extends BaseComponent implements Animated, On
     .getInputMode$()
     .pipe(
       tap((_) => {
-        this.background = _ === 'notes' ? 'transparent' : '';
+        this.background = _ === InputModeType.NOTES ? 'transparent' : '';
       })
     )
     .subscribe((v) => (this._inputMode = v));
   @Input() value: string = '';
   @Input() missingValue: string = '';
   private buttonAnimation!: Animation;
-  private _inputMode!: InputMode;
+  private _inputMode!: InputModeType;
   animationsEnabled: boolean = true;
 
-  get inputMode(): InputMode {
+  get inputMode(): InputModeType {
     return this._inputMode;
   }
 

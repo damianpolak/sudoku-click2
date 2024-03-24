@@ -11,7 +11,11 @@ export enum GameStatusType {
   LOSS = 'LOSS',
 }
 
-export type InputMode = 'value' | 'notes';
+export enum InputModeType {
+  VALUE = 'VALUE',
+  NOTES = 'NOTES',
+}
+
 export enum BurstModeType {
   NORMAL = 'NORMAL',
   BURST = 'BURST',
