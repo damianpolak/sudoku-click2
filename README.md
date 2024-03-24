@@ -71,6 +71,7 @@ ng serve --port 1338
 - Slow board click on iOS (cause: ngOnChange set animations, a lot of checks)
 - Notes/Value input mode should be cleared after new game, restart or continue
 - When put notes numbers and clear and put number again then all numbers back
+- Put notes numbers on value number animate field
 
 ## Options section:
 
