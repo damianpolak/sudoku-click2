@@ -16,11 +16,12 @@ npm install -g @ionic/cli
 
 ```bash
 npm install
-ng serve --port 1338
+ng serve --port 4210
 ```
 
 ## Features to do:
 
+- ~~Hide status bar (android - @capacitor/status bar)~~
 - ~~Create burst mode~~
 - ~~Set default selected field when continue game~~
 - ~~Don't run animations when put number (only background)~~
@@ -72,6 +73,8 @@ ng serve --port 1338
 - Notes/Value input mode should be cleared after new game, restart or continue
 - When put notes numbers and clear and put number again then all numbers back
 - Put notes numbers on value number animate field
+- Back doesn't work when burst mode and after burst
+- Wrong color (black) on finishing screen (should be --ion-color-text)
 
 ## Options section:
 
