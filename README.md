@@ -74,7 +74,7 @@ ng serve --port 4210
 - When put notes numbers and clear and put number again then all numbers back
 - Put notes numbers on value number animate field
 - Back doesn't work when burst mode and after burst
-- Wrong color (black) on finishing screen (should be --ion-color-text)
+- ~~Wrong color (black) on finishing screen (should be --ion-text-color)~~
 
 ## Options section:
 
