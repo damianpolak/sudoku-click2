@@ -27,7 +27,9 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
 
   async ngOnInit(): Promise<void> {
     this.setHeaderSize(screen.orientation.type, '0px', '44px');
-    await StatusBar.hide();
+    await StatusBar.hide().catch((e) => {
+      console.log(`[SudokuClick][Capacitor]`, (e as Error).message);
+    });
   }
 
   ngOnDestroy(): void {
