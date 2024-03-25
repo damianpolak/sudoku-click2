@@ -25,7 +25,7 @@ export class GamePage extends BaseComponent implements OnDestroy {
 
   private gameStateSub$: Subscription = this.gameStateServ
     .getGameState$()
-    .subscribe((gameState) => this.gameStateServ.saveGameState(gameState));
+    .subscribe(async (gameState) => await this.gameStateServ.saveGameState(gameState));
 
   private inputModeSubs$: Subscription = this.gameStateServ.getInputMode$().subscribe((mode) => {
     this.inputMode = mode;

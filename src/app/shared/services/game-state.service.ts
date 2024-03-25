@@ -10,6 +10,7 @@ import {
 } from './game-state.types';
 import { MissingNumber } from 'src/app/game/board/board.types';
 import { Field } from 'src/app/game/board/field/field.types';
+import { StorageService } from './storage.service';
 
 export enum Levels {
   EASY = 'EASY',
@@ -64,13 +65,10 @@ export class GameStateService {
   /**
    * Game state local storage key
    */
-  private static readonly GAME_STATE_KEY = 'GAME_STATE' as const;
+  private static readonly GAME_STATE_KEY = 'SUDOKU_GAME_STATE' as const;
 
-  private readonly gameStartMode$ = new BehaviorSubject<GameStartMode>(
-    this.loadGameState()
-      ? { type: GameStartType.CONTINUE, gameState: this.loadGameState() }
-      : { type: GameStartType.NEW_GAME }
-  );
+  private gameStartMode$!: BehaviorSubject<GameStartMode>;
+
   private readonly pauseState$ = new Subject<boolean>();
   private readonly inputMode$ = new BehaviorSubject<InputModeType>(InputModeType.VALUE);
   private readonly burstMode$ = new BehaviorSubject<BurstModeType>(BurstModeType.NORMAL);
@@ -82,9 +80,16 @@ export class GameStateService {
 
   private _selectedLevel: GameLevel;
 
-  constructor() {
+  constructor(private storageServ: StorageService) {
     console.log('GameStateService constructor');
     this._selectedLevel = new GameLevel(Levels.MASTER);
+
+    (async () => {
+      const result = await this.loadGameState();
+      this.gameStartMode$ = new BehaviorSubject<GameStartMode>(
+        result ? { type: GameStartType.CONTINUE, gameState: result } : { type: GameStartType.NEW_GAME }
+      );
+    })();
   }
 
   setGameState(gameState: GameState): void {
@@ -178,25 +183,25 @@ export class GameStateService {
     return this.gameStatus$.asObservable();
   }
 
-  saveGameState(gamestate: GameState): void {
+  async saveGameState(gamestate: GameState): Promise<void> {
     try {
-      localStorage.setItem(GameStateService.GAME_STATE_KEY, JSON.stringify(gamestate));
+      await this.storageServ.set(GameStateService.GAME_STATE_KEY, JSON.stringify(gamestate));
     } catch (e) {
-      console.log('Cannot save game state');
+      console.log('Cannot save the game state');
     }
   }
 
-  loadGameState(): GameState | undefined {
+  async loadGameState(): Promise<GameState | undefined> {
     try {
-      const data = localStorage.getItem(GameStateService.GAME_STATE_KEY);
+      const data = await this.storageServ.get(GameStateService.GAME_STATE_KEY);
       return data !== null ? JSON.parse(data) : undefined;
     } catch (e) {
-      console.log('An error occured when trying to load game state.');
+      console.log('An error occured when trying to load game state');
       return undefined;
     }
   }
 
-  clearGameState(): void {
-    localStorage.removeItem(GameStateService.GAME_STATE_KEY);
+  async clearGameState(): Promise<void> {
+    await this.storageServ.remove(GameStateService.GAME_STATE_KEY);
   }
 }

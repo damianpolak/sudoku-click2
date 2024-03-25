@@ -117,8 +117,8 @@ export class FullscreenViewComponent extends BaseComponent implements Animated, 
     });
   }
 
-  navigateHome(): void {
-    this.gameStateServ.clearGameState();
+  async navigateHome(): Promise<void> {
+    await this.gameStateServ.clearGameState();
     this.navCtrl.navigateBack('home');
   }
 
