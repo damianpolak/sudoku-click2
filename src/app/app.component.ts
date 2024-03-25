@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, fromEvent } from 'rxjs';
 import { AppStateService } from './shared/services/app-state.service';
 import { BaseComponent } from './shared/abstracts/base-component.abstract';
+import { StatusBar } from '@capacitor/status-bar';
 
 @Component({
   selector: 'app-root',
@@ -24,8 +25,9 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     this.registerSubscriptions([this.screenOrientationSubs$]);
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.setHeaderSize(screen.orientation.type, '0px', '44px');
+    await StatusBar.hide();
   }
 
   ngOnDestroy(): void {
