@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { isNavigatedGuard } from './guards';
 
 const routes: Routes = [
   {
@@ -15,6 +16,11 @@ const routes: Routes = [
     path: 'game',
     loadChildren: () => import('./game/game.module').then((m) => m.GamePageModule),
     pathMatch: 'full',
+    canActivate: [isNavigatedGuard],
+  },
+  {
+    path: '**',
+    redirectTo: 'home',
   },
 ];
 
