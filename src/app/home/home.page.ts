@@ -51,14 +51,14 @@ export class HomePage extends BaseComponent {
     this.unsubscribeSubscriptions();
   }
 
-  private loadGameState(): void {
-    const gameState = this.gameStateServ.loadGameState();
+  private async loadGameState(): Promise<void> {
+    const gameState = await this.gameStateServ.loadGameState();
     if (gameState && this.isGamePlayable(gameState)) {
       this.canContinue = true;
       this._gameState = gameState;
       this.setContinueOptions(gameState);
     } else if (gameState && !this.isGamePlayable(gameState)) {
-      this.gameStateServ.clearGameState();
+      await this.gameStateServ.clearGameState();
     } else {
       this.canContinue = false;
     }
@@ -84,8 +84,8 @@ export class HomePage extends BaseComponent {
     this.navCtrl.navigateForward('game');
   }
 
-  onNewGame(): void {
-    this.gameStateServ.clearGameState();
+  async onNewGame(): Promise<void> {
+    await this.gameStateServ.clearGameState();
     this.gameStateServ.setGameStartMode({
       type: GameStartType.NEW_GAME,
     });
