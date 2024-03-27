@@ -25,14 +25,16 @@ interface Level {
   cols: number;
   name: Levels;
   givenNumbers: number;
+  scoreMultiplier: number;
+  maxScore?(): number;
 }
 
 const levelList: Level[] = [
-  { rows: 9, cols: 9, name: Levels.EASY, givenNumbers: 75 },
-  { rows: 9, cols: 9, name: Levels.MEDIUM, givenNumbers: 44 },
-  { rows: 9, cols: 9, name: Levels.HARD, givenNumbers: 38 },
-  { rows: 9, cols: 9, name: Levels.EXPERT, givenNumbers: 28 },
-  { rows: 9, cols: 9, name: Levels.MASTER, givenNumbers: 17 },
+  { rows: 9, cols: 9, name: Levels.EASY, givenNumbers: 75, scoreMultiplier: 50 },
+  { rows: 9, cols: 9, name: Levels.MEDIUM, givenNumbers: 44, scoreMultiplier: 75 },
+  { rows: 9, cols: 9, name: Levels.HARD, givenNumbers: 38, scoreMultiplier: 100 },
+  { rows: 9, cols: 9, name: Levels.EXPERT, givenNumbers: 28, scoreMultiplier: 150 },
+  { rows: 9, cols: 9, name: Levels.MASTER, givenNumbers: 17, scoreMultiplier: 200 },
 ];
 
 export class GameLevel implements Level {
@@ -40,6 +42,11 @@ export class GameLevel implements Level {
   cols: number;
   name: Levels;
   givenNumbers: number;
+  scoreMultiplier: number;
+
+  maxScore(): number {
+    return (this.rows * this.cols - this.givenNumbers) * this.scoreMultiplier;
+  }
 
   constructor(selectedLevel?: Levels) {
     const level = levelList.find((item) => item.name === selectedLevel);
@@ -48,12 +55,14 @@ export class GameLevel implements Level {
       this.cols = levelList[0].cols;
       this.name = levelList[0].name;
       this.givenNumbers = levelList[0].givenNumbers;
+      this.scoreMultiplier = levelList[0].scoreMultiplier;
       return this;
     } else {
       this.rows = level.rows;
       this.cols = level.cols;
       this.name = level.name;
       this.givenNumbers = level.givenNumbers;
+      this.scoreMultiplier = level.scoreMultiplier;
     }
   }
 }
