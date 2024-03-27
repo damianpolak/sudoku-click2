@@ -65,7 +65,7 @@ ng serve --port 4210
 
 - ~~Border color when first number was wrong and second propertly then border is red~~
 - ~~No history when continue game~~
-- Sometimes when player click back then we can see rotate animation
+- ~~Sometimes when player click back then we can see rotate animation~~ (fixed: implemented ionic lifecycle instead angular)
 - When put many wrong values in one field and back then it launch animation
 - ~~Currently available type number in field where is properly or initial number~~
 - When restart application and continue then game level is set to master
