@@ -16,13 +16,14 @@ import { FinishGameType } from './fullscreen-view.types';
 import { Animated } from '../../interfaces/core.interface';
 import { GameStateService } from '../../services/game-state.service';
 import { BurstModeType, GameStartType, GameStatusType, InputModeType } from '../../services/game-state.types';
-import { Subscription, tap } from 'rxjs';
+import { Observable, Subscription, tap } from 'rxjs';
 import { BaseComponent } from '../../abstracts/base-component.abstract';
 import { MistakeService } from '../../services/mistake.service';
 import { TimerService } from '../../services/timer.service';
 import { HistoryService } from '../../services/history.service';
 import { ControlsService } from 'src/app/game/controls/controls.service';
 import { FullscreenViewAnimation } from '../../animations/fullscreen-view.animation';
+import { Timestring } from '../../services/timer.types';
 
 @Component({
   selector: 'app-fullscreen-view',
@@ -37,6 +38,8 @@ export class FullscreenViewComponent extends BaseComponent implements Animated, 
   @Input() durationTime: number = 1000;
   @Input() finishType: FinishGameType | undefined;
   @Output() closeEvent: EventEmitter<void> = new EventEmitter<void>();
+
+  timeString: Observable<Timestring> = this.timerServ.getTimestring();
 
   @HostBinding('class.hide') get isHidden() {
     return !this.isOpen;
