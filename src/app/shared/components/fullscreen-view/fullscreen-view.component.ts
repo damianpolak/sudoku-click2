@@ -58,13 +58,13 @@ export class FullscreenViewComponent extends BaseComponent implements Animated, 
     .subscribe();
 
   constructor(
-    private gameStateServ: GameStateService,
-    private ref: ElementRef,
-    private navCtrl: NavController,
-    private mistakeServ: MistakeService,
-    private historyServ: HistoryService,
-    private timerServ: TimerService,
-    private controlsServ: ControlsService
+    private readonly gameStateServ: GameStateService,
+    private readonly ref: ElementRef,
+    private readonly navCtrl: NavController,
+    private readonly mistakeServ: MistakeService,
+    private readonly historyServ: HistoryService,
+    private readonly timerServ: TimerService,
+    private readonly controlsServ: ControlsService
   ) {
     super();
     this.registerSubscriptions([this.gameStartModeSub$]);
