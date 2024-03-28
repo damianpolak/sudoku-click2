@@ -200,6 +200,7 @@ export class BoardService extends BaseService implements OnDestroy {
         const clearedField = new BoardBuilder({ board: this.board }).unselectAllFields().eraseField(addr).get();
         this.historyServ.add([{ board: clearedField, selectedField: this._selectedField }]);
         this.setBoard(clearedField);
+        this.setSelectedField({ ...this._selectedField, value: 0, notes: new NotesBuilder().get() });
         this.gameStateServ.onBoardFieldClick({ ...this._selectedField, ...{ value: 0, highlight: false } });
       }
     }
