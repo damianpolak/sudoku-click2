@@ -82,8 +82,8 @@ export class ControlsComponent extends BaseComponent implements OnInit, OnDestro
 
   private featuresCreate(): FeatureControl[] {
     return [
-      { name: 'Undo', type: 'click', feature: 'back', icon: 'arrow-back-circle-outline' },
-      { name: 'Erase', type: 'click', feature: 'erase', icon: 'close-circle-outline' },
+      { name: 'Undo', type: 'click', feature: 'back', icon: 'return-down-back-outline' },
+      { name: 'Erase', type: 'click', feature: 'erase', icon: 'close-outline' },
       {
         name: 'Notes',
         type: 'toggle',
