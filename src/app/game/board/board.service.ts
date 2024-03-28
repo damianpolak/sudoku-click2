@@ -23,6 +23,7 @@ import { NotesBuilder } from 'src/app/shared/builders/notes.builder';
 import { TimerService } from 'src/app/shared/services/timer.service';
 import { MistakeService, PresentMistake } from 'src/app/shared/services/mistake.service';
 import { BaseService } from 'src/app/shared/abstracts/base-service.abstract';
+import { ScoreService } from 'src/app/shared/services/score.service';
 
 @Injectable()
 export class BoardService extends BaseService implements OnDestroy {
@@ -149,7 +150,8 @@ export class BoardService extends BaseService implements OnDestroy {
     private readonly controlsServ: ControlsService,
     private readonly historyServ: HistoryService,
     private readonly timerServ: TimerService,
-    private readonly mistakeServ: MistakeService
+    private readonly mistakeServ: MistakeService,
+    private readonly scoreServ: ScoreService
   ) {
     super();
     console.log('BoardService Constructor');
@@ -165,6 +167,7 @@ export class BoardService extends BaseService implements OnDestroy {
     ]);
     this.historyServ.create();
     this.mistakeServ.create();
+    this.scoreServ.create();
   }
 
   ngOnDestroy(): void {
@@ -172,6 +175,7 @@ export class BoardService extends BaseService implements OnDestroy {
     this.unsubscribeSubscriptions();
     this.historyServ.destroy();
     this.mistakeServ.destroy();
+    this.scoreServ.destroy();
   }
 
   private onFeatureClick(featureClickEvent: FeatureClickEvent): void {
@@ -223,6 +227,7 @@ export class BoardService extends BaseService implements OnDestroy {
           .selectFieldsByNumber(numberClickEvent.number, { isAnimated: false })
           .get()
       );
+      this.scoreServ.set([this._board.flat().reduce((prev, curr) => prev + curr.score.score, 0)]);
       this.historyServ.add([
         {
           board: new BoardBuilder({ board: this._board }).unselectAllFields().get(),
@@ -394,6 +399,7 @@ export class BoardService extends BaseService implements OnDestroy {
     this.timerServ.start('00:00:00');
     this.historyServ.clear();
     this.mistakeServ.clear();
+    this.scoreServ.clear();
   }
 
   private onRestartGame(mode: GameStartMode): void {
@@ -401,6 +407,7 @@ export class BoardService extends BaseService implements OnDestroy {
     this.timerServ.start('00:00:00');
     this.historyServ.clear();
     this.mistakeServ.clear();
+    this.scoreServ.clear();
     this.setBoard(
       new BoardBuilder({ level: this.gameStateServ.selectedLevel, board: this._board })
         .setDefaults()
