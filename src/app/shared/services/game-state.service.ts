@@ -76,7 +76,9 @@ export class GameStateService {
    */
   private static readonly GAME_STATE_KEY = 'SUDOKU_GAME_STATE' as const;
 
-  private gameStartMode$!: BehaviorSubject<GameStartMode>;
+  private gameStartMode$: BehaviorSubject<GameStartMode> = new BehaviorSubject<GameStartMode>({
+    type: GameStartType.NEW_GAME,
+  });
 
   private readonly pauseState$ = new Subject<boolean>();
   private readonly inputMode$ = new BehaviorSubject<InputModeType>(InputModeType.VALUE);
@@ -91,13 +93,6 @@ export class GameStateService {
 
   constructor(private storageServ: StorageService) {
     console.log('GameStateService constructor');
-    (async () => {
-      const result = await this.loadGameState();
-      console.log('=== gameState', result);
-      this.gameStartMode$ = new BehaviorSubject<GameStartMode>(
-        result ? { type: GameStartType.CONTINUE, gameState: result } : { type: GameStartType.NEW_GAME }
-      );
-    })();
   }
 
   setGameState(gameState: GameState): void {
