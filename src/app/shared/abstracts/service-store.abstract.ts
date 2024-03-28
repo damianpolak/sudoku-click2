@@ -24,6 +24,10 @@ export abstract class ServiceStore<T> implements Store {
     this.emitter$.next([]);
   }
 
+  set(items: T[]): void {
+    this.emitter$.next(items);
+  }
+
   get$(): Observable<T[]> {
     return this.emitter$.asObservable();
   }
