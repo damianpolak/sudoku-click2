@@ -1,10 +1,11 @@
 import { Board, SudokuGridSet } from 'src/app/game/board/board.types';
 import { GridBuilder } from './grid.builder';
 import { Address, Field } from 'src/app/game/board/field/field.types';
-import { Notes, NotesBuilder } from './notes.builder';
+import { NotesBuilder } from './notes.builder';
 import { SudokuUtil } from '../utils/sudoku.util';
 import { GameLevel, Levels } from '../services/game-state.service';
 import { SudokuBuilder } from './sudoku.builder';
+import { ScoreBuilder } from './score.builder';
 
 export class BoardBuilder {
   private _board: Board;
@@ -23,6 +24,11 @@ export class BoardBuilder {
         highlight: false,
         isInitialValue: false,
         isAnimated: true,
+        scoreable: false,
+        score: {
+          score: 0,
+          scored: false,
+        },
       }).getGrid();
 
       for (let row = 0; row <= payload.level.rows - 1; row++) {
@@ -33,6 +39,7 @@ export class BoardBuilder {
           this._board[row][col].isInitialValue = sudokuValue === 0 ? false : true;
           this._board[row][col].address = { row: row, col: col };
           this._board[row][col].isCorrectValue = sudokuValue > 0;
+          this._board[row][col].scoreable = sudokuValue === 0;
         }
       }
     } else {
@@ -64,6 +71,15 @@ export class BoardBuilder {
             }
           : field;
       });
+    });
+    return this;
+  }
+
+  updateScore(address: Address, multiplier: number): this {
+    const field = this._board[address.row][address.col];
+    this.updateFieldInBoard({
+      address,
+      score: new ScoreBuilder(field.score, field.isCorrectValue as boolean, multiplier).get(),
     });
     return this;
   }

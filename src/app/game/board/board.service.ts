@@ -218,6 +218,7 @@ export class BoardService extends BaseService implements OnDestroy {
         new BoardBuilder({ board: this._board })
           .unselectAllFields()
           .updateFieldInBoard({ address: this._selectedField.address, value: numberClickEvent.number })
+          .updateScore(this._selectedField.address, this.gameStateServ.selectedLevel.scoreMultiplier)
           .highlightFields(this._selectedField.address)
           .selectFieldsByNumber(numberClickEvent.number, { isAnimated: false })
           .get()
