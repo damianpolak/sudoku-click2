@@ -24,6 +24,7 @@ import { HistoryService } from '../../services/history.service';
 import { ControlsService } from 'src/app/game/controls/controls.service';
 import { FullscreenViewAnimation } from '../../animations/fullscreen-view.animation';
 import { Timestring } from '../../services/timer.types';
+import { ScoreService } from '../../services/score.service';
 
 @Component({
   selector: 'app-fullscreen-view',
@@ -40,6 +41,7 @@ export class FullscreenViewComponent extends BaseComponent implements Animated, 
   @Output() closeEvent: EventEmitter<void> = new EventEmitter<void>();
 
   timeString: Observable<Timestring> = this.timerServ.getTimestring();
+  score: Observable<number> = this.scoreServ.getPresentScore();
 
   @HostBinding('class.hide') get isHidden() {
     return !this.isOpen;
@@ -62,6 +64,7 @@ export class FullscreenViewComponent extends BaseComponent implements Animated, 
     private readonly ref: ElementRef,
     private readonly navCtrl: NavController,
     private readonly mistakeServ: MistakeService,
+    private readonly scoreServ: ScoreService,
     private readonly historyServ: HistoryService,
     private readonly timerServ: TimerService,
     private readonly controlsServ: ControlsService
