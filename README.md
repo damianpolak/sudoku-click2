@@ -19,6 +19,13 @@ npm install
 ng serve --port 4210
 ```
 
+### Compile
+
+```bash
+ionic build --platform android
+npx cap sync
+```
+
 ## Features to do:
 
 - ~~Hide status bar (android - @capacitor/status bar)~~
