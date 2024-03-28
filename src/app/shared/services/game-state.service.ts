@@ -87,14 +87,13 @@ export class GameStateService {
   private readonly fieldClick$ = new Subject<Field>();
   private readonly gameStatus$ = new Subject<GameStatusType>();
 
-  private _selectedLevel: GameLevel;
+  private _selectedLevel!: GameLevel;
 
   constructor(private storageServ: StorageService) {
     console.log('GameStateService constructor');
-    this._selectedLevel = new GameLevel(Levels.MASTER);
-
     (async () => {
       const result = await this.loadGameState();
+      console.log('=== gameState', result);
       this.gameStartMode$ = new BehaviorSubject<GameStartMode>(
         result ? { type: GameStartType.CONTINUE, gameState: result } : { type: GameStartType.NEW_GAME }
       );

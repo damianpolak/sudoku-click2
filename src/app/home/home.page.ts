@@ -81,6 +81,7 @@ export class HomePage extends BaseComponent {
       type: GameStartType.CONTINUE,
       gameState: this._gameState,
     });
+    this.gameStateServ.setLevel(this._gameState.level.name);
     this.navCtrl.navigateForward('game');
   }
 
