@@ -3,6 +3,7 @@
     <ng-template>
       <div class="block">
         <h1>Pause</h1>
+        <h3>Score {{ score | async }}</h3>
         <app-status-bar [style.width]="'55%'"></app-status-bar>
 
         <div class="pause-buttons">

@@ -11,6 +11,6 @@ export class ScoreService extends ServiceStore<number> {
   }
 
   getPresentScore(): Observable<number> {
-    return this.emitter$.pipe(map((x) => x[0]));
+    return this.emitter$.pipe(map((x) => (x[0] ? x[0] : 0)));
   }
 }

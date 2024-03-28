@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { BaseComponent } from 'src/app/shared/abstracts/base-component.abstract';
 import { GameStateService } from 'src/app/shared/services/game-state.service';
 import { MistakeService } from 'src/app/shared/services/mistake.service';
+import { ScoreService } from 'src/app/shared/services/score.service';
 import { TimerService } from 'src/app/shared/services/timer.service';
 import { ConversionUtil } from 'src/app/shared/utils/conversion.util';
 
@@ -11,6 +12,8 @@ import { ConversionUtil } from 'src/app/shared/utils/conversion.util';
   styleUrls: ['./status-bar.component.scss'],
 })
 export class StatusBarComponent extends BaseComponent {
+  @Input() visibleScore: boolean = false;
+
   get levelName() {
     return ConversionUtil.firstUpper(this.gameStateServ.selectedLevel.name);
   }
@@ -23,10 +26,15 @@ export class StatusBarComponent extends BaseComponent {
     return this.mistakeServ.getPresentMistakes();
   }
 
+  get score() {
+    return this.scoreServ.getPresentScore();
+  }
+
   constructor(
     private gameStateServ: GameStateService,
     private timerServ: TimerService,
-    private mistakeServ: MistakeService
+    private mistakeServ: MistakeService,
+    private scoreServ: ScoreService
   ) {
     super();
   }

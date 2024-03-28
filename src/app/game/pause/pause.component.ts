@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { PauseModalActionType } from './pause.types';
 import { DynamicModalComponent } from 'src/app/shared/abstracts/modal.abstract';
+import { Observable } from 'rxjs';
+import { ScoreService } from 'src/app/shared/services/score.service';
 
 @Component({
   selector: 'app-pause',
@@ -9,8 +11,9 @@ import { DynamicModalComponent } from 'src/app/shared/abstracts/modal.abstract';
 })
 export class PauseComponent extends DynamicModalComponent<PauseModalActionType> {
   buttonsSize: 'small' | 'default' | 'large' = 'default';
+  score: Observable<number> = this.scoreServ.getPresentScore();
 
-  constructor() {
+  constructor(private readonly scoreServ: ScoreService) {
     super();
   }
 

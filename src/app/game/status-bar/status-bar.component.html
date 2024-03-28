@@ -6,6 +6,12 @@
   <span>Time</span>
   <span>{{ timestring | async }}</span>
 </div>
+@if(visibleScore) {
+  <div class="score-object">
+    <span>Score</span>
+    <span>{{ score | async }}</span>
+  </div>
+}
 <div class="score-object">
   <span>Mistakes</span>
   <span
