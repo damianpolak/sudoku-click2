@@ -29,6 +29,7 @@ export type GameState = {
   mistakes: Mistake[];
   selectedField: Field;
   state: GameStatusType;
+  score: number;
 };
 
 export enum GameStartType {

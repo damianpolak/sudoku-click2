@@ -59,10 +59,11 @@ export class BoardService extends BaseService implements OnDestroy {
     this.historyServ.get$(),
     this.timerServ.getTimestring(),
     this.mistakeServ.get$(),
+    this.scoreServ.getPresentScore(),
   ])
     .pipe(
-      map(([board, presentMistake, field, history, timestring, mistake]) => {
-        return { board, presentMistake, field, history, timestring, mistake };
+      map(([board, presentMistake, field, history, timestring, mistake, score]) => {
+        return { board, presentMistake, field, history, timestring, mistake, score };
       })
     )
     .pipe(
@@ -81,6 +82,7 @@ export class BoardService extends BaseService implements OnDestroy {
         timestring: v.timestring,
         mistakes: v.mistake,
         state: v.state,
+        score: v.score,
       });
     });
 
@@ -205,7 +207,7 @@ export class BoardService extends BaseService implements OnDestroy {
     if (featureClickEvent.feature === 'back') {
       from(this.historyServ.back()).subscribe((lastHistory) => {
         if (typeof lastHistory !== 'undefined') {
-          this.setBoard(lastHistory.board);
+          this.setBoard(new BoardBuilder({ board: lastHistory.board }).replaceProperty(this._board, 'score').get());
           this.gameStateServ.onBoardFieldClick(lastHistory.selectedField);
         }
       });
@@ -389,6 +391,7 @@ export class BoardService extends BaseService implements OnDestroy {
     this.timerServ.start(mode.gameState?.timestring);
     this.historyServ.add(mode.gameState ? mode.gameState.history : []);
     this.mistakeServ.add(mode.gameState ? mode.gameState.mistakes : []);
+    this.scoreServ.add(mode.gameState ? [mode.gameState.score] : []);
   }
 
   private onNewGame(_mode: GameStartMode): void {

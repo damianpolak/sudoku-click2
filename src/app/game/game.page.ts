@@ -9,6 +9,7 @@ import { MistakeService } from '../shared/services/mistake.service';
 import { FinishGame, FinishGameType } from '../shared/components/fullscreen-view/fullscreen-view.types';
 import { HistoryService } from '../shared/services/history.service';
 import { BaseComponent } from '../shared/abstracts/base-component.abstract';
+import { ScoreService } from '../shared/services/score.service';
 
 @Component({
   selector: 'app-game',
@@ -73,6 +74,7 @@ export class GamePage extends BaseComponent implements OnDestroy {
     private appStateServ: AppStateService,
     private gameStateServ: GameStateService,
     private timerServ: TimerService,
+    private scoreServ: ScoreService,
     private historyServ: HistoryService,
     private mistakeServ: MistakeService
   ) {
@@ -86,6 +88,7 @@ export class GamePage extends BaseComponent implements OnDestroy {
     this.unsubscribeSubscriptions();
     this.mistakeServ.clear();
     this.historyServ.clear();
+    this.scoreServ.clear();
     this.timerServ.stop();
   }
 
