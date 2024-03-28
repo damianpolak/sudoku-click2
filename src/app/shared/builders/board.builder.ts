@@ -196,6 +196,7 @@ export class BoardBuilder {
             value: field.isInitialValue ? field.finalValue : 0,
             highlight: false,
             selected: false,
+            score: new ScoreBuilder(),
           },
         };
       });
