@@ -204,6 +204,18 @@ export class BoardBuilder {
     return this;
   }
 
+  replaceProperty<T extends keyof Field>(boardDonor: Board, property: T): this {
+    this._board = structuredClone(this._board).map((row, rowIndex) => {
+      return row.map((field, colIndex) => {
+        return {
+          ...field,
+          ...{ [property]: boardDonor[rowIndex][colIndex].score },
+        };
+      });
+    });
+    return this;
+  }
+
   private getRandomEmptyFieldAddress(board: Board): Address {
     const address = {
       row: Math.floor(Math.random() * board.length),
