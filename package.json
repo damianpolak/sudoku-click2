@@ -12,6 +12,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:android": "ionic build --platform android & npx cap sync",
+    "sync": "npx cap sync",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
