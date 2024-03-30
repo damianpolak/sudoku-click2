@@ -14,6 +14,7 @@ import { FieldComponent } from './board/field/field.component';
 import { ControlsComponent } from './controls/controls.component';
 import { PauseComponent } from './pause/pause.component';
 import { DevModeDirective } from '../shared/directives/dev-mode.directive';
+import { ThemeComponent } from './theme/theme.component';
 
 @NgModule({
   imports: [CommonModule, FormsModule, IonicModule, SharedModule, GamePageRoutingModule],
@@ -24,6 +25,7 @@ import { DevModeDirective } from '../shared/directives/dev-mode.directive';
     FieldComponent,
     ControlsComponent,
     PauseComponent,
+    ThemeComponent,
     DevModeDirective,
   ],
 })

@@ -2,9 +2,12 @@
   [showPause]="true"
   [showBack]="true"
   [isPaused]="isPaused"
+  [isThemesMenuVisible]="isThemeMenuVisible"
+  [showThemes]="true"
   backPath="home"
   (pauseClickEvent)="pause($event)"
   (backClickEvent)="back($event)"
+  (themeClickEvent)="themes($event)"
   [title]="title"
 ></app-header>
 
@@ -29,6 +32,7 @@
   </div>
 </ion-content>
 <app-pause [isOpen]="isPaused" (actionEvent)="onPauseModalDismiss($event)"></app-pause>
+<app-theme [isOpen]="isThemeMenuVisible" (actionEvent)="onThemeModalDismiss($event)"></app-theme>
 
 <app-fullscreen-view
   [isOpen]="isFinalViewOpen"

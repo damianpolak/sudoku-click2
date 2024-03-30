@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { NavController, PopoverController } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
 import { AppStateService } from '../../services/app-state.service';
 import { BaseComponent } from '../../abstracts/base-component.abstract';
-import { ThemeControllerComponent } from '../theme-controller/theme-controller.component';
 
 @Component({
   selector: 'app-header',
@@ -11,26 +10,24 @@ import { ThemeControllerComponent } from '../theme-controller/theme-controller.c
 })
 export class HeaderComponent extends BaseComponent implements OnInit, OnDestroy {
   @Input() showOptions: boolean = true;
-  @Input() showThemes: boolean = true;
+  @Input() showThemes: boolean = false;
   @Input() showPause: boolean = false;
   @Input() showBack: boolean = false;
   @Input() backPath: string = '';
   @Input() title: string = '';
 
   @Output() pauseClickEvent = new EventEmitter<boolean>();
+  @Output() themeClickEvent = new EventEmitter<boolean>();
   @Output() optionsClickEvent = new EventEmitter<boolean>();
   @Output() backClickEvent = new EventEmitter<void>();
 
   @Input() isPaused: boolean = false;
+  @Input() isThemesMenuVisible: boolean = false;
   isOptionsMenuVisible: boolean = false;
   private appDevMode: boolean = false;
 
   private readonly appDevModeSub$ = this.appStateServ.getAppDevMode$().subscribe((v) => (this.appDevMode = v));
-  constructor(
-    private navCtrl: NavController,
-    private appStateServ: AppStateService,
-    private popoverController: PopoverController
-  ) {
+  constructor(private navCtrl: NavController, private appStateServ: AppStateService) {
     super();
     this.registerSubscriptions([this.appDevModeSub$]);
   }
@@ -55,6 +52,11 @@ export class HeaderComponent extends BaseComponent implements OnInit, OnDestroy 
     this.pauseClickEvent.emit(this.isPaused);
   }
 
+  onThemes(): void {
+    this.isThemesMenuVisible = !this.isThemesMenuVisible;
+    this.themeClickEvent.emit(this.isThemesMenuVisible);
+  }
+
   onOptions(): void {
     this.isOptionsMenuVisible = !this.isOptionsMenuVisible;
     this.optionsClickEvent.emit(this.isOptionsMenuVisible);
@@ -62,15 +64,5 @@ export class HeaderComponent extends BaseComponent implements OnInit, OnDestroy 
 
   onAppDevModeToggle(): void {
     this.appStateServ.setAppDevMode(!this.appDevMode);
-  }
-
-  async createThemePopover(event: Event) {
-    const popover = await this.popoverController.create({
-      component: ThemeControllerComponent,
-      event: event,
-      translucent: true,
-      cssClass: 'theme-controller-popover',
-    });
-    return await popover.present();
   }
 }

@@ -10,6 +10,7 @@ import { FinishGame, FinishGameType } from '../shared/components/fullscreen-view
 import { HistoryService } from '../shared/services/history.service';
 import { BaseComponent } from '../shared/abstracts/base-component.abstract';
 import { ScoreService } from '../shared/services/score.service';
+import { ThemeModalActionType } from './theme/theme.types';
 
 @Component({
   selector: 'app-game',
@@ -20,6 +21,7 @@ export class GamePage extends BaseComponent implements OnDestroy {
   orientation$ = this.appStateServ.getScreenOrientation$();
   inputMode!: InputModeType;
   isPaused!: boolean;
+  isThemeMenuVisible!: boolean;
   isFinalViewOpen: boolean = false;
   level!: GameLevel;
   title: string = 'Sudoku.click';
@@ -101,6 +103,11 @@ export class GamePage extends BaseComponent implements OnDestroy {
     this.gameStateServ.setPauseState(event);
   }
 
+  themes(event: boolean): void {
+    this.isThemeMenuVisible = event;
+    console.log('Themes is', event);
+  }
+
   onPauseModalDismiss(event: PauseModalActionType): void {
     switch (event) {
       case 'RESTART':
@@ -110,6 +117,17 @@ export class GamePage extends BaseComponent implements OnDestroy {
         break;
       default:
         this.gameStateServ.setPauseState(false);
+    }
+  }
+
+  onThemeModalDismiss(event: ThemeModalActionType): void {
+    switch (event) {
+      case 'THEME':
+        //
+        break;
+      default:
+        console.log('===onThemeModalDismiss===', event);
+        this.isThemeMenuVisible = false;
     }
   }
 
