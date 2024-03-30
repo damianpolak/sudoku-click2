@@ -6,25 +6,10 @@ import { NumberButtonComponent } from './components/number-button/number-button.
 import { FirstUpperPipe } from './pipes/first-upper.pipe';
 import { BannerComponent } from './components/banner/banner.component';
 import { FullscreenViewComponent } from './components/fullscreen-view/fullscreen-view.component';
-import { ThemeControllerComponent } from './components/theme-controller/theme-controller.component';
 
 @NgModule({
-  declarations: [
-    HeaderComponent,
-    NumberButtonComponent,
-    BannerComponent,
-    FullscreenViewComponent,
-    FirstUpperPipe,
-    ThemeControllerComponent,
-  ],
+  declarations: [HeaderComponent, NumberButtonComponent, BannerComponent, FullscreenViewComponent, FirstUpperPipe],
   imports: [CommonModule, IonicModule],
-  exports: [
-    HeaderComponent,
-    NumberButtonComponent,
-    BannerComponent,
-    FullscreenViewComponent,
-    FirstUpperPipe,
-    ThemeControllerComponent,
-  ],
+  exports: [HeaderComponent, NumberButtonComponent, BannerComponent, FullscreenViewComponent, FirstUpperPipe],
 })
 export class SharedModule {}
