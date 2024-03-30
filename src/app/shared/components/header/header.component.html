@@ -22,12 +22,21 @@
         ></ion-icon>
       </ion-button>
     </ion-buttons>
+    <ion-buttons *ngIf="showThemes" slot="end">
+      <ion-button (click)="createThemePopover($event)">
+        <ion-icon
+          slot="icon-only"
+          ios="color-palette-outline"
+          md="color-palette-outline"
+        ></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-buttons *ngIf="showOptions" slot="end">
       <ion-button (click)="onOptions()">
         <ion-icon
-          slot="icon-only"
-          ios="ellipsis-horizontal-circle-outline"
-          md="ellipsis-horizontal-circle-outline"
+        slot="icon-only"
+        ios="ellipsis-horizontal-circle-outline"
+        md="ellipsis-horizontal-circle-outline"
         ></ion-icon>
       </ion-button>
     </ion-buttons>

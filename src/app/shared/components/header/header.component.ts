@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { NavController } from '@ionic/angular';
-import { GameStateService } from '../../services/game-state.service';
+import { NavController, PopoverController } from '@ionic/angular';
 import { AppStateService } from '../../services/app-state.service';
 import { BaseComponent } from '../../abstracts/base-component.abstract';
+import { ThemeControllerComponent } from '../theme-controller/theme-controller.component';
 
 @Component({
   selector: 'app-header',
@@ -11,6 +11,7 @@ import { BaseComponent } from '../../abstracts/base-component.abstract';
 })
 export class HeaderComponent extends BaseComponent implements OnInit, OnDestroy {
   @Input() showOptions: boolean = true;
+  @Input() showThemes: boolean = true;
   @Input() showPause: boolean = false;
   @Input() showBack: boolean = false;
   @Input() backPath: string = '';
@@ -25,7 +26,11 @@ export class HeaderComponent extends BaseComponent implements OnInit, OnDestroy 
   private appDevMode: boolean = false;
 
   private readonly appDevModeSub$ = this.appStateServ.getAppDevMode$().subscribe((v) => (this.appDevMode = v));
-  constructor(private navCtrl: NavController, private appStateServ: AppStateService) {
+  constructor(
+    private navCtrl: NavController,
+    private appStateServ: AppStateService,
+    private popoverController: PopoverController
+  ) {
     super();
     this.registerSubscriptions([this.appDevModeSub$]);
   }
@@ -57,5 +62,15 @@ export class HeaderComponent extends BaseComponent implements OnInit, OnDestroy 
 
   onAppDevModeToggle(): void {
     this.appStateServ.setAppDevMode(!this.appDevMode);
+  }
+
+  async createThemePopover(event: Event) {
+    const popover = await this.popoverController.create({
+      component: ThemeControllerComponent,
+      event: event,
+      translucent: true,
+      cssClass: 'theme-controller-popover',
+    });
+    return await popover.present();
   }
 }
