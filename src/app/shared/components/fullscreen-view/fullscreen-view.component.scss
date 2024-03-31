@@ -14,10 +14,7 @@
 :host {
   position: absolute;
   z-index: 10;
-
   color: var(--ion-text-color);
-
-  text-shadow: 2px 2px rgba(0, 0, 0, 0.5);
 
   .loss-background {
     background: linear-gradient(-45deg, var(--loss-color1), var(--loss-color2), var(--loss-color3), var(--loss-color4));
