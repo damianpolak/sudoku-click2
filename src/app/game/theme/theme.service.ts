@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ServiceStore } from 'src/app/shared/abstracts/service-store.abstract';
+import { AppStateService } from 'src/app/shared/services/app-state.service';
 
-type Theme = string;
+export type Theme = string;
 export type ThemeDefinition = {
   name: Theme;
   active?: boolean;
@@ -14,7 +15,7 @@ export type ThemeDefinition = {
 export class ThemeService extends ServiceStore<ThemeDefinition> {
   private readonly autoThemeMode: boolean = false;
 
-  constructor() {
+  constructor(private readonly appStateServ: AppStateService) {
     super();
   }
 
@@ -33,6 +34,7 @@ export class ThemeService extends ServiceStore<ThemeDefinition> {
     const classesToRemove = this.store.filter((f) => f.name !== themeName).map((m) => m.name);
     document.body.classList.remove(...classesToRemove);
     document.body.classList.add(themeName);
+    this.appStateServ.setAppSettings({ theme: themeName });
   }
 
   isPrefersDark(): boolean {

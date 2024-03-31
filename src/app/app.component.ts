@@ -4,6 +4,7 @@ import { AppStateService } from './shared/services/app-state.service';
 import { BaseComponent } from './shared/abstracts/base-component.abstract';
 import { StatusBar } from '@capacitor/status-bar';
 import { ThemeService } from './game/theme/theme.service';
+import { AppSettings } from './shared/services/app-state.types';
 
 @Component({
   selector: 'app-root',
@@ -12,10 +13,30 @@ import { ThemeService } from './game/theme/theme.service';
 })
 export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
   private screenOrientationSubs$: Subscription;
+  private appSettingsSub$: Subscription = this.appStateServ
+    .getAppSettings$()
+    .subscribe((appSettings) => this.appStateServ.saveAppSettings(appSettings));
 
   constructor(private appStateServ: AppStateService, private readonly themeServ: ThemeService) {
     super();
-    // this.themeToggler();
+    this.appStateServ.setScreenOrientation(screen.orientation.type);
+    this.screenOrientationSubs$ = fromEvent(screen.orientation, 'change').subscribe((x) => {
+      const orientation = (x.target as ScreenOrientation).type;
+      this.appStateServ.setScreenOrientation(orientation);
+      this.setHeaderSize(orientation, '0px', '44px');
+    });
+    this.registerSubscriptions([this.screenOrientationSubs$, this.appSettingsSub$]);
+    this.themeServ.create();
+  }
+
+  async ngOnInit(): Promise<void> {
+    await this.appStateServ.storageInit();
+    this.setHeaderSize(screen.orientation.type, '0px', '44px');
+    await StatusBar.hide().catch((e) => {
+      console.log(`[SudokuClick][Capacitor]`, (e as Error).message);
+    });
+
+    const appSettings: AppSettings | undefined = await this.appStateServ.loadStorageSettings();
 
     this.themeServ.register(
       [
@@ -23,24 +44,8 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
         { name: 'dark', background: 'var(--ion-theme-dark-presentable)' },
         { name: 'pastel', background: 'var(--ion-theme-pastel-presentable)' },
       ],
-      'dark'
+      appSettings ? appSettings.theme : undefined
     );
-
-    this.appStateServ.setScreenOrientation(screen.orientation.type);
-    this.screenOrientationSubs$ = fromEvent(screen.orientation, 'change').subscribe((x) => {
-      const orientation = (x.target as ScreenOrientation).type;
-      this.appStateServ.setScreenOrientation(orientation);
-      this.setHeaderSize(orientation, '0px', '44px');
-    });
-    this.registerSubscriptions([this.screenOrientationSubs$]);
-    this.themeServ.create();
-  }
-
-  async ngOnInit(): Promise<void> {
-    this.setHeaderSize(screen.orientation.type, '0px', '44px');
-    await StatusBar.hide().catch((e) => {
-      console.log(`[SudokuClick][Capacitor]`, (e as Error).message);
-    });
   }
 
   ngOnDestroy(): void {
