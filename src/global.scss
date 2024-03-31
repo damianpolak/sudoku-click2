@@ -30,6 +30,17 @@
   --header-size: 0px;
 }
 
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: normal;
+  src: url("./assets/fonts/OpenSans-VariableFont_wdth,wght.ttf");
+}
+
+body * {
+  font-family: "Open Sans", "Roboto", "Helvetica Neue", sans-serif;
+}
+
 @media (orientation: portrait) {
   html {
     font-size: calc(10px + 1.3vw);
