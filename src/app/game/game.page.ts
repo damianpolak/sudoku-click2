@@ -21,7 +21,7 @@ export class GamePage extends BaseComponent implements OnDestroy {
   orientation$ = this.appStateServ.getScreenOrientation$();
   inputMode!: InputModeType;
   isPaused!: boolean;
-  isThemeMenuVisible!: boolean;
+  isThemeMenuVisible: boolean = false;
   isFinalViewOpen: boolean = false;
   level!: GameLevel;
   title: string = 'Sudoku.click';
