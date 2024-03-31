@@ -26,7 +26,8 @@
 :host {
   background-color: var(--ion-board-background);
   & .field-value {
-    font-size: 1.2em;
+    position: absolute;
+    font-size: 1.5em;
   }
 
   & .field-value-debug {
