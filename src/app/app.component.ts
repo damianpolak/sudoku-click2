@@ -11,12 +11,21 @@ import { ThemeService } from './game/theme/theme.service';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
-  private readonly autoThemeMode: boolean = false;
   private screenOrientationSubs$: Subscription;
 
   constructor(private appStateServ: AppStateService, private readonly themeServ: ThemeService) {
     super();
-    this.themeToggler();
+    // this.themeToggler();
+
+    this.themeServ.register(
+      [
+        { name: 'light', background: 'var(--ion-theme-light-presentable)' },
+        { name: 'dark', background: 'var(--ion-theme-dark-presentable)' },
+        { name: 'pastel', background: 'var(--ion-theme-pastel-presentable)' },
+      ],
+      'dark'
+    );
+
     this.appStateServ.setScreenOrientation(screen.orientation.type);
     this.screenOrientationSubs$ = fromEvent(screen.orientation, 'change').subscribe((x) => {
       const orientation = (x.target as ScreenOrientation).type;
@@ -36,23 +45,6 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.unsubscribeSubscriptions();
-  }
-
-  private themeToggler(): void {
-    if (this.autoThemeMode) {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-      if (prefersDark.matches) {
-        this.setTheme('dark');
-      } else {
-        this.setTheme('light');
-      }
-    } else {
-      this.setTheme('dark');
-    }
-  }
-
-  private setTheme(theme: 'light' | 'dark'): void {
-    document.body.classList.toggle(theme, true);
   }
 
   private setHeaderSize(

@@ -4,7 +4,7 @@
       <div class="block">
         <h1>Change theme</h1>
         <div class="themes">
-          @for(item of (themes2 | async); track item.name) {
+          @for(item of themes; track item.name) {
             <ion-button [ngStyle]="getThemeStyle(item.name)" (click)="onThemeClick(item.name)"></ion-button>
           }
         </div>

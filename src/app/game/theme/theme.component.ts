@@ -9,12 +9,8 @@ import { Observable, Subscription, from, lastValueFrom } from 'rxjs';
   templateUrl: './theme.component.html',
   styleUrls: ['./theme.component.scss'],
 })
-export class ThemeComponent extends DynamicModalComponent<ThemeModalActionType> implements OnInit {
+export class ThemeComponent extends DynamicModalComponent<ThemeModalActionType> {
   override backdropDismissEnabled: boolean = true;
-  get themes2(): Observable<ThemeDefinition[]> {
-    return this.themeServ.get$();
-  }
-
   private _themes: ThemeDefinition[] = [];
   private themesSub$: Subscription = this.themeServ.get$().subscribe((v) => {
     this._themes = v;
@@ -26,15 +22,8 @@ export class ThemeComponent extends DynamicModalComponent<ThemeModalActionType> 
 
   constructor(private readonly themeServ: ThemeService) {
     super();
-    this.themeServ.set([
-      { name: 'light', active: true, background: 'var(--ion-theme-light-presentable)' },
-      { name: 'dark', active: false, background: 'var(--ion-theme-dark-presentable)' },
-      { name: 'pastel', active: false, background: 'var(--ion-theme-pastel-presentable)' },
-    ]);
+    this.registerSubscriptions([this.themesSub$]);
   }
-
-  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
-  ngOnInit() {}
 
   onThemeClick(themeName: string): void {
     this.themeServ.set(
