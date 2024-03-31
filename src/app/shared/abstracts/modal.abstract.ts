@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { IonModal } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+import { BaseComponent } from './base-component.abstract';
 
 interface Modal extends AfterViewInit, OnDestroy {
   isOpen: boolean;
@@ -15,7 +16,7 @@ interface Modal extends AfterViewInit, OnDestroy {
 }
 
 @Component({ template: '' })
-export abstract class DynamicModalComponent<T> implements Modal, AfterViewInit, OnDestroy {
+export abstract class DynamicModalComponent<T> extends BaseComponent implements Modal, AfterViewInit, OnDestroy {
   @Input() isOpen: boolean = false;
   @Output() actionEvent = new EventEmitter<T>();
   @ViewChild('modal') modalViewChild!: IonModal;
@@ -32,11 +33,12 @@ export abstract class DynamicModalComponent<T> implements Modal, AfterViewInit, 
     this.modalDidPresentSub$ = this.modalViewChild.didPresent.subscribe(() => {
       this.isOpen = true;
     });
+
+    this.registerSubscriptions([this.modalWillDismissSub$, this.modalDidPresentSub$]);
   }
 
   ngOnDestroy(): void {
-    this.modalWillDismissSub$.unsubscribe();
-    this.modalDidPresentSub$.unsubscribe();
+    this.unsubscribeSubscriptions();
   }
 
   async action(action: T): Promise<void> {
