@@ -3,6 +3,7 @@ import { Subscription, fromEvent } from 'rxjs';
 import { AppStateService } from './shared/services/app-state.service';
 import { BaseComponent } from './shared/abstracts/base-component.abstract';
 import { StatusBar } from '@capacitor/status-bar';
+import { ThemeService } from './game/theme/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
   private readonly autoThemeMode: boolean = false;
   private screenOrientationSubs$: Subscription;
 
-  constructor(private appStateServ: AppStateService) {
+  constructor(private appStateServ: AppStateService, private readonly themeServ: ThemeService) {
     super();
     this.themeToggler();
     this.appStateServ.setScreenOrientation(screen.orientation.type);
@@ -23,6 +24,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
       this.setHeaderSize(orientation, '0px', '44px');
     });
     this.registerSubscriptions([this.screenOrientationSubs$]);
+    this.themeServ.create();
   }
 
   async ngOnInit(): Promise<void> {
