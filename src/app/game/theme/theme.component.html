@@ -2,9 +2,12 @@
   <ion-modal [backdropDismiss]="backdropDismissEnabled" #modal [isOpen]="isOpen" [initialBreakpoint]="1" [breakpoints]="[0, 1]">
     <ng-template>
       <div class="block">
-        <h1>Theme changer</h1>
-        <p>Change themes to...</p>
-        <p>12345...</p>
+        <h1>Change theme</h1>
+        <div class="themes">
+          @for(item of (themes2 | async); track item.name) {
+            <ion-button [ngStyle]="getThemeStyle(item.name)" (click)="onThemeClick(item.name)"></ion-button>
+          }
+        </div>
       </div>
     </ng-template>
   </ion-modal>
