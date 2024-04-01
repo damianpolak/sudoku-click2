@@ -42,7 +42,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
       [
         { name: 'light', background: 'var(--ion-theme-light-presentable)' },
         { name: 'dark', background: 'var(--ion-theme-dark-presentable)' },
-        { name: 'pastel', background: 'var(--ion-theme-pastel-presentable)' },
+        { name: 'apricot', background: 'var(--ion-theme-apricot-presentable)' },
       ],
       appSettings ? appSettings.theme : undefined
     );
