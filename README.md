@@ -47,7 +47,7 @@ npx cap sync
 - Create statistic/rank page
 - ~~Change continue text~~
 - Create three additional themes (light and two custom)
-- Create themes menu and icon on app-header
+- ~~Create themes menu and icon on app-header~~
 - Create capacitor splash screen
 - ~~Change color and background of numbered buttons when change input mode (notes enabled/disabled)~~
 - Option for enable/disable opacity or hidden/visible numbered button when all available numbers have been used
