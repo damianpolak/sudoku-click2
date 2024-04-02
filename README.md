@@ -61,6 +61,7 @@ npx cap sync
 - ~~Mistakes handling and finishing game~~
 - Lock rotating screen on smartphones, enabled on tables
 - ~~Refactor animations, replace setTimeout instead native animation delay~~
+- time, score and mistakes slot machine animation
 
 ## Refactoring:
 
@@ -85,6 +86,8 @@ npx cap sync
 
 ## Options section:
 
+- 3 mistakes limit ON/OFF
+-
 - fieldAnimation ON/OFF (field.component)
 - boardAnimation ON/OFF
 - pause backdropDismiss ON/OFF (pause.component)
