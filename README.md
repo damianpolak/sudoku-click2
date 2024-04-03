@@ -28,6 +28,7 @@ npx cap sync
 
 ## Features to do:
 
+- Multisolutions (naive alghoritm)
 - ~~Hide status bar (android - @capacitor/status bar)~~
 - ~~Create burst mode~~
 - ~~Set default selected field when continue game~~
