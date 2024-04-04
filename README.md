@@ -87,12 +87,16 @@ npx cap sync
 
 ## Options section:
 
-- 3 mistakes limit ON/OFF
--
+- Don't hide number buttons when all used
 - fieldAnimation ON/OFF (field.component)
 - boardAnimation ON/OFF
 - pause backdropDismiss ON/OFF (pause.component)
 - mistakes limit to 3 ON/OFF
+- sounds ON/OFF
+- haptics ON/OFF
+- timer ON/OFF
+- score ON/OFF
+- mistakes ON/OFF
 
 ### Author
 
