@@ -68,7 +68,7 @@ npx cap sync
 
 - Move level class and types from game-state.service.ts to dedicated file
 - Move save storage from game-state.service.ts to dedicated file
-- Change data saving from localStorage to ionic storage (or capacitor preferences)
+- ~~Change data saving from localStorage to ionic storage (or capacitor preferences)~~
 
 ## Bugs:
 
