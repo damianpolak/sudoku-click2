@@ -29,7 +29,7 @@
       justify-content: center;
 
       ion-button {
-        --background: rgba(var(--ion-color-secondary-rgb), 0.45);
+        --background: rgba(var(--ion-color-primary-rgb), 0.15);
       }
     }
   }
@@ -46,7 +46,7 @@
     width: 100%;
     font-size: 0.65rem;
     font-weight: bold;
-    --color: var(--ion-color-secondary-contrast);
+    --color: var(--ion-color-primary-rgb);
     --padding-start: 0;
     --padding-end: 0;
     --padding-top: 0;

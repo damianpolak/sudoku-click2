@@ -41,9 +41,9 @@ export class ThemeComponent extends DynamicModalComponent<ThemeModalActionType> 
     const themeDef = this.themes.find((t) => t.name === themeName);
     return {
       '--background': themeDef?.background || '',
-      '--border-width': '0.2rem',
+      '--border-width': themeDef?.active ? '0.2rem' : '0.1rem',
       '--border-style': 'solid',
-      '--border-color': themeDef?.active ? 'var(--ion-color-primary)' : 'transparent',
+      '--border-color': themeDef?.active ? 'var(--ion-color-primary)' : 'rgba(var(--ion-color-primary-rgb), .2)',
       '--box-shadow': 'none',
     };
   }

@@ -10,7 +10,7 @@
 
   .window {
     text-align: center;
-    background-color: var(--ion-color-primary-tint);
+    background-color: var(--ion-color-secondary);
     width: 70%;
     padding: 1rem;
     border-radius: 7px;
@@ -20,12 +20,12 @@
 
     & .title {
       font-size: 1.3em;
-      color: var(--ion-color-primary);
+      color: rgba(var(--ion-color-secondary-contrast-rgb), .8);
     }
 
     & .message {
       font-size: 1em;
-      color: var(--ion-color-primary-contrast);
+      color: rgba(var(--ion-color-secondary-contrast-rgb), .8);
     }
   }
 }
