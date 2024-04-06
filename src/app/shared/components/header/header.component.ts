@@ -48,10 +48,6 @@ export class HeaderComponent extends BaseComponent implements OnInit, OnDestroy 
   }
 
   async onBack(): Promise<void> {
-    // if (this.showBack) {
-    //   await this.navCtrl.navigateBack(this.);
-    // }
-    console.log('=== onBack backPath', this.backPath);
     if (this.showBack && this.backPath !== '') {
       switch (this.backPath) {
         case 'home':
@@ -86,9 +82,7 @@ export class HeaderComponent extends BaseComponent implements OnInit, OnDestroy 
   }
 
   onOptions(): void {
-    this.navCtrl.navigateForward(['options'], { queryParams: { parent: this.parentPath } });
-    // this.isOptionsMenuVisible = !this.isOptionsMenuVisible;
-    // this.optionsClickEvent.emit(this.isOptionsMenuVisible);
+    this.navCtrl.navigateForward('options', { queryParams: { parent: this.parentPath } });
   }
 
   onAppDevModeToggle(): void {
@@ -97,19 +91,6 @@ export class HeaderComponent extends BaseComponent implements OnInit, OnDestroy 
 
   private async getGameState(): Promise<CommonGameState> {
     const gameState = await this.gameStateServ.loadGameState();
-    if (gameState && gameState.gameState) {
-      return gameState;
-    } else {
-      return {
-        canContinue: false,
-      };
-    }
-    // if (gameState) {
-    //   this.canContinue = gameState.canContinue;
-    //   this._gameState = gameState.gameState;
-    //   this.setContinueOptions(gameState.gameState);
-    // } else {
-    //   this.canContinue = false;
-    // }
+    return gameState && gameState.gameState ? gameState : { canContinue: false };
   }
 }

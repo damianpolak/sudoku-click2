@@ -88,7 +88,7 @@ export class HomePage extends BaseComponent {
     this.gameStateServ.setGameStartMode({
       type: GameStartType.NEW_GAME,
     });
-    this.navCtrl.navigateForward('game');
+    this.navCtrl.navigateForward('game', { queryParams: { parent: 'home' } });
   }
 
   openMenuLevel(isOpen: boolean): void {

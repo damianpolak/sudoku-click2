@@ -20,57 +20,17 @@ import { ThemeModalActionType } from './theme/theme.types';
 export class GamePage extends BaseComponent {
   orientation$ = this.appStateServ.getScreenOrientation$();
   inputMode!: InputModeType;
-  isPaused!: boolean;
+  isPaused: boolean = false;
   isThemeMenuVisible: boolean = false;
   isFinalViewOpen: boolean = false;
   level!: GameLevel;
   title: string = 'Sudoku.click';
-
-  private gameStateSub$: Subscription = this.gameStateServ
-    .getGameState$()
-    .subscribe((gameState) => this.gameStateServ.saveGameState(gameState));
-
-  private inputModeSubs$: Subscription = this.gameStateServ.getInputMode$().subscribe((mode) => {
-    this.inputMode = mode;
-  });
-
-  private pauseStateSub$: Subscription = this.gameStateServ
-    .getPauseState$()
-    .pipe(
-      tap((state) => {
-        if (state) {
-          this.timerServ.stop();
-        } else {
-          this.timerServ.start();
-        }
-      })
-    )
-    .subscribe((pause) => {
-      this.isPaused = pause;
-    });
-
   gameFinished: FinishGame = { title: '', description: '' };
 
-  private finishGameSub$: Subscription = this.gameStateServ.getGameStatus$().subscribe((finishGameType) => {
-    if (finishGameType === GameStatusType.VICTORY) {
-      this.onFinishGameScreen({
-        title: 'Congratulations',
-        description: 'You found the solution!',
-        finishType: FinishGameType.VICTORY,
-      });
-    } else if (finishGameType === GameStatusType.LOSS) {
-      this.onFinishGameScreen({
-        title: 'Game over',
-        description: 'You made 3 mistakes!',
-        finishType: FinishGameType.LOSS,
-      });
-    } else if (finishGameType === GameStatusType.PENDING) {
-      if (this.isFinalViewOpen) {
-        this.timerServ.stop();
-        this.isFinalViewOpen = false;
-      }
-    }
-  });
+  private gameStateSub$!: Subscription;
+  private inputModeSubs$!: Subscription;
+  private pauseStateSub$!: Subscription;
+  private finishGameSub$!: Subscription;
 
   constructor(
     private appStateServ: AppStateService,
@@ -81,10 +41,57 @@ export class GamePage extends BaseComponent {
     private mistakeServ: MistakeService
   ) {
     super();
+  }
+
+  ionViewDidEnter(): void {
+    console.log('GamePage DidEnter');
+    this.gameStateSub$ = this.gameStateServ
+      .getGameState$()
+      .subscribe((gameState) => this.gameStateServ.saveGameState(gameState));
+
+    this.inputModeSubs$ = this.gameStateServ.getInputMode$().subscribe((mode) => {
+      this.inputMode = mode;
+    });
+
+    this.pauseStateSub$ = this.gameStateServ
+      .getPauseState$()
+      .pipe(
+        tap((state) => {
+          if (state) {
+            this.timerServ.stop();
+          } else {
+            this.timerServ.start();
+          }
+        })
+      )
+      .subscribe((pause) => {
+        this.isPaused = pause;
+      });
+
+    this.finishGameSub$ = this.gameStateServ.getGameStatus$().subscribe((finishGameType) => {
+      if (finishGameType === GameStatusType.VICTORY) {
+        this.onFinishGameScreen({
+          title: 'Congratulations',
+          description: 'You found the solution!',
+          finishType: FinishGameType.VICTORY,
+        });
+      } else if (finishGameType === GameStatusType.LOSS) {
+        this.onFinishGameScreen({
+          title: 'Game over',
+          description: 'You made 3 mistakes!',
+          finishType: FinishGameType.LOSS,
+        });
+      } else if (finishGameType === GameStatusType.PENDING) {
+        if (this.isFinalViewOpen) {
+          this.timerServ.stop();
+          this.isFinalViewOpen = false;
+        }
+      }
+    });
+
     this.registerSubscriptions([this.inputModeSubs$, this.pauseStateSub$, this.finishGameSub$, this.gameStateSub$]);
     this.level = this.gameStateServ.selectedLevel;
   }
-
   ionViewDidLeave(): void {
     console.log('GamePage DidLeave');
     this.unsubscribeSubscriptions();
@@ -123,7 +130,6 @@ export class GamePage extends BaseComponent {
   onThemeModalDismiss(event: ThemeModalActionType): void {
     switch (event) {
       case 'THEME':
-        //
         break;
       default:
         console.log('===onThemeModalDismiss===', event);
