@@ -19,6 +19,12 @@ const routes: Routes = [
     canActivate: [isNavigatedGuard],
   },
   {
+    path: 'options',
+    loadChildren: () => import('./options/options.module').then((m) => m.OptionsPageModule),
+    pathMatch: 'full',
+    canActivate: [isNavigatedGuard],
+  },
+  {
     path: '**',
     redirectTo: 'home',
   },
