@@ -54,6 +54,11 @@ body.dark {
   --sudoku-loss-color2: var(--ion-color-danger);
   --sudoku-loss-color3: var(--ion-color-primary-contrast);
   --sudoku-loss-color4: var(--ion-color-warning);
+
+  --sudoku-victory-color1: var(--ion-color-primary);
+  --sudoku-victory-color2: var(--ion-color-success);
+  --sudoku-victory-color3: var(--ion-color-primary-contrast);
+  --sudoku-victory-color4: var(--ion-color-secondary);
 }
 
 .ios body.dark {
