@@ -4,8 +4,8 @@ import { GameStateService, Levels } from '../shared/services/game-state.service'
 import { ConversionUtil } from '../shared/utils/conversion.util';
 import { Subscription, combineLatest } from 'rxjs';
 import { GameStartType, GameState, GameStatusType } from '../shared/services/game-state.types';
-import { Timestring } from '../shared/services/timer.types';
 import { BaseComponent } from '../shared/abstracts/base-component.abstract';
+import { Timestring } from '../shared/services/timer.types';
 
 type ContinueOptions = {
   level: string;
@@ -24,14 +24,14 @@ export class HomePage extends BaseComponent {
   menuLevelTitle = 'Choose difficulty level';
   menuLevelButtons = this.createActionSheetMenu();
 
-  private _gameState!: GameState;
+  private _gameState?: GameState;
   private gameStateSub$!: Subscription;
 
   constructor(private navCtrl: NavController, private gameStateServ: GameStateService) {
     super();
   }
 
-  ionViewDidEnter(): void {
+  async ionViewDidEnter(): Promise<void> {
     console.log('=== HomePageDidEnter');
     this.gameStateSub$ = combineLatest([
       this.gameStateServ.getPauseState$(),
@@ -43,7 +43,7 @@ export class HomePage extends BaseComponent {
       this.setContinueOptions(gameState);
     });
     this.registerSubscriptions([this.gameStateSub$]);
-    this.loadGameState();
+    await this.loadGameState();
   }
 
   ionViewDidLeave(): void {
@@ -53,27 +53,23 @@ export class HomePage extends BaseComponent {
 
   private async loadGameState(): Promise<void> {
     const gameState = await this.gameStateServ.loadGameState();
-    if (gameState && this.isGamePlayable(gameState)) {
-      this.canContinue = true;
-      this._gameState = gameState;
-      this.setContinueOptions(gameState);
-    } else if (gameState && !this.isGamePlayable(gameState)) {
-      await this.gameStateServ.clearGameState();
+    if (gameState) {
+      this.canContinue = gameState.canContinue;
+      this._gameState = gameState.gameState;
+      this.setContinueOptions(gameState.gameState);
     } else {
       this.canContinue = false;
     }
   }
 
-  private isGamePlayable(gameState: GameState): boolean {
-    return gameState.state === GameStatusType.PENDING;
-  }
-
-  private setContinueOptions(gamestate: GameState): void {
-    this.continueOptions = {
-      level: gamestate.level.name,
-      mistakes: gamestate.mistakes.length,
-      time: gamestate.timestring,
-    };
+  private setContinueOptions(gamestate?: GameState): void {
+    if (gamestate) {
+      this.continueOptions = {
+        level: gamestate.level.name,
+        mistakes: gamestate.mistakes.length,
+        time: gamestate.timestring,
+      };
+    }
   }
 
   onContinue(): void {
@@ -81,8 +77,10 @@ export class HomePage extends BaseComponent {
       type: GameStartType.CONTINUE,
       gameState: this._gameState,
     });
-    this.gameStateServ.setLevel(this._gameState.level.name);
-    this.navCtrl.navigateForward('game');
+    if (this._gameState) {
+      this.gameStateServ.setLevel(this._gameState.level.name);
+      this.navCtrl.navigateForward('game', { queryParams: { parent: 'home' } });
+    }
   }
 
   async onNewGame(): Promise<void> {

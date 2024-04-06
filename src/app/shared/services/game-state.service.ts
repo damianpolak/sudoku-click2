@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
 import {
   BurstModeType,
+  CommonGameState,
   GameStartMode,
   GameStartType,
   GameState,
@@ -194,10 +195,23 @@ export class GameStateService {
     }
   }
 
-  async loadGameState(): Promise<GameState | undefined> {
+  async loadGameState(): Promise<CommonGameState | undefined> {
     try {
       const data = await this.storageServ.get(GameStateService.GAME_STATE_KEY);
-      return data !== null ? JSON.parse(data) : undefined;
+      const gameState = data !== null ? JSON.parse(data) : undefined;
+      if (gameState && this.isGamePlayable(gameState)) {
+        return {
+          gameState,
+          canContinue: true,
+        };
+      } else if (gameState && !this.isGamePlayable(gameState)) {
+        await this.clearGameState();
+        return undefined;
+      } else {
+        return {
+          canContinue: false,
+        };
+      }
     } catch (e) {
       console.log('An error occured when trying to load game state');
       return undefined;
@@ -206,5 +220,9 @@ export class GameStateService {
 
   async clearGameState(): Promise<void> {
     await this.storageServ.remove(GameStateService.GAME_STATE_KEY);
+  }
+
+  private isGamePlayable(gameState: GameState): boolean {
+    return gameState.state === GameStatusType.PENDING;
   }
 }

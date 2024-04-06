@@ -1,6 +1,6 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { AppStateService } from '../shared/services/app-state.service';
-import { Subscription, combineLatest, map, tap } from 'rxjs';
+import { Subscription, tap } from 'rxjs';
 import { GameLevel, GameStateService } from '../shared/services/game-state.service';
 import { TimerService } from '../shared/services/timer.service';
 import { GameStartType, GameStatusType, InputModeType } from '../shared/services/game-state.types';
@@ -17,7 +17,7 @@ import { ThemeModalActionType } from './theme/theme.types';
   templateUrl: './game.page.html',
   styleUrls: ['./game.page.scss'],
 })
-export class GamePage extends BaseComponent implements OnDestroy {
+export class GamePage extends BaseComponent {
   orientation$ = this.appStateServ.getScreenOrientation$();
   inputMode!: InputModeType;
   isPaused!: boolean;
@@ -85,8 +85,8 @@ export class GamePage extends BaseComponent implements OnDestroy {
     this.level = this.gameStateServ.selectedLevel;
   }
 
-  ngOnDestroy(): void {
-    console.log('GamePage Destroy');
+  ionViewDidLeave(): void {
+    console.log('GamePage DidLeave');
     this.unsubscribeSubscriptions();
     this.mistakeServ.clear();
     this.historyServ.clear();

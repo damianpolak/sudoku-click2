@@ -118,7 +118,7 @@ export class BoardComponent extends BaseComponent implements Animated, OnInit, O
 
   private async animationHandler(gameStartMode: GameStartMode): Promise<void> {
     setTimeout(async () => {
-      if (this.animationsEnabled) {
+      if (this.animationsEnabled && gameStartMode.options?.banner !== false) {
         switch (gameStartMode.type) {
           case GameStartType.RESTART_GAME:
             this.showAnimation(this.restartAnimation, 'Restart game', 'Good luck!');

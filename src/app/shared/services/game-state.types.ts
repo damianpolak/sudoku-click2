@@ -32,6 +32,11 @@ export type GameState = {
   score: number;
 };
 
+export type CommonGameState = {
+  gameState?: GameState;
+  canContinue: boolean;
+};
+
 export enum GameStartType {
   CONTINUE = 'CONTINUE',
   NEW_GAME = 'NEW_GAME',
@@ -41,5 +46,6 @@ export enum GameStartType {
 
 export type GameStartMode = {
   type: GameStartType;
+  options?: { banner: boolean };
   gameState?: GameState;
 };
