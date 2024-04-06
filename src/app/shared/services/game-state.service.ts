@@ -14,6 +14,7 @@ import { Field } from 'src/app/game/board/field/field.types';
 import { StorageService } from './storage.service';
 
 export enum Levels {
+  DEV = 'DEV',
   EASY = 'EASY',
   MEDIUM = 'MEDIUM',
   HARD = 'HARD',
@@ -31,7 +32,8 @@ interface Level {
 }
 
 const levelList: Level[] = [
-  { rows: 9, cols: 9, name: Levels.EASY, givenNumbers: 75, scoreMultiplier: 50 },
+  { rows: 9, cols: 9, name: Levels.DEV, givenNumbers: 75, scoreMultiplier: 50 },
+  { rows: 9, cols: 9, name: Levels.EASY, givenNumbers: 50, scoreMultiplier: 50 },
   { rows: 9, cols: 9, name: Levels.MEDIUM, givenNumbers: 44, scoreMultiplier: 75 },
   { rows: 9, cols: 9, name: Levels.HARD, givenNumbers: 38, scoreMultiplier: 100 },
   { rows: 9, cols: 9, name: Levels.EXPERT, givenNumbers: 28, scoreMultiplier: 150 },
