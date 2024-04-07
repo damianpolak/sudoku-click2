@@ -11,7 +11,7 @@ import { CommonGameState, GameStartType } from '../../services/game-state.types'
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent extends BaseComponent implements OnInit, OnDestroy {
-  @Input() showOptions: boolean = true;
+  @Input() showOptions: boolean = false;
   @Input() showThemes: boolean = false;
   @Input() showPause: boolean = false;
   @Input() showBack: boolean = false;
@@ -66,7 +66,7 @@ export class HeaderComponent extends BaseComponent implements OnInit, OnDestroy 
           }
           break;
         default:
-          this.navCtrl.navigateBack(this.backPath);
+          this.navCtrl.pop();
       }
     }
   }
