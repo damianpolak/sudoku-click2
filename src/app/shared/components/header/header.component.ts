@@ -15,6 +15,7 @@ export class HeaderComponent extends BaseComponent implements OnInit, OnDestroy 
   @Input() showThemes: boolean = false;
   @Input() showPause: boolean = false;
   @Input() showBack: boolean = false;
+  @Input() showDevMode: boolean = false;
   @Input() backPath: string = '';
   @Input() parentPath: string = '';
   @Input() title: string = '';
