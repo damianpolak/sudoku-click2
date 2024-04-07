@@ -25,6 +25,11 @@ const routes: Routes = [
     canActivate: [isNavigatedGuard],
   },
   {
+    path: 'options/stats',
+    loadChildren: () => import('./options/stats/stats.module').then((m) => m.StatsPageModule),
+    pathMatch: 'full',
+  },
+  {
     path: '**',
     redirectTo: 'home',
   },

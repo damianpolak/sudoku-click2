@@ -6,7 +6,7 @@
 <ion-content>
   <!-- Temporarily hardcoded -->
   <ion-list [inset]="true">
-    <ion-item [button]="true">
+    <ion-item [button]="true" (click)="onMenuItemClick()">
       <ion-icon slot="start" name="stats-chart-outline" size="large"></ion-icon>
       <ion-label>Statistics</ion-label>
       <ion-icon slot="end" name="chevron-forward-outline" size="small"></ion-icon>
