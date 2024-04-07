@@ -3,7 +3,7 @@ import { Storage } from '@ionic/storage-angular';
 
 type KeyName = `SUDOKU_${string}`;
 
-const REGISTERED_KEYS: KeyName[] = ['SUDOKU_GAME_STATE', 'SUDOKU_APP_SETTINGS'];
+const REGISTERED_KEYS: KeyName[] = ['SUDOKU_GAME_STATE', 'SUDOKU_APP_SETTINGS', 'SUDOKU_GAME_STATS'];
 
 @Injectable({
   providedIn: 'root',
