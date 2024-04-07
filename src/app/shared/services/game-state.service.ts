@@ -13,7 +13,7 @@ import { MissingNumber } from 'src/app/game/board/board.types';
 import { Field } from 'src/app/game/board/field/field.types';
 import { StorageService } from './storage.service';
 
-export enum Levels {
+export enum Level {
   DEV = 'DEV',
   EASY = 'EASY',
   MEDIUM = 'MEDIUM',
@@ -22,28 +22,28 @@ export enum Levels {
   MASTER = 'MASTER',
 }
 
-interface Level {
+type CommonGameLevel = {
   rows: number;
   cols: number;
-  name: Levels;
+  name: Level;
   givenNumbers: number;
   scoreMultiplier: number;
   maxScore?(): number;
-}
+};
 
-const levelList: Level[] = [
-  { rows: 9, cols: 9, name: Levels.DEV, givenNumbers: 75, scoreMultiplier: 50 },
-  { rows: 9, cols: 9, name: Levels.EASY, givenNumbers: 50, scoreMultiplier: 50 },
-  { rows: 9, cols: 9, name: Levels.MEDIUM, givenNumbers: 44, scoreMultiplier: 75 },
-  { rows: 9, cols: 9, name: Levels.HARD, givenNumbers: 38, scoreMultiplier: 100 },
-  { rows: 9, cols: 9, name: Levels.EXPERT, givenNumbers: 28, scoreMultiplier: 150 },
-  { rows: 9, cols: 9, name: Levels.MASTER, givenNumbers: 17, scoreMultiplier: 200 },
+const levelList: CommonGameLevel[] = [
+  { rows: 9, cols: 9, name: Level.DEV, givenNumbers: 75, scoreMultiplier: 50 },
+  { rows: 9, cols: 9, name: Level.EASY, givenNumbers: 50, scoreMultiplier: 50 },
+  { rows: 9, cols: 9, name: Level.MEDIUM, givenNumbers: 44, scoreMultiplier: 75 },
+  { rows: 9, cols: 9, name: Level.HARD, givenNumbers: 38, scoreMultiplier: 100 },
+  { rows: 9, cols: 9, name: Level.EXPERT, givenNumbers: 28, scoreMultiplier: 150 },
+  { rows: 9, cols: 9, name: Level.MASTER, givenNumbers: 17, scoreMultiplier: 200 },
 ];
 
-export class GameLevel implements Level {
+export class GameLevel implements CommonGameLevel {
   rows: number;
   cols: number;
-  name: Levels;
+  name: Level;
   givenNumbers: number;
   scoreMultiplier: number;
 
@@ -51,7 +51,7 @@ export class GameLevel implements Level {
     return (this.rows * this.cols - this.givenNumbers) * this.scoreMultiplier;
   }
 
-  constructor(selectedLevel?: Levels) {
+  constructor(selectedLevel?: Level) {
     const level = levelList.find((item) => item.name === selectedLevel);
     if (typeof level == 'undefined') {
       this.rows = levelList[0].rows;
@@ -125,7 +125,7 @@ export class GameStateService {
     return this.pauseState$.asObservable();
   }
 
-  setLevel(value?: Levels): void {
+  setLevel(value?: Level): void {
     this._selectedLevel = new GameLevel(value);
   }
 

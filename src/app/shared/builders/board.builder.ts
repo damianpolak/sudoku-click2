@@ -3,7 +3,7 @@ import { GridBuilder } from './grid.builder';
 import { Address, Field } from 'src/app/game/board/field/field.types';
 import { NotesBuilder } from './notes.builder';
 import { SudokuUtil } from '../utils/sudoku.util';
-import { GameLevel, Levels } from '../services/game-state.service';
+import { GameLevel, Level } from '../services/game-state.service';
 import { SudokuBuilder } from './sudoku.builder';
 import { ScoreBuilder } from './score.builder';
 
@@ -13,7 +13,7 @@ export class BoardBuilder {
 
   constructor(payload: { board?: Board; level?: GameLevel } = {}) {
     if (typeof payload.board === 'undefined') {
-      payload.level = typeof payload.level === 'undefined' ? new GameLevel(Levels.EASY) : payload.level;
+      payload.level = typeof payload.level === 'undefined' ? new GameLevel(Level.EASY) : payload.level;
       this._sudokuGrids = this.createSudokuGridSet(payload.level.givenNumbers, payload.level.rows);
       this._board = new GridBuilder<Field>(payload.level.rows, payload.level.cols, {
         value: 0,

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActionSheetButton, NavController } from '@ionic/angular';
-import { GameStateService, Levels } from '../shared/services/game-state.service';
+import { GameStateService, Level } from '../shared/services/game-state.service';
 import { ConversionUtil } from '../shared/utils/conversion.util';
 import { Subscription, combineLatest } from 'rxjs';
 import { GameStartType, GameState, GameStatusType } from '../shared/services/game-state.types';
@@ -105,7 +105,7 @@ export class HomePage extends BaseComponent {
   }
 
   createActionSheetMenu(): ActionSheetButton[] {
-    return Object.keys(Levels).map((item) => {
+    return Object.keys(Level).map((item) => {
       return {
         text: ConversionUtil.firstUpper(item),
         data: {
