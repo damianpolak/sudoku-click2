@@ -28,6 +28,7 @@ const routes: Routes = [
     path: 'options/stats',
     loadChildren: () => import('./options/stats/stats.module').then((m) => m.StatsPageModule),
     pathMatch: 'full',
+    canActivate: [isNavigatedGuard],
   },
   {
     path: '**',
