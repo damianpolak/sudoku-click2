@@ -72,6 +72,7 @@ npx cap sync
 
 ## Bugs:
 
+- disable score counting when first type wrong number then type properly
 - ~~Border color when first number was wrong and second propertly then border is red~~
 - ~~No history when continue game~~
 - ~~Sometimes when player click back then we can see rotate animation~~ (fixed: implemented ionic lifecycle instead angular)
