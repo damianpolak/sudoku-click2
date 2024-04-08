@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
-
-type KeyName = `SUDOKU_${string}`;
+import { KeyName } from '../interfaces/core.interface';
 
 const REGISTERED_KEYS: KeyName[] = ['SUDOKU_GAME_STATE', 'SUDOKU_APP_SETTINGS', 'SUDOKU_GAME_STATS'];
 
