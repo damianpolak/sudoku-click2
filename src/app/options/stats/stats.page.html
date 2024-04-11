@@ -1,5 +1,16 @@
-<app-header
-  [showBack]="true"
-  [backPath]="backPath"
-  title="Statistics"
-></app-header>
+<app-header [showBack]="true" [backPath]="backPath" title="Statistics"></app-header>
+@if(isReady) {
+  <ion-content>
+    <ion-segment [scrollable]="true" value="heart">
+      @for (level of levels; track level['id']) {
+        <ion-segment-button [value]="level.value" (click)="onSelectCategory(level.value)">
+          {{ level.value}}
+        </ion-segment-button>
+      }
+    </ion-segment>
+  </ion-content>
+} @else {
+  <ion-content>
+    <ion-spinner></ion-spinner>
+  </ion-content>
+}
