@@ -128,8 +128,9 @@ export class FullscreenViewComponent extends BaseComponent implements Animated, 
     this.navCtrl.navigateBack('home');
   }
 
-  onStatistics(): void {
-    console.log('Open stats');
+  async onStatistics(): Promise<void> {
+    await this.gameStateServ.clearGameState();
+    await this.navCtrl.navigateForward('options/stats', { queryParams: { parent: 'home' } });
   }
 
   setAnimation(): void {
