@@ -45,9 +45,9 @@ npx cap sync
 - ~~Create new native animations for new game/continue, restart game~~
 - ~~Create new native square animate when fill all numbers~~
 - Create sudoku.click logo and icons
-- Create statistic/rank page
+- ~~Create statistic/rank page~~
 - ~~Change continue text~~
-- Create three additional themes (light and two custom)
+- ~~Create three additional themes (light and two custom)~~
 - ~~Create themes menu and icon on app-header~~
 - Create capacitor splash screen
 - ~~Change color and background of numbered buttons when change input mode (notes enabled/disabled)~~
