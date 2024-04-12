@@ -40,12 +40,14 @@ export class StatsService {
   }
 
   highScore(level: Level, statistics: Stat[]): number {
-    return Math.max(...statistics.filter((i) => i.level === level && i.statsable).map((i) => i.score));
+    const score = Math.max(...statistics.filter((i) => i.level === level && i.statsable).map((i) => i.score));
+    return Number.isFinite(score) ? score : 0;
   }
 
   winsRatio(level: Level, statistics: Stat[]): number {
-    const wins = this.countWins(level, statistics);
-    return (100 * wins) / statistics.filter((i) => i.level === level && i.statsable).length;
+    const ratio =
+      (100 * this.countWins(level, statistics)) / statistics.filter((i) => i.level === level && i.statsable).length;
+    return Number.isNaN(ratio) ? 0 : ratio;
   }
 
   countFlawlessWins(level: Level, statistics: Stat[]): number {
@@ -62,17 +64,55 @@ export class StatsService {
       .filter((i) => i.mistakes === 0 && i.score === new GameLevel(level).maxScore()).length;
   }
 
-  processStats(statistics: Stat[]): SummaryStats {
-    return Object.values(Level).reduce((acc: SummaryStats, curr, index) => {
-      acc[`${curr}`] = {
-        wins: this.countWins(curr, statistics),
-        total: this.countStartedGames(curr, statistics),
-        highscore: this.highScore(curr, statistics),
-        winsRatio: this.winsRatio(curr, statistics),
-        flawlessRatio: this.countFlawlessWins(curr, statistics),
-        perfectWins: this.countPerfectWins(curr, statistics),
+  processStats(statistics: Stat[]): SummaryStats[] {
+    return Object.values(Level).map((i) => {
+      return {
+        level: i,
+        stats: [
+          {
+            name: 'total',
+            title: 'Total games',
+            icon: 'game-controller-outline',
+            color: 'default',
+            value: this.countStartedGames(i, statistics),
+          },
+          {
+            name: 'wins',
+            title: 'Total wins',
+            icon: 'trophy-outline',
+            color: 'default',
+            value: this.countWins(i, statistics),
+          },
+          {
+            name: 'flawlessRatio',
+            title: 'Flawless games',
+            icon: 'bonfire-outline',
+            color: 'default',
+            value: this.countFlawlessWins(i, statistics),
+          },
+          {
+            name: 'perfectWins',
+            title: 'Perfect games',
+            icon: 'heart-outline',
+            color: 'default',
+            value: this.countPerfectWins(i, statistics),
+          },
+          {
+            name: 'highscore',
+            title: 'High score',
+            icon: 'analytics-outline',
+            color: 'default',
+            value: this.highScore(i, statistics),
+          },
+          {
+            name: 'winsRatio',
+            title: 'Wins ratio',
+            icon: 'podium-outline',
+            color: 'default',
+            value: this.winsRatio(i, statistics) + '%',
+          },
+        ],
       };
-      return acc;
-    }, {});
+    });
   }
 }

@@ -16,12 +16,14 @@ export interface StatExtended extends Stat {
 }
 
 export type SummaryStats = {
-  [keyof in Level]?: {
-    wins: number;
-    total: number;
-    highscore: number;
-    winsRatio: number;
-    flawlessRatio: number;
-    perfectWins: number;
-  };
+  level: Level;
+  stats: StatDetail[];
+};
+
+export type StatDetail = {
+  name: string;
+  title: string;
+  icon: string;
+  color: string;
+  value: number | string;
 };

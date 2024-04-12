@@ -1,16 +1,24 @@
 <app-header [showBack]="true" [backPath]="backPath" title="Statistics"></app-header>
+
 @if(isReady) {
-  <ion-content>
-    <ion-segment [scrollable]="true" value="heart">
-      @for (level of levels; track level['id']) {
-        <ion-segment-button [value]="level.value" (click)="onSelectCategory(level.value)">
-          {{ level.value}}
-        </ion-segment-button>
-      }
-    </ion-segment>
-  </ion-content>
-} @else {
-  <ion-content>
-    <ion-spinner></ion-spinner>
-  </ion-content>
+<ion-toolbar>
+  <ion-segment [scrollable]="true" [value]="currentTabValue">
+    @for (level of levels; track level['id']) {
+    <ion-segment-button [value]="level.value" (click)="selectCategory(level.value)">
+      {{ level.value}}
+    </ion-segment-button>
+    }
+  </ion-segment>
+</ion-toolbar>
+<ion-content>
+  <ion-list [inset]="true">
+    @for(item of currentStatItem?.stats; track item['name']) {
+    <ion-item>
+      <ion-icon color="default" slot="start" [name]="item.icon" size="large"></ion-icon>
+      <ion-label>{{ item.title }}</ion-label>
+      <ion-note slot="end"> {{ item.value }}</ion-note>
+    </ion-item>
+    }
+  </ion-list>
+</ion-content>
 }
