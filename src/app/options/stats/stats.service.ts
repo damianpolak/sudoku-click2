@@ -109,7 +109,7 @@ export class StatsService {
             title: 'Wins ratio',
             icon: 'podium-outline',
             color: 'default',
-            value: this.winsRatio(i, statistics) + '%',
+            value: Number(this.winsRatio(i, statistics).toPrecision(2)) + '%',
           },
         ],
       };
