@@ -31,14 +31,14 @@
 }
 
 @font-face {
-  font-family: "Roboto";
+  font-family: 'Roboto';
   font-style: normal;
   font-weight: normal;
-  src: url("./assets/fonts/Roboto-Regular.ttf");
+  src: url('./assets/fonts/Roboto-Regular.ttf');
 }
 
 body * {
-  font-family: "Roboto", "Helvetica Neue", sans-serif;
+  font-family: 'Roboto', 'Helvetica Neue', sans-serif;
 }
 
 @media (orientation: portrait) {
@@ -53,18 +53,10 @@ body * {
   }
 }
 
-ion-content {
-  --overflow: hidden;
-}
-
 ion-button {
   --border-radius: 7px;
-  // font-size: 0.7rem;
 }
 
-.action-sheet-button.sc-ion-action-sheet-ios {
-  // font-size: 0.8rem;
-}
 app-field {
   $borderSquare: 2px solid var(--ion-board-border-square);
   $borderInternal: 1px solid var(--ion-board-border-internal);
@@ -95,5 +87,5 @@ app-field {
 }
 
 .hide {
-  display: none!important;
+  display: none !important;
 }
