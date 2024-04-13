@@ -36,7 +36,7 @@ npx cap sync
 - ~~Create modal banner with animation for start, end, win, lose, restart messages~~
 - Create tip feature
 - ~~Change back to undo~~
-- Implement chance used
+- ~~Implement chance used~~
 - Show wrong numbers in cross selection (red tint backgrounds)
 - ~~Restart game~~
 - Create and change control icons for own custom
@@ -51,7 +51,6 @@ npx cap sync
 - ~~Create themes menu and icon on app-header~~
 - Create capacitor splash screen
 - ~~Change color and background of numbered buttons when change input mode (notes enabled/disabled)~~
-- Option for enable/disable opacity or hidden/visible numbered button when all available numbers have been used
 - Set larger font size on app-status-bar (top info bar)
 - Set larger controls icons and labels
 - Create preference menu
@@ -89,6 +88,7 @@ npx cap sync
 ## Options section:
 
 - Don't hide number buttons when all used
+- Option for enable/disable opacity or hidden/visible numbered button when all available numbers have been used
 - fieldAnimation ON/OFF (field.component)
 - boardAnimation ON/OFF
 - pause backdropDismiss ON/OFF (pause.component)
