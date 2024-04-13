@@ -31,6 +31,15 @@ export class StatsService {
     }
   }
 
+  async removeLast(): Promise<void> {
+    try {
+      const stats = await this.load();
+      await this.storageServ.set(StatsService.GAME_STATS_KEY, stats.splice(0, stats.length - 1));
+    } catch (e) {
+      console.log('Cannot remove last item');
+    }
+  }
+
   countStartedGames(level: Level, statistics: Stat[]): number {
     return statistics.filter((i) => i.level === level && i.statsable).length;
   }

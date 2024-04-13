@@ -25,6 +25,7 @@ import { ControlsService } from 'src/app/game/controls/controls.service';
 import { FullscreenViewAnimation } from '../../animations/fullscreen-view.animation';
 import { Timestring } from '../../services/timer.types';
 import { ScoreService } from '../../services/score.service';
+import { StatsService } from 'src/app/options/stats/stats.service';
 
 @Component({
   selector: 'app-fullscreen-view',
@@ -42,6 +43,7 @@ export class FullscreenViewComponent extends BaseComponent implements Animated, 
 
   timeString: Observable<Timestring> = this.timerServ.getTimestring();
   score: Observable<number> = this.scoreServ.getPresentScore();
+  canSecondChance: Observable<boolean> = this.mistakeServ.canUseSecondChance();
 
   @HostBinding('class.hide') get isHidden() {
     return !this.isOpen;
@@ -65,9 +67,9 @@ export class FullscreenViewComponent extends BaseComponent implements Animated, 
     private readonly navCtrl: NavController,
     private readonly mistakeServ: MistakeService,
     private readonly scoreServ: ScoreService,
-    private readonly historyServ: HistoryService,
     private readonly timerServ: TimerService,
-    private readonly controlsServ: ControlsService
+    private readonly controlsServ: ControlsService,
+    private readonly statsServ: StatsService
   ) {
     super();
     this.registerSubscriptions([this.gameStartModeSub$]);
@@ -109,7 +111,7 @@ export class FullscreenViewComponent extends BaseComponent implements Animated, 
     });
   }
 
-  onSecondChance(): void {
+  async onSecondChance(): Promise<void> {
     this.mistakeServ.secondChance();
     this.gameStateServ.setInputMode(InputModeType.VALUE);
     this.gameStateServ.setBurstMode(BurstModeType.NORMAL);
@@ -121,6 +123,7 @@ export class FullscreenViewComponent extends BaseComponent implements Animated, 
     this.gameStateServ.setGameStartMode({
       type: GameStartType.SECOND_CHANCE,
     });
+    await this.statsServ.removeLast();
   }
 
   navigateHome(): void {

@@ -7,11 +7,13 @@ export type Mistake = {
   address: Address;
   value: number;
   finalValue: number;
+  chanceUsed?: boolean;
 };
 
 export type PresentMistake = {
   value: number;
   limit: number;
+  secondChanceUsed?: boolean;
 };
 
 @Injectable({
@@ -32,7 +34,16 @@ export class MistakeService extends ServiceStore<Mistake> {
         return {
           value: x.length,
           limit: this.limitEnabled ? MistakeService.MISTAKE_LIMIT : 0,
+          secondChanceUsed: x.some((s) => s.chanceUsed),
         };
+      })
+    );
+  }
+
+  canUseSecondChance(): Observable<boolean> {
+    return this.getPresentMistakes().pipe(
+      map((x) => {
+        return x.value >= x.limit && x.secondChanceUsed === true;
       })
     );
   }
@@ -43,7 +54,9 @@ export class MistakeService extends ServiceStore<Mistake> {
 
   secondChance(): void {
     if (this.store.length >= MistakeService.MISTAKE_LIMIT) {
-      this.emitter$.next(this.store.splice(0, this.store.length - 1));
+      const mistakes = this.store.splice(0, this.store.length - 1);
+      mistakes[mistakes.length - 1] = { ...mistakes[mistakes.length - 1], ...{ chanceUsed: true } };
+      this.emitter$.next(mistakes);
     }
   }
 }

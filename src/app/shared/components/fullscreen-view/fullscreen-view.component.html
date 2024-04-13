@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="buttons">
-      <ion-button expand="block" (click)="onSecondChance()">Second chance</ion-button>
+      <ion-button expand="block" [disabled]="canSecondChance | async" (click)="onSecondChance()">Second chance</ion-button>
       <div class="buttons-row">
         <ion-button expand="block" (click)="navigateHome()">Home</ion-button>
         <ion-button expand="block" (click)="onRestartGame()">Restart</ion-button>

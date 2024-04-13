@@ -6,6 +6,7 @@ import { Subscription, combineLatest } from 'rxjs';
 import { GameStartType, GameState, GameStatusType } from '../shared/services/game-state.types';
 import { BaseComponent } from '../shared/abstracts/base-component.abstract';
 import { Timestring } from '../shared/services/timer.types';
+import { StatsService } from '../options/stats/stats.service';
 
 type ContinueOptions = {
   level: string;
@@ -27,11 +28,26 @@ export class HomePage extends BaseComponent {
   private _gameState?: GameState;
   private gameStateSub$!: Subscription;
 
-  constructor(private navCtrl: NavController, private gameStateServ: GameStateService) {
+  constructor(
+    private navCtrl: NavController,
+    private gameStateServ: GameStateService,
+    private statsServ: StatsService
+  ) {
     super();
   }
 
   async ionViewDidEnter(): Promise<void> {
+    // Randomize stats data
+    // for (let i = 0; i <= 10000; i++) {
+    //   await this.statsServ.save({
+    //     level: Object.keys(Level)[Math.floor(Math.random() * Object.keys(Level).length)] as Level,
+    //     status: Object.keys(GameStatusType)[Math.floor(Math.random() * Object.keys(Level).length)] as GameStatusType,
+    //     score: Number(Math.floor(Math.random() * 100000).toFixed()),
+    //     time: '00:34',
+    //     mistakes: Math.floor(Math.random() * 3),
+    //     statsable: true,
+    //   });
+    // }
     console.log('=== HomePageDidEnter');
     this.gameStateSub$ = combineLatest([
       this.gameStateServ.getPauseState$(),
