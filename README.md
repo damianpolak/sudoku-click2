@@ -38,6 +38,8 @@ npx cap sync
 - ~~Change back to undo~~
 - ~~Implement chance used~~
 - Show wrong numbers in cross selection (red tint backgrounds)
+- Change background color of note number when selected number in grid
+- Change background color of wrong number in highlight area to red
 - ~~Restart game~~
 - Create and change control icons for own custom
 - Create new native animation on control number button
