@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { StorageService } from 'src/app/shared/services/storage.service';
-import { Stat, SummaryStats } from './stats.types';
+import { Stat, SummaryGames, SummaryStats } from './stats.types';
 import { GameLevel, Level } from 'src/app/shared/services/game-state.service';
 import { GameStatusType } from 'src/app/shared/services/game-state.types';
+import { ConversionUtil } from 'src/app/shared/utils/conversion.util';
 
 @Injectable({
   providedIn: 'root',
@@ -73,6 +74,20 @@ export class StatsService {
       .filter((i) => i.mistakes === 0 && i.score === new GameLevel(level).maxScore()).length;
   }
 
+  bestWorstTime(level: Level, statistics: Stat[], option: { type: 'best' | 'worst' }): string {
+    const bestOrWorst = (type: 'best' | 'worst', ...values: number[]): number => {
+      return type === 'best' ? Math.min(...values) : Math.max(...values);
+    };
+
+    const timeResult = statistics
+      .filter((i) => i.level === level && i.statsable && i.status === GameStatusType.VICTORY)
+      .map((i) => ({ time: i.time, timeScoring: parseInt(ConversionUtil.replaceChar(i.time, ':', ''), 16) }));
+    const result = timeResult.find(
+      (i) => i.timeScoring === bestOrWorst(option.type, ...timeResult.map((i) => i.timeScoring))
+    )?.time as string;
+    return result ? result : 'N/A';
+  }
+
   processStats(statistics: Stat[]): SummaryStats[] {
     return Object.values(Level).map((i) => {
       return {
@@ -120,7 +135,43 @@ export class StatsService {
             color: 'default',
             value: Number(this.winsRatio(i, statistics).toPrecision(2)) + '%',
           },
+          {
+            name: 'bestTime',
+            title: 'Best time',
+            icon: 'arrow-up-outline',
+            color: 'default',
+            value: this.bestWorstTime(i, statistics, { type: 'best' }),
+          },
+          {
+            name: 'worstTime',
+            title: 'Worst time',
+            icon: 'arrow-down-outline',
+            color: 'default',
+            value: this.bestWorstTime(i, statistics, { type: 'worst' }),
+          },
         ],
+      };
+    });
+  }
+
+  processGames(statistics: Stat[]): SummaryGames[] {
+    return Object.values(Level).map((i) => {
+      return {
+        level: i,
+        games: statistics
+          .filter((j) => j.level === i && j.statsable)
+          .map((j, index) => {
+            return {
+              id: index,
+              status: j.status,
+              score: j.score,
+              time: j.time,
+              mistakes: j.mistakes,
+              icon: j.status === GameStatusType.VICTORY ? 'trophy-outline' : 'skull-outline',
+              color: 'default',
+              datestring: j.datetime ? j.datetime.toLocaleString() : 'n/a',
+            };
+          }),
       };
     });
   }

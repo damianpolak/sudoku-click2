@@ -1,6 +1,11 @@
 import { Level } from 'src/app/shared/services/game-state.service';
 import { GameStatusType } from 'src/app/shared/services/game-state.types';
 
+export type CurrentItem = {
+  summaryStats: SummaryStats | undefined;
+  summaryGames: SummaryGames | undefined;
+};
+
 export type Stat = {
   level: Level;
   status: GameStatusType;
@@ -8,12 +13,8 @@ export type Stat = {
   time: string;
   mistakes: number;
   statsable: boolean;
+  datetime: Date;
 };
-
-export interface StatExtended extends Stat {
-  perfectWins: number;
-  highscore: number;
-}
 
 export type SummaryStats = {
   level: Level;
@@ -27,3 +28,15 @@ export type StatDetail = {
   color: string;
   value: number | string;
 };
+
+export type SummaryGames = {
+  level: Level;
+  games: GameDetail[];
+};
+
+export interface GameDetail extends Omit<Stat, 'level' | 'statsable' | 'datetime'> {
+  id: number;
+  icon: string;
+  color: string;
+  datestring: string;
+}

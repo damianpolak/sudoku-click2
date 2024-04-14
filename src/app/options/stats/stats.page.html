@@ -11,12 +11,26 @@
   </ion-segment>
 </ion-toolbar>
 <ion-content>
+  <h1>Summary</h1>
   <ion-list [inset]="true">
-    @for(item of currentStatItem?.stats; track item['name']) {
+    @for(item of currentItem.summaryStats?.stats; track item['name']) {
     <ion-item>
-      <ion-icon color="default" slot="start" [name]="item.icon" size="large"></ion-icon>
-      <ion-label>{{ item.title }}</ion-label>
-      <ion-note slot="end"> {{ item.value }}</ion-note>
+      <ion-icon color="primary" slot="start" [name]="item.icon" size="large"></ion-icon>
+      <ion-label color="primary">{{ item.title }}</ion-label>
+      <ion-note slot="end" color="primary"> {{ item.value }}</ion-note>
+    </ion-item>
+    }
+  </ion-list>
+  <h1>Games history</h1>
+  <ion-list [inset]="true">
+    @for(item of currentItem.summaryGames?.games; track item['id']) {
+    <ion-item>
+      <ion-icon [color]="item.status === 'VICTORY' ? 'success' : 'danger'" slot="start" [name]="item.icon" size="large"></ion-icon>
+      <ion-label [color]="item.status === 'VICTORY' ? 'success' : 'danger'">
+        <h2>{{ item.score }} / {{ item.mistakes }}</h2>
+        <p>{{ item.datestring }}</p>
+      </ion-label>
+      <ion-note slot="end" [color]="item.status === 'VICTORY' ? 'success' : 'danger'"> {{ item.time }}</ion-note>
     </ion-item>
     }
   </ion-list>

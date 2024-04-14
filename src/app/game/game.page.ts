@@ -97,8 +97,8 @@ export class GamePage extends BaseComponent {
             time: v.timer,
             mistakes: v.mistake.value,
             statsable: v.mistake.limit > 0,
+            datetime: new Date(),
           });
-          console.log('=== SAVE ON VICTORY', v);
         } else if (v.status === GameStatusType.LOSS) {
           this.onFinishGameScreen({
             title: 'Game over',
@@ -112,8 +112,8 @@ export class GamePage extends BaseComponent {
             time: v.timer,
             mistakes: v.mistake.value,
             statsable: v.mistake.limit > 0,
+            datetime: new Date(),
           });
-          console.log('=== SAVE ON LOSS', v);
         } else if (v.status === GameStatusType.PENDING) {
           if (this.isFinalViewOpen) {
             this.timerServ.stop();
@@ -136,7 +136,6 @@ export class GamePage extends BaseComponent {
   }
 
   back(event: void): void {
-    console.log('Back to menu: ', event);
     this.gameStateServ.setPauseState(true);
   }
 
@@ -146,7 +145,6 @@ export class GamePage extends BaseComponent {
 
   themes(event: boolean): void {
     this.isThemeMenuVisible = event;
-    console.log('Themes is', event);
   }
 
   onPauseModalDismiss(event: PauseModalActionType): void {
@@ -166,7 +164,6 @@ export class GamePage extends BaseComponent {
       case 'THEME':
         break;
       default:
-        console.log('===onThemeModalDismiss===', event);
         this.isThemeMenuVisible = false;
     }
   }

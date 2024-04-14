@@ -4,7 +4,7 @@ import { Level } from 'src/app/shared/services/game-state.service';
 import { StatsService } from './stats.service';
 import { BaseComponent } from 'src/app/shared/abstracts/base-component.abstract';
 import { Subscription } from 'rxjs';
-import { Stat, SummaryStats } from './stats.types';
+import { CurrentItem, Stat, SummaryGames, SummaryStats } from './stats.types';
 import { LoadingController } from '@ionic/angular';
 
 type MenuLevelOption = {
@@ -19,10 +19,11 @@ type MenuLevelOption = {
 })
 export class StatsPage extends BaseComponent {
   backPath!: string;
-  summarized!: SummaryStats[];
+  summarizedStats!: SummaryStats[];
+  summarizedGames!: SummaryGames[];
   currentTabValue: string = Object.values(Level)[0];
-  currentStatItem!: SummaryStats | undefined;
-  private commonStatistics: Stat[] = [];
+  currentItem!: CurrentItem;
+  private _commonStatistics: Stat[] = [];
   private queryParamsSub$!: Subscription;
 
   constructor(
@@ -71,14 +72,17 @@ export class StatsPage extends BaseComponent {
 
   async loadStats(): Promise<void> {
     this.isReady = false;
-    // await new Promise((resolve) => setTimeout(resolve, 3000));
-    this.commonStatistics = await this.statsServ.load();
-    this.summarized = this.statsServ.processStats(this.commonStatistics);
+    this._commonStatistics = await this.statsServ.load();
+    this.summarizedStats = this.statsServ.processStats(this._commonStatistics);
+    this.summarizedGames = this.statsServ.processGames(this._commonStatistics);
     this.selectCategory(this.currentTabValue);
     this.isReady = true;
   }
 
   selectCategory(level: Level | string): void {
-    this.currentStatItem = this.summarized.find((i) => i.level === level);
+    this.currentItem = {
+      summaryStats: this.summarizedStats.find((i) => i.level === level),
+      summaryGames: this.summarizedGames.find((i) => i.level === level),
+    };
   }
 }
