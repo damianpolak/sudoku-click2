@@ -9,13 +9,13 @@
 This project was created for fun. I designed it using Ionic, targeting compilation for Android and iOS platforms. If you want to test it in a desktop browser, enable developer mode with mobile view.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/damianpolak/sudoku-click2/refs/heads/master/.github/gfx/1.png?token=GHSAT0AAAAAAC7LOEL36VADOMRHQTZT5FDCZ52ESBQ">
-  <img src="https://raw.githubusercontent.com/damianpolak/sudoku-click2/refs/heads/master/.github/gfx/2.png?token=GHSAT0AAAAAAC7LOEL3ZHCH62MD7PL7JXN6Z52ESHQ">
-  <img src="https://raw.githubusercontent.com/damianpolak/sudoku-click2/refs/heads/master/.github/gfx/3.png?token=GHSAT0AAAAAAC7LOEL3ILE4JTADFPJOP5YCZ52ESNA">
-  <img src="https://raw.githubusercontent.com/damianpolak/sudoku-click2/refs/heads/master/.github/gfx/4.png?token=GHSAT0AAAAAAC7LOEL2HHHAMGAEN2IZA22WZ52ESSA">
-  <img src="https://raw.githubusercontent.com/damianpolak/sudoku-click2/refs/heads/master/.github/gfx/5.png?token=GHSAT0AAAAAAC7LOEL2Z6CIFO536AQVH766Z52ES2Q">
-  <img src="https://raw.githubusercontent.com/damianpolak/sudoku-click2/refs/heads/master/.github/gfx/6.png?token=GHSAT0AAAAAAC7LOEL3QHOU3UHVQTSSJBYKZ52ETBA">
-  <img src="https://raw.githubusercontent.com/damianpolak/sudoku-click2/refs/heads/master/.github/gfx/7.png?token=GHSAT0AAAAAAC7LOEL37SSNOQGMQUHWXE6UZ52ETGA">
+  <img src="https://raw.githubusercontent.com/damianpolak/sudoku-click2/refs/heads/master/.github/gfx/1.png">
+  <img src="https://raw.githubusercontent.com/damianpolak/sudoku-click2/refs/heads/master/.github/gfx/2.png">
+  <img src="https://raw.githubusercontent.com/damianpolak/sudoku-click2/refs/heads/master/.github/gfx/3.png">
+  <img src="https://raw.githubusercontent.com/damianpolak/sudoku-click2/refs/heads/master/.github/gfx/4.png">
+  <img src="https://raw.githubusercontent.com/damianpolak/sudoku-click2/refs/heads/master/.github/gfx/5.png">
+  <img src="https://raw.githubusercontent.com/damianpolak/sudoku-click2/refs/heads/master/.github/gfx/6.png">
+  <img src="https://raw.githubusercontent.com/damianpolak/sudoku-click2/refs/heads/master/.github/gfx/7.png">
 </p>
 
 ## Usage
