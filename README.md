@@ -56,8 +56,8 @@ npx cap sync
 - Set larger font size on app-status-bar (top info bar)
 - Set larger controls icons and labels
 - Create preference menu
-- Create a haptics service
-- Create an audio service
+- ~~Create a haptics service~~
+- ~~Create an audio service~~
 - ~~Create finish game menu~~
 - ~~Create scoring feature~~
 - ~~Mistakes handling and finishing game~~
