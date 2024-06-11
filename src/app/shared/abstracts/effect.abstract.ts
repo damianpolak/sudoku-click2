@@ -1,6 +1,7 @@
-import { HapticsPlugin, ImpactOptions, ImpactStyle } from '@capacitor/haptics';
-import { EffectType } from '../interfaces/effect.type';
-
+type EffectType<T> = {
+  name: string;
+  resource: T;
+};
 export abstract class Effect<T, K> {
   protected resource: T[] = [];
   protected effectResource: EffectType<K>[] = [];
