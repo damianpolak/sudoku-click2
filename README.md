@@ -46,7 +46,7 @@ npx cap sync
 - ~~Create new native animation on number field click~~
 - ~~Create new native animations for new game/continue, restart game~~
 - ~~Create new native square animate when fill all numbers~~
-- Create sudoku.click logo and icons
+- Create sudoku.click logo and icons (AI?)
 - ~~Create statistic/rank page~~
 - ~~Change continue text~~
 - ~~Create three additional themes (light and two custom)~~
