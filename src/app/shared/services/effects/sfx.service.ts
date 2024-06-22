@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Effect } from '../abstracts/effect.abstract';
+import { Effect } from '../../abstracts/effect.abstract';
 
 @Injectable({
   providedIn: 'root',
