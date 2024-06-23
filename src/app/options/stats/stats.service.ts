@@ -4,40 +4,26 @@ import { Stat, SummaryGames, SummaryStats } from './stats.types';
 import { GameLevel, Level } from 'src/app/shared/services/game-state.service';
 import { GameStatusType } from 'src/app/shared/services/game-state.types';
 import { ConversionUtil } from 'src/app/shared/utils/conversion.util';
+import { Menu } from 'src/app/shared/abstracts/menu.abstract';
+import { KeyName } from 'src/app/shared/interfaces/core.interface';
 
 @Injectable({
   providedIn: 'root',
 })
-export class StatsService {
-  private static readonly GAME_STATS_KEY = 'SUDOKU_GAME_STATS' as const;
+export class StatsService extends Menu<Stat> {
+  protected readonly storageKey: KeyName = 'SUDOKU_GAME_STATS' as const;
+  protected readonly _entityName: string = 'STATS';
 
-  constructor(private readonly storageServ: StorageService) {}
-
-  async save(value: Stat): Promise<void> {
-    try {
-      let stats = await this.load();
-      await this.storageServ.set(StatsService.GAME_STATS_KEY, [...stats, ...[value]]);
-    } catch (e) {
-      console.log('Cannot save player stats');
-    }
-  }
-
-  async load(): Promise<Stat[]> {
-    try {
-      const stats = await this.storageServ.get(StatsService.GAME_STATS_KEY);
-      return stats ? stats : [];
-    } catch (e) {
-      console.log('An error occured when trying to load player stats');
-      return [];
-    }
+  constructor(protected override readonly storageServ: StorageService) {
+    super(storageServ);
   }
 
   async removeLast(): Promise<void> {
     try {
       const stats = await this.load();
-      await this.storageServ.set(StatsService.GAME_STATS_KEY, stats.splice(0, stats.length - 1));
+      await this.storageServ.set(this.storageKey, stats.splice(0, stats.length - 1));
     } catch (e) {
-      console.log('Cannot remove last item');
+      console.error(`Cannot remove last item from ${this.entityName}`);
     }
   }
 
