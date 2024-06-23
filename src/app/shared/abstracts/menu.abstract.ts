@@ -17,9 +17,12 @@ export abstract class Menu<T> implements BaseMenu {
 
   constructor(protected readonly storageServ: StorageService) {}
 
-  async save(value: T): Promise<void> {
+  async save(value: T | T[]): Promise<void> {
     try {
-      await this.storageServ.set(this.storageKey, [...(await this.load()), ...[value]]);
+      await this.storageServ.set(this.storageKey, [
+        ...(Array.isArray(value) ? [] : await this.load()),
+        ...(Array.isArray(value) ? value : [value]),
+      ]);
     } catch (e) {
       console.error(`Cannot save ${this.entityName}`);
     }
