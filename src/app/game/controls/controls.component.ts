@@ -13,6 +13,7 @@ type NumberControl = {
 type FeatureControl = FeatureClickEvent & {
   name: string;
   icon: string;
+  disabled?: boolean;
   toggle?: boolean;
 };
 
@@ -91,7 +92,7 @@ export class ControlsComponent extends BaseComponent implements OnInit, OnDestro
         icon: this.inputMode === InputModeType.VALUE ? 'document-outline' : 'document-text-outline',
         toggle: this.inputMode === InputModeType.NOTES,
       },
-      { name: 'Tip', type: 'click', feature: 'tip', icon: 'bulb-outline' },
+      { name: 'Tip', type: 'click', feature: 'tip', icon: 'bulb-outline', disabled: true },
       {
         name: 'Burst',
         type: 'toggle',
