@@ -68,6 +68,9 @@ export class EffectHandlerService extends BaseService implements OnDestroy {
   private onFeatureClick(): void {
     if (this.optionsService.getValueById(ToggleOption.SOUND)) {
       this.sfxServ.run('zipclick');
+    }
+
+    if (this.optionsService.getValueById(ToggleOption.HAPTICS)) {
       this.hapticServ.run('impactLight');
     }
   }
@@ -75,6 +78,9 @@ export class EffectHandlerService extends BaseService implements OnDestroy {
   private onNumberClick(): void {
     if (this.optionsService.getValueById(ToggleOption.SOUND)) {
       this.sfxServ.run('click');
+    }
+
+    if (this.optionsService.getValueById(ToggleOption.HAPTICS)) {
       this.hapticServ.run('impactLight');
     }
   }
