@@ -1,0 +1,21 @@
+export enum ToggleOption {
+  DONT_HIDE_NUMBER_BUTTONS = 'DONT_HIDE_NUMBER_BUTTONS',
+  FIELD_ANIMATIONS = 'FIELD_ANIMATIONS',
+  BOARD_ANIMATIONS = 'BOARD_ANIMATIONS',
+  CLICK_BACKDROP_TO_UNPAUSE = 'CLICK_BACKDROP_TO_UNPAUSE',
+  UNLIMITTED_MISTAKES = 'UNLIMITTED_MISTAKES',
+  SOUND = 'SOUND',
+  HAPTICS = 'HAPTICS',
+  SHOW_TIMER = 'SHOW_TIMER',
+  SHOW_SCORE = 'SHOW_SCORE',
+  SHOW_MISTAKES = 'SHOW_MISTAKES',
+}
+
+export type Option = {
+  id: ToggleOption;
+  title: string;
+  description?: string;
+  defaultValue: boolean;
+  value: boolean;
+  display: boolean;
+};
