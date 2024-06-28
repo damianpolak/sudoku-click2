@@ -13,6 +13,10 @@ export class AppStateService {
   private readonly appDevMode$ = new BehaviorSubject<boolean>(false);
   private readonly appSettings$ = new Subject<AppSettings>();
 
+  private readonly headerButtonClick$ = new Subject<void>();
+  private readonly optionButtonClick$ = new Subject<void>();
+  private readonly mainMenuButtonClick$ = new Subject<void>();
+
   constructor(private readonly storageServ: StorageService) {}
 
   setScreenOrientation(orientation: OrientationType): void {
@@ -55,5 +59,29 @@ export class AppStateService {
 
   getAppSettings$(): Observable<AppSettings> {
     return this.appSettings$.asObservable();
+  }
+
+  onHeaderButtonClick(): void {
+    this.headerButtonClick$.next();
+  }
+
+  getHeaderButtonClick$() {
+    return this.headerButtonClick$.asObservable();
+  }
+
+  onOptionButtonClick(): void {
+    this.optionButtonClick$.next();
+  }
+
+  getOptionButtonClick$() {
+    return this.optionButtonClick$.asObservable();
+  }
+
+  onMainMenuButtonClick(): void {
+    this.mainMenuButtonClick$.next();
+  }
+
+  getMainMenuButtonClick$() {
+    return this.mainMenuButtonClick$.asObservable();
   }
 }
