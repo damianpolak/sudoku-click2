@@ -1,5 +1,6 @@
 import { KeyName } from '../interfaces/core.interface';
 import { StorageService } from '../services/storage.service';
+import { BaseService } from './base-service.abstract';
 
 interface BaseMenu {
   save(value: unknown): Promise<void>;
@@ -7,7 +8,7 @@ interface BaseMenu {
   entityName: string;
 }
 
-export abstract class Menu<T> implements BaseMenu {
+export abstract class Menu<T> extends BaseService implements BaseMenu {
   protected abstract readonly storageKey: KeyName;
   protected abstract readonly _entityName: string;
 
@@ -15,7 +16,9 @@ export abstract class Menu<T> implements BaseMenu {
     return this._entityName.toLowerCase();
   }
 
-  constructor(protected readonly storageServ: StorageService) {}
+  constructor(protected readonly storageServ: StorageService) {
+    super();
+  }
 
   async save(value: T | T[]): Promise<void> {
     try {
