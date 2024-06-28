@@ -3,6 +3,7 @@ import { DynamicModalComponent } from 'src/app/shared/abstracts/modal.abstract';
 import { ThemeModalActionType } from './theme.types';
 import { ThemeDefinition, ThemeService } from './theme.service';
 import { Observable, Subscription, from, lastValueFrom } from 'rxjs';
+import { AppStateService } from 'src/app/shared/services/app-state.service';
 
 @Component({
   selector: 'app-theme',
@@ -20,12 +21,13 @@ export class ThemeComponent extends DynamicModalComponent<ThemeModalActionType> 
     return this._themes;
   }
 
-  constructor(private readonly themeServ: ThemeService) {
+  constructor(private readonly themeServ: ThemeService, private readonly appStateServ: AppStateService) {
     super();
     this.registerSubscriptions([this.themesSub$]);
   }
 
   onThemeClick(themeName: string): void {
+    this.appStateServ.onOptionButtonClick();
     this.themeServ.set(
       this.themes.map((t) => {
         return {

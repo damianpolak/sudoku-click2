@@ -50,6 +50,7 @@ export class HeaderComponent extends BaseComponent implements OnInit, OnDestroy 
 
   async onBack(): Promise<void> {
     if (this.showBack && this.backPath !== '') {
+      this.appStateServ.onHeaderButtonClick();
       switch (this.backPath) {
         case 'home':
           this.navCtrl.navigateBack(this.backPath);
@@ -73,20 +74,24 @@ export class HeaderComponent extends BaseComponent implements OnInit, OnDestroy 
   }
 
   onPause(): void {
+    this.appStateServ.onHeaderButtonClick();
     this.isPaused = !this.isPaused;
     this.pauseClickEvent.emit(this.isPaused);
   }
 
   onThemes(): void {
+    this.appStateServ.onHeaderButtonClick();
     this.isThemesMenuVisible = !this.isThemesMenuVisible;
     this.themeClickEvent.emit(this.isThemesMenuVisible);
   }
 
   onOptions(): void {
+    this.appStateServ.onHeaderButtonClick();
     this.navCtrl.navigateForward('options', { queryParams: { parent: this.parentPath } });
   }
 
   onAppDevModeToggle(): void {
+    this.appStateServ.onHeaderButtonClick();
     this.appStateServ.setAppDevMode(!this.appDevMode);
   }
 

@@ -7,6 +7,7 @@ import { GameStartType, GameState, GameStatusType } from '../shared/services/gam
 import { BaseComponent } from '../shared/abstracts/base-component.abstract';
 import { Timestring } from '../shared/services/timer.types';
 import { StatsService } from '../options/stats/stats.service';
+import { AppStateService } from '../shared/services/app-state.service';
 
 type ContinueOptions = {
   level: string;
@@ -31,7 +32,7 @@ export class HomePage extends BaseComponent {
   constructor(
     private navCtrl: NavController,
     private gameStateServ: GameStateService,
-    private statsServ: StatsService
+    private appStateServ: AppStateService
   ) {
     super();
   }
@@ -89,6 +90,7 @@ export class HomePage extends BaseComponent {
   }
 
   onContinue(): void {
+    this.appStateServ.onMainMenuButtonClick();
     this.gameStateServ.setGameStartMode({
       type: GameStartType.CONTINUE,
       gameState: this._gameState,
@@ -100,6 +102,7 @@ export class HomePage extends BaseComponent {
   }
 
   async onNewGame(): Promise<void> {
+    this.appStateServ.onMainMenuButtonClick();
     await this.gameStateServ.clearGameState();
     this.gameStateServ.setGameStartMode({
       type: GameStartType.NEW_GAME,
@@ -108,6 +111,7 @@ export class HomePage extends BaseComponent {
   }
 
   openMenuLevel(isOpen: boolean): void {
+    this.appStateServ.onMainMenuButtonClick();
     this.isMenuLevelOpen = isOpen;
   }
 
