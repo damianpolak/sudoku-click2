@@ -32,11 +32,11 @@ export class SfxService extends Effect<HTMLAudioElement, string> {
     this.loaded = true;
   }
 
-  protected effectBody(name: string): void {
+  protected async effectBody(name: string): Promise<void> {
     const audio = this.resource.find((i) => i.src.includes(name));
 
     if (audio) {
-      audio.play();
+      await audio.play();
     }
   }
 }

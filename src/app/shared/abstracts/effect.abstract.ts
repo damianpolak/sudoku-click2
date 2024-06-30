@@ -12,7 +12,7 @@ export abstract class Effect<T, K> {
     this.effectResource = [...this.effectResource, ...resource];
   }
 
-  protected abstract effectBody(name: string): void;
+  protected abstract effectBody(name: string): Promise<void>;
 
   protected process(effectBody: () => void) {
     if (this.effectEnabled) {
@@ -28,9 +28,9 @@ export abstract class Effect<T, K> {
     }
   }
 
-  run(name: string): void | Promise<void> {
-    this.process(() => {
-      this.effectBody(name);
+  async run(name: string): Promise<void> {
+    this.process(async () => {
+      await this.effectBody(name);
     });
   }
 }
