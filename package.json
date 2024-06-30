@@ -11,7 +11,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "start:external": "ng serve --host 0.0.0.0 --disable-host-check",
+    "start:external:dev": "ng serve --host 0.0.0.0 --disable-host-check",
+    "start:external:dist": "angular-http-server --path .\\www",
     "build": "ng build",
     "build:android": "ionic build --platform android & npx cap sync",
     "open:android": "ionic capacitor open android",
