@@ -36,6 +36,7 @@ export class SfxService extends Effect<HTMLAudioElement, string> {
     const audio = this.resource.find((i) => i.src.includes(name));
 
     if (audio) {
+      audio.currentTime = 0;
       await audio.play();
     }
   }
