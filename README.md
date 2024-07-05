@@ -55,7 +55,7 @@ npx cap sync
 - ~~Change color and background of numbered buttons when change input mode (notes enabled/disabled)~~
 - Set larger font size on app-status-bar (top info bar)
 - Set larger controls icons and labels
-- Create preference menu
+- Create preference menu (done)
 - ~~Create a haptics service~~
 - ~~Create an audio service~~
 - ~~Create finish game menu~~
