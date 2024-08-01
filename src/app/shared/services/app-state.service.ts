@@ -56,7 +56,6 @@ export class AppStateService {
 
   async setAppSettings(appSettings: AppSettings): Promise<void> {
     const settings = await this.storageServ.get(AppStateService.APP_SETTINGS_KEY);
-    console.log('=== settings', settings);
     this.appSettings$.next(appSettings);
   }
 

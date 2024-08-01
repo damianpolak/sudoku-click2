@@ -40,9 +40,8 @@ export class HeaderComponent extends BaseComponent implements OnInit, OnDestroy 
     this.registerSubscriptions([this.appDevModeSub$]);
   }
 
-  ngOnInit(): void {
-    console.log('Header on init');
-  }
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
+  ngOnInit(): void {}
 
   ngOnDestroy(): void {
     this.unsubscribeSubscriptions();
