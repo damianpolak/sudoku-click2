@@ -12,6 +12,7 @@
       <ion-button expand="block" (click)="openMenuLevel(true)">New game</ion-button>
     </div>
   </div>
+  <div class="version-info">version: {{ (buildVersion | async)?.buildVersion }}</div>
 </ion-content>
 
 <ion-action-sheet

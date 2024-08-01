@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { ActionSheetButton, NavController } from '@ionic/angular';
 import { GameStateService, Level } from '../shared/services/game-state.service';
 import { ConversionUtil } from '../shared/utils/conversion.util';
-import { Subscription, combineLatest } from 'rxjs';
+import { Observable, Subscription, combineLatest } from 'rxjs';
 import { GameStartType, GameState, GameStatusType } from '../shared/services/game-state.types';
 import { BaseComponent } from '../shared/abstracts/base-component.abstract';
 import { Timestring } from '../shared/services/timer.types';
 import { StatsService } from '../options/stats/stats.service';
 import { AppStateService } from '../shared/services/app-state.service';
+import { Build } from '../shared/interfaces/core.interface';
 
 type ContinueOptions = {
   level: string;
@@ -28,6 +29,10 @@ export class HomePage extends BaseComponent {
 
   private _gameState?: GameState;
   private gameStateSub$!: Subscription;
+
+  get buildVersion(): Observable<Build> {
+    return this.appStateServ.getBuildVersionFile$();
+  }
 
   constructor(
     private navCtrl: NavController,

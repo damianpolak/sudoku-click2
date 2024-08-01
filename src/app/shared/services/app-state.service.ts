@@ -3,6 +3,8 @@ import { BehaviorSubject, Observable, ReplaySubject, Subject, map } from 'rxjs';
 import { AppSettings, BasicOrientationType } from './app-state.types';
 import { ConversionUtil } from '../utils/conversion.util';
 import { StorageService } from './storage.service';
+import { HttpClient } from '@angular/common/http';
+import { Build } from '../interfaces/core.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -16,8 +18,13 @@ export class AppStateService {
   private readonly headerButtonClick$ = new Subject<void>();
   private readonly optionButtonClick$ = new Subject<void>();
   private readonly mainMenuButtonClick$ = new Subject<void>();
+  private readonly buildVersionFile$ = (this.httpClient.get('build-version.json') as unknown as Observable<Build>).pipe(
+    map((v) => {
+      return v ? v : ({ appVersion: 'no info', currentIteration: 0, buildVersion: 'no info' } as Build);
+    })
+  );
 
-  constructor(private readonly storageServ: StorageService) {}
+  constructor(private readonly storageServ: StorageService, private readonly httpClient: HttpClient) {}
 
   setScreenOrientation(orientation: OrientationType): void {
     this.screenOrientation$.next(orientation);
@@ -83,5 +90,9 @@ export class AppStateService {
 
   getMainMenuButtonClick$() {
     return this.mainMenuButtonClick$.asObservable();
+  }
+
+  getBuildVersionFile$() {
+    return this.buildVersionFile$;
   }
 }

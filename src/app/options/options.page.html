@@ -22,4 +22,26 @@
 
     } }
   </ion-list>
+
+  <ion-list [inset]="true">
+    <ion-item>
+      <ion-label
+        >Application version
+        <p>{{ (buildVersion | async)?.appVersion}}</p></ion-label
+      >
+    </ion-item>
+    <ion-item>
+      <ion-label
+        >Current iteration
+        <p>{{ (buildVersion | async)?.currentIteration}}</p></ion-label
+      >
+    </ion-item>
+
+    <ion-item>
+      <ion-label
+        >Build version
+        <p>{{ (buildVersion | async)?.buildVersion}}</p></ion-label
+      >
+    </ion-item>
+  </ion-list>
 </ion-content>

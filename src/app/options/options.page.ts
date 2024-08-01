@@ -4,6 +4,8 @@ import { NavController } from '@ionic/angular';
 import { OptionsService } from './options.service';
 import { Option } from './options.types';
 import { AppStateService } from '../shared/services/app-state.service';
+import { Observable } from 'rxjs';
+import { Build } from '../shared/interfaces/core.interface';
 
 @Component({
   selector: 'app-options',
@@ -16,6 +18,10 @@ export class OptionsPage implements OnInit {
 
   get options(): Option[] {
     return this._options;
+  }
+
+  get buildVersion(): Observable<Build> {
+    return this.appStateServ.getBuildVersionFile$();
   }
 
   constructor(

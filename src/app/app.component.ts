@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription, fromEvent } from 'rxjs';
+import { Subscription, fromEvent, lastValueFrom } from 'rxjs';
 import { AppStateService } from './shared/services/app-state.service';
 import { BaseComponent } from './shared/abstracts/base-component.abstract';
 import { StatusBar } from '@capacitor/status-bar';
@@ -7,6 +7,7 @@ import { ThemeService } from './game/theme/theme.service';
 import { AppSettings } from './shared/services/app-state.types';
 import { OptionsService } from './options/options.service';
 import { EffectHandlerService } from './shared/services/effect-handler.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -26,6 +27,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     private readonly effectHandlerServ: EffectHandlerService
   ) {
     super();
+    this.displayBuildVersion();
     this.appStateServ.setScreenOrientation(screen.orientation.type);
     this.screenOrientationSubs$ = fromEvent(screen.orientation, 'change').subscribe((x) => {
       const orientation = (x.target as ScreenOrientation).type;
@@ -69,6 +71,22 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
       document.documentElement.style.setProperty('--header-size', portraitValue);
     } else {
       document.documentElement.style.setProperty('--header-size', landscapeValue);
+    }
+  }
+
+  async displayBuildVersion(): Promise<void> {
+    try {
+      const buildVersionFile = await lastValueFrom(this.appStateServ.getBuildVersionFile$());
+      console.log(
+        `%cCurrent version: ${environment.version}`,
+        `background: #0082af; padding: 8px 12px; border-radius: 4px; color: #fafafa; font-size: large`
+      );
+      console.log(
+        `%cCurrent build number: ${buildVersionFile?.buildVersion}`,
+        `background: #0082af; padding: 8px 12px; border-radius: 4px; color: #fafafa; font-size: large`
+      );
+    } catch (e) {
+      console.warn(e);
     }
   }
 }
