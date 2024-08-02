@@ -5,10 +5,11 @@ export interface Animated {
 
 export type KeyName = `SUDOKU_${string}`;
 
-export type BuildVersion = `${number}.${number}.${number}-build.${number}.${number}`;
+export type BuildVersion = `${number}.${number}.${number}-build.${number}.${number}.${number}`;
 
 export type Build = {
   appVersion: string | 'no info';
-  currentIteration: number;
+  iterationNumber: number;
+  compilationNumber: number;
   buildVersion: BuildVersion | 'no info';
 };

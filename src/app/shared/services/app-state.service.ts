@@ -20,7 +20,7 @@ export class AppStateService {
   private readonly mainMenuButtonClick$ = new Subject<void>();
   private readonly buildVersionFile$ = (this.httpClient.get('build-version.json') as unknown as Observable<Build>).pipe(
     map((v) => {
-      return v ? v : ({ appVersion: 'no info', currentIteration: 0, buildVersion: 'no info' } as Build);
+      return v ? v : ({ appVersion: 'no info', iterationNumber: 0, buildVersion: 'no info' } as Build);
     })
   );
 

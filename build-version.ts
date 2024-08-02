@@ -1,25 +1,25 @@
-import { writeFileSync } from 'fs';
 import { join } from 'path';
+import { writeFileSync } from 'fs';
 import { Build, BuildVersion } from 'src/app/shared/interfaces/core.interface';
 
-const BUILD_VERSION_PATH = join(__dirname, 'src/build-version.json');
+const BUILD_VERSION_PATH = join(__dirname, './src/build-version.json');
 
-function getTimestampBasedVersion() {
-  return new Date().getTime() / 1000;
-}
-
-let currentIteration = getTimestampBasedVersion();
+const timestampBasedVersion = new Date().getTime() / 1000;
+let iterationNumber = 0;
 
 try {
-  currentIteration = require('./build-version.json')?.currentIteration || getTimestampBasedVersion();
+  iterationNumber = (require('./src/build-version.json') as Build)?.iterationNumber || 0;
 } catch (e) {
-  currentIteration = getTimestampBasedVersion();
+  iterationNumber = 0;
 }
 
 const buildVersion: Build = {
   appVersion: require('./package.json')?.version || 'no info',
-  currentIteration: currentIteration + 1,
-  buildVersion: (`${require('./package.json')?.version}-build.${currentIteration}` as BuildVersion) || 'no info',
+  iterationNumber: ++iterationNumber,
+  compilationNumber: timestampBasedVersion,
+  buildVersion:
+    (`${require('./package.json')?.version}-build.${iterationNumber}.${timestampBasedVersion}` as BuildVersion) ||
+    'no info',
 };
 
 writeFileSync(BUILD_VERSION_PATH, JSON.stringify(buildVersion, null, 2));

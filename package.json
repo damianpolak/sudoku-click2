@@ -1,6 +1,6 @@
 {
   "name": "sudoku-click2",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "author": "Damian Polak",
   "description": "An Sudoku Classic project in Ionic 17. ",
   "homepage": "https://sudoku.click/",
@@ -13,8 +13,8 @@
     "start": "ng serve",
     "start:external:dev": "ng serve --host 0.0.0.0 --disable-host-check",
     "start:external:dist": "angular-http-server --path .\\www",
-    "build:prod": "powershell .\\build-version.ps1 && ng build --configuration production --aot",
-    "build:android": "powershell .\\build-version.ps1 && ionic build --platform android --configuration production & npx cap sync",
+    "build:prod": "powershell .\\run-build.ps1 && ng build --configuration production --aot",
+    "build:android": "powershell .\\run-build.ps1 && ionic build --platform android --configuration production & npx cap sync",
     "open:android": "ionic capacitor open android",
     "sync": "npx cap sync",
     "watch": "ng build --watch --configuration development",

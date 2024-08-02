@@ -78,11 +78,11 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     try {
       const buildVersionFile = await lastValueFrom(this.appStateServ.getBuildVersionFile$());
       console.log(
-        `%cCurrent version: ${environment.version}`,
+        `%cApp version: ${environment.version}`,
         `background: #0082af; padding: 8px 12px; border-radius: 4px; color: #fafafa; font-size: large`
       );
       console.log(
-        `%cCurrent build number: ${buildVersionFile?.buildVersion}`,
+        `%cBuild number: ${buildVersionFile?.buildVersion}`,
         `background: #0082af; padding: 8px 12px; border-radius: 4px; color: #fafafa; font-size: large`
       );
     } catch (e) {
