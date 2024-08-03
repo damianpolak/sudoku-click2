@@ -1,6 +1,6 @@
 <div class="function-buttons">
   @for (feature of features; track feature.feature) {
-    <ion-button fill="clear" (click)="onFeatureClick({ type: feature.type, feature: feature.feature })" [disabled]="feature.disabled">
+    <ion-button fill="clear" (click)="onFeatureClick({ type: feature.type, feature: feature.feature })" [ngStyle]="{'display': feature.hidden ? 'none' : 'block'}" [disabled]="feature.disabled">
       <div class="bcon" style="display: flex; flex-direction: column; gap: 0.5rem; padding: 0.7rem 0.7rem; justify-content: center; align-items: center;">
         <ion-icon slot="icon-only" [name]="feature.icon" [ngStyle]="getFeatureToggleStyle(feature.toggle)"></ion-icon>
         <span class="btxt" [ngStyle]="getFeatureToggleStyle(feature.toggle)">{{ feature.name }}</span>
