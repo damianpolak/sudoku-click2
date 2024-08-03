@@ -31,10 +31,10 @@ export class StatusBarComponent extends BaseComponent {
   }
 
   constructor(
-    private gameStateServ: GameStateService,
-    private timerServ: TimerService,
-    private mistakeServ: MistakeService,
-    private scoreServ: ScoreService
+    private readonly gameStateServ: GameStateService,
+    private readonly timerServ: TimerService,
+    private readonly mistakeServ: MistakeService,
+    private readonly scoreServ: ScoreService
   ) {
     super();
   }

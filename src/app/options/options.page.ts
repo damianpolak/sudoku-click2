@@ -34,7 +34,7 @@ export class OptionsPage extends BaseComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-    private route: ActivatedRoute,
+    private readonly route: ActivatedRoute,
     private readonly navCtrl: NavController,
     private readonly optionsServ: OptionsService,
     private readonly appStateServ: AppStateService

@@ -34,13 +34,13 @@ export class GamePage extends BaseComponent {
   private finishGameSub$!: Subscription;
 
   constructor(
-    private appStateServ: AppStateService,
-    private gameStateServ: GameStateService,
-    private timerServ: TimerService,
-    private scoreServ: ScoreService,
-    private historyServ: HistoryService,
-    private mistakeServ: MistakeService,
-    private statsServ: StatsService
+    private readonly appStateServ: AppStateService,
+    private readonly gameStateServ: GameStateService,
+    private readonly timerServ: TimerService,
+    private readonly scoreServ: ScoreService,
+    private readonly historyServ: HistoryService,
+    private readonly mistakeServ: MistakeService,
+    private readonly statsServ: StatsService
   ) {
     super();
   }

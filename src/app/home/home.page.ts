@@ -39,9 +39,9 @@ export class HomePage extends BaseComponent {
   }
 
   constructor(
-    private navCtrl: NavController,
-    private gameStateServ: GameStateService,
-    private appStateServ: AppStateService
+    private readonly navCtrl: NavController,
+    private readonly gameStateServ: GameStateService,
+    private readonly appStateServ: AppStateService
   ) {
     super();
   }

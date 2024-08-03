@@ -33,7 +33,7 @@ export class BannerComponent implements Banner, Animated, OnChanges, AfterViewIn
   private animation!: Animation;
   animationsEnabled: boolean = true;
 
-  constructor(private ref: ElementRef) {}
+  constructor(private readonly ref: ElementRef) {}
 
   async ngAfterViewInit(): Promise<void> {
     this.setAnimation();

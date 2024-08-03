@@ -27,7 +27,7 @@ export class StatsPage extends BaseComponent {
   private queryParamsSub$!: Subscription;
 
   constructor(
-    private route: ActivatedRoute,
+    private readonly route: ActivatedRoute,
     private readonly statsServ: StatsService,
     private readonly loadingCtrl: LoadingController
   ) {

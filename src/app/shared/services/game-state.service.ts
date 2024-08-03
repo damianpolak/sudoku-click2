@@ -94,7 +94,7 @@ export class GameStateService {
 
   private _selectedLevel!: GameLevel;
 
-  constructor(private storageServ: StorageService) {}
+  constructor(private readonly storageServ: StorageService) {}
 
   setGameState(gameState: GameState): void {
     this.gameState$.next(gameState);

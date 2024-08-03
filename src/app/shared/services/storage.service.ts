@@ -15,7 +15,7 @@ const REGISTERED_KEYS: KeyName[] = [
 export class StorageService {
   private _storage: Storage | null = null;
 
-  constructor(private storage: Storage) {
+  constructor(private readonly storage: Storage) {
     this.init();
   }
 

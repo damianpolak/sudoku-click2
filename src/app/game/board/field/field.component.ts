@@ -84,7 +84,7 @@ export class FieldComponent extends BaseComponent implements Animated, OnChanges
     });
   }
 
-  constructor(private gameStateServ: GameStateService, private ref: ElementRef) {
+  constructor(private readonly gameStateServ: GameStateService, private readonly ref: ElementRef) {
     super();
     this.registerSubscriptions([this.animateSub$]);
   }

@@ -14,7 +14,7 @@ export class DebugModeDirective extends BaseComponent implements OnDestroy {
   @HostBinding('style.display') display!: string;
   @HostBinding('style.color') color!: string;
 
-  constructor(private appStateServ: AppStateService) {
+  constructor(private readonly appStateServ: AppStateService) {
     super();
     this.registerSubscriptions([this.appDebugModeSub$]);
   }

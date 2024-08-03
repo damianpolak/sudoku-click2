@@ -60,7 +60,7 @@ export class NumberButtonComponent extends BaseComponent implements Animated, On
     }
   }
 
-  constructor(private ref: ElementRef, private gameStateServ: GameStateService) {
+  constructor(private readonly ref: ElementRef, private readonly gameStateServ: GameStateService) {
     super();
     this.registerSubscriptions([this.interractionSub$]);
   }

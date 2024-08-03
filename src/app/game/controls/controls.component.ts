@@ -54,9 +54,9 @@ export class ControlsComponent extends BaseComponent implements OnInit, OnDestro
 
   features!: FeatureControl[];
   constructor(
-    private controlsServ: ControlsService,
-    private gameStateServ: GameStateService,
-    private appStateServ: AppStateService
+    private readonly controlsServ: ControlsService,
+    private readonly gameStateServ: GameStateService,
+    private readonly appStateServ: AppStateService
   ) {
     super();
   }
