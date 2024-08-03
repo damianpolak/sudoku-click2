@@ -6,10 +6,25 @@ import { NumberButtonComponent } from './components/number-button/number-button.
 import { FirstUpperPipe } from './pipes/first-upper.pipe';
 import { BannerComponent } from './components/banner/banner.component';
 import { FullscreenViewComponent } from './components/fullscreen-view/fullscreen-view.component';
+import { HoldTouchDirective } from './directives/hold-touch.directive';
 
 @NgModule({
-  declarations: [HeaderComponent, NumberButtonComponent, BannerComponent, FullscreenViewComponent, FirstUpperPipe],
+  declarations: [
+    HeaderComponent,
+    NumberButtonComponent,
+    BannerComponent,
+    FullscreenViewComponent,
+    FirstUpperPipe,
+    HoldTouchDirective,
+  ],
   imports: [CommonModule, IonicModule],
-  exports: [HeaderComponent, NumberButtonComponent, BannerComponent, FullscreenViewComponent, FirstUpperPipe],
+  exports: [
+    HeaderComponent,
+    NumberButtonComponent,
+    BannerComponent,
+    FullscreenViewComponent,
+    FirstUpperPipe,
+    HoldTouchDirective,
+  ],
 })
 export class SharedModule {}
