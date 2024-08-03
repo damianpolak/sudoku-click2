@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { ActionSheetButton, NavController } from '@ionic/angular';
 import { GameStateService, Level } from '../shared/services/game-state.service';
 import { ConversionUtil } from '../shared/utils/conversion.util';
@@ -9,6 +9,7 @@ import { Timestring } from '../shared/services/timer.types';
 import { StatsService } from '../options/stats/stats.service';
 import { AppStateService } from '../shared/services/app-state.service';
 import { Build } from '../shared/interfaces/core.interface';
+import { Action } from 'rxjs/internal/scheduler/Action';
 
 type ContinueOptions = {
   level: string;
@@ -25,17 +26,19 @@ export class HomePage extends BaseComponent {
   canContinue: boolean = false;
   continueOptions!: ContinueOptions;
   menuLevelTitle = 'Choose difficulty level';
-  menuLevelButtons = this.createActionSheetMenu();
+  menuLevelButtons!: ActionSheetButton[];
 
   private _gameState?: GameState;
   private gameStateSub$!: Subscription;
+  private devModeSub$!: Subscription;
+  private _devMode: boolean = false;
 
   get buildVersion(): Observable<Build> {
     return this.appStateServ.getBuildVersionFile$();
   }
 
-  get devMode$(): Observable<boolean> {
-    return this.appStateServ.getAppDevMode$();
+  get devMode(): boolean {
+    return this._devMode;
   }
 
   constructor(
@@ -68,7 +71,13 @@ export class HomePage extends BaseComponent {
       this._gameState = gameState;
       this.setContinueOptions(gameState);
     });
-    this.registerSubscriptions([this.gameStateSub$]);
+
+    this.devModeSub$ = this.appStateServ.getAppDevMode$().subscribe((v) => {
+      this._devMode = v;
+      this.menuLevelButtons = this.createActionSheetMenu();
+    });
+
+    this.registerSubscriptions([this.gameStateSub$, this.devModeSub$]);
     await this.loadGameState();
   }
 
@@ -134,13 +143,17 @@ export class HomePage extends BaseComponent {
   }
 
   createActionSheetMenu(): ActionSheetButton[] {
-    return Object.keys(Level).map((item) => {
-      return {
-        text: ConversionUtil.firstUpper(item),
-        data: {
-          selectedLevel: item,
-        },
-      };
-    });
+    return Object.keys(Level)
+      .map((item) => {
+        return {
+          text: ConversionUtil.firstUpper(item),
+          data: {
+            selectedLevel: item,
+          },
+        };
+      })
+      .filter((item) => {
+        return this.devMode ? true : !item.text.toUpperCase().includes('DEV');
+      });
   }
 }

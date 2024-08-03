@@ -13,7 +13,7 @@ export class AppStateService {
   private static readonly APP_SETTINGS_KEY = 'SUDOKU_APP_SETTINGS' as const;
   private readonly screenOrientation$ = new ReplaySubject<OrientationType>(5);
   private readonly appDebugMode$ = new BehaviorSubject<boolean>(false);
-  private readonly appDevMode$ = new ReplaySubject<boolean>();
+  private readonly appDevMode$ = new ReplaySubject<boolean>(5);
   private readonly appSettings$ = new Subject<AppSettings>();
 
   private readonly headerButtonClick$ = new Subject<void>();

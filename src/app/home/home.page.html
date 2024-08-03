@@ -13,7 +13,7 @@
     </div>
   </div>
   <div class="footer">
-    <div class="mode">{{(devMode$ | async) ? 'dev mode' : ''}}</div>
+    <div class="mode">{{devMode ? 'dev mode' : ''}}</div>
     <div class="version-info">version: {{ (buildVersion | async)?.buildVersion }}</div>
   </div>
 </ion-content>
