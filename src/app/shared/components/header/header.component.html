@@ -5,10 +5,9 @@
         <ion-icon slot="icon-only" ios="chevron-back-outline" md="chevron-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <!-- dev mode -->
-    <ion-buttons *ngIf="showDevMode" slot="end">
-      <ion-button (click)="onAppDevModeToggle()">
-        <!-- <ion-icon slot="icon-only" ios="chevron-back-outline" md="chevron-back-outline"></ion-icon> -->
+    <!-- debug mode -->
+    <ion-buttons *ngIf="showDebugMode" slot="end">
+      <ion-button (click)="onAppDebugModeToggle()">
         <ion-icon slot="icon-only" name="bug-outline"></ion-icon>
       </ion-button>
     </ion-buttons>

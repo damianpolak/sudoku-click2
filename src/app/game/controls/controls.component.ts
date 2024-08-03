@@ -4,6 +4,7 @@ import { GameStateService } from 'src/app/shared/services/game-state.service';
 import { Subscription, combineLatest, map } from 'rxjs';
 import { BurstModeType, InputModeType } from 'src/app/shared/services/game-state.types';
 import { BaseComponent } from 'src/app/shared/abstracts/base-component.abstract';
+import { AppStateService } from 'src/app/shared/services/app-state.service';
 
 type NumberControl = {
   value: number;
@@ -26,7 +27,9 @@ type FeatureControl = FeatureClickEvent & {
 export class ControlsComponent extends BaseComponent implements OnInit, OnDestroy {
   private inputMode!: InputModeType;
   private burstMode!: BurstModeType;
+  private isDebugMode: boolean = false;
   private interractionModeSub$!: Subscription;
+  private debugModeSub$!: Subscription;
   private numberSub$: Subscription = this.gameStateServ
     .getMissingNumbers$()
     .pipe(
@@ -50,7 +53,11 @@ export class ControlsComponent extends BaseComponent implements OnInit, OnDestro
   }
 
   features!: FeatureControl[];
-  constructor(private controlsServ: ControlsService, private gameStateServ: GameStateService) {
+  constructor(
+    private controlsServ: ControlsService,
+    private gameStateServ: GameStateService,
+    private appStateServ: AppStateService
+  ) {
     super();
   }
 
@@ -61,9 +68,14 @@ export class ControlsComponent extends BaseComponent implements OnInit, OnDestro
     ]).subscribe(([input, burst]) => {
       this.inputMode = input;
       this.burstMode = burst;
-      this.features = this.featuresCreate();
+      this.features = this.createFeatures();
     });
-    this.registerSubscriptions([this.interractionModeSub$, this.numberSub$]);
+
+    this.debugModeSub$ = this.appStateServ.getAppDebugMode$().subscribe((v) => {
+      this.isDebugMode = v;
+      this.createFeatures();
+    });
+    this.registerSubscriptions([this.interractionModeSub$, this.numberSub$, this.debugModeSub$]);
   }
 
   ngOnDestroy(): void {
@@ -82,7 +94,7 @@ export class ControlsComponent extends BaseComponent implements OnInit, OnDestro
     });
   }
 
-  private featuresCreate(): FeatureControl[] {
+  private createFeatures(): FeatureControl[] {
     return [
       { name: 'Undo', type: 'click', feature: 'back', icon: 'return-down-back-outline' },
       { name: 'Erase', type: 'click', feature: 'erase', icon: 'close-outline' },
@@ -93,7 +105,14 @@ export class ControlsComponent extends BaseComponent implements OnInit, OnDestro
         icon: this.inputMode === InputModeType.VALUE ? 'document-outline' : 'document-text-outline',
         toggle: this.inputMode === InputModeType.NOTES,
       },
-      { name: 'Tip', type: 'click', feature: 'tip', icon: 'bulb-outline', disabled: true, hidden: true },
+      {
+        name: 'Tip',
+        type: 'click',
+        feature: 'tip',
+        icon: 'bulb-outline',
+        disabled: true,
+        hidden: !this.isDebugMode,
+      },
       {
         name: 'Burst',
         type: 'toggle',

@@ -4,4 +4,5 @@ export type BasicOrientationType = 'portrait' | 'landscape';
 
 export type AppSettings = {
   theme: Theme;
+  devMode: boolean;
 };

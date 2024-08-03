@@ -12,7 +12,10 @@
       <ion-button expand="block" (click)="openMenuLevel(true)">New game</ion-button>
     </div>
   </div>
-  <div class="version-info">version: {{ (buildVersion | async)?.buildVersion }}</div>
+  <div class="footer">
+    <div class="mode">{{(devMode$ | async) ? 'dev mode' : ''}}</div>
+    <div class="version-info">version: {{ (buildVersion | async)?.buildVersion }}</div>
+  </div>
 </ion-content>
 
 <ion-action-sheet

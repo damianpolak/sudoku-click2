@@ -41,11 +41,18 @@ ion-content {
     }
   }
 
-  .version-info {
+  .footer {
+    display: flex;
+    justify-content: space-between;
     font-size: 0.75em;
     position: absolute;
     bottom: 0;
     right: 0;
     padding: 0.3em;
+    width: 100%;
+
+    .mode {
+      font-weight: bold;
+    }
   }
 }

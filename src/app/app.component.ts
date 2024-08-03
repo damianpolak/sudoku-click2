@@ -20,6 +20,10 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     .getAppSettings$()
     .subscribe((appSettings) => this.appStateServ.saveAppSettings(appSettings));
 
+  private appDevModeSub$: Subscription = this.appStateServ
+    .getAppDevMode$()
+    .subscribe((v) => this.appStateServ.setAppSettings({ devMode: v }));
+
   constructor(
     private readonly appStateServ: AppStateService,
     private readonly themeServ: ThemeService,
@@ -34,7 +38,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
       this.appStateServ.setScreenOrientation(orientation);
       this.setHeaderSize(orientation, '0px', '44px');
     });
-    this.registerSubscriptions([this.screenOrientationSubs$, this.appSettingsSub$]);
+    this.registerSubscriptions([this.screenOrientationSubs$, this.appSettingsSub$, this.appDevModeSub$]);
     this.themeServ.create();
   }
 
@@ -56,6 +60,11 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
       appSettings ? appSettings.theme : undefined
     );
     await this.optionsServ.register();
+
+    // Set devMode
+    appSettings?.devMode !== undefined
+      ? this.appStateServ.setAppDevMode(appSettings.devMode)
+      : this.appStateServ.setAppDevMode(false);
   }
 
   ngOnDestroy(): void {

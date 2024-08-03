@@ -34,6 +34,10 @@ export class HomePage extends BaseComponent {
     return this.appStateServ.getBuildVersionFile$();
   }
 
+  get devMode$(): Observable<boolean> {
+    return this.appStateServ.getAppDevMode$();
+  }
+
   constructor(
     private navCtrl: NavController,
     private gameStateServ: GameStateService,

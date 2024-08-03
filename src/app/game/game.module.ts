@@ -13,7 +13,7 @@ import { BoardComponent } from './board/board.component';
 import { FieldComponent } from './board/field/field.component';
 import { ControlsComponent } from './controls/controls.component';
 import { PauseComponent } from './pause/pause.component';
-import { DevModeDirective } from '../shared/directives/dev-mode.directive';
+import { DebugModeDirective } from '../shared/directives/debug-mode.directive';
 import { ThemeComponent } from './theme/theme.component';
 
 @NgModule({
@@ -26,7 +26,7 @@ import { ThemeComponent } from './theme/theme.component';
     ControlsComponent,
     PauseComponent,
     ThemeComponent,
-    DevModeDirective,
+    DebugModeDirective,
   ],
 })
 export class GamePageModule {}

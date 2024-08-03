@@ -12,7 +12,8 @@ import { Build } from '../interfaces/core.interface';
 export class AppStateService {
   private static readonly APP_SETTINGS_KEY = 'SUDOKU_APP_SETTINGS' as const;
   private readonly screenOrientation$ = new ReplaySubject<OrientationType>(5);
-  private readonly appDevMode$ = new BehaviorSubject<boolean>(false);
+  private readonly appDebugMode$ = new BehaviorSubject<boolean>(false);
+  private readonly appDevMode$ = new ReplaySubject<boolean>();
   private readonly appSettings$ = new Subject<AppSettings>();
 
   private readonly headerButtonClick$ = new Subject<void>();
@@ -38,6 +39,14 @@ export class AppStateService {
     );
   }
 
+  getAppDebugMode$(): Observable<boolean> {
+    return this.appDebugMode$.asObservable();
+  }
+
+  setAppDebugMode(value: boolean): void {
+    this.appDebugMode$.next(value);
+  }
+
   getAppDevMode$(): Observable<boolean> {
     return this.appDevMode$.asObservable();
   }
@@ -54,17 +63,17 @@ export class AppStateService {
     return await this.storageServ.get(AppStateService.APP_SETTINGS_KEY);
   }
 
-  async setAppSettings(appSettings: AppSettings): Promise<void> {
+  getAppSettings$(): Observable<AppSettings> {
+    return this.appSettings$.asObservable();
+  }
+
+  async setAppSettings(appSettings: Partial<AppSettings>): Promise<void> {
     const settings = await this.storageServ.get(AppStateService.APP_SETTINGS_KEY);
-    this.appSettings$.next(appSettings);
+    this.appSettings$.next({ ...settings, ...appSettings });
   }
 
   async saveAppSettings(appSettings: AppSettings): Promise<void> {
     await this.storageServ.set(AppStateService.APP_SETTINGS_KEY, appSettings);
-  }
-
-  getAppSettings$(): Observable<AppSettings> {
-    return this.appSettings$.asObservable();
   }
 
   onHeaderButtonClick(): void {

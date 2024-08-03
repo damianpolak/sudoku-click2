@@ -3,10 +3,10 @@ import { AppStateService } from '../services/app-state.service';
 import { BaseComponent } from '../abstracts/base-component.abstract';
 
 @Directive({
-  selector: '[appDevMode]',
+  selector: '[appDebugMode]',
 })
-export class DevModeDirective extends BaseComponent implements OnDestroy {
-  private appDevModeSub$ = this.appStateServ.getAppDevMode$().subscribe((v) => {
+export class DebugModeDirective extends BaseComponent implements OnDestroy {
+  private appDebugModeSub$ = this.appStateServ.getAppDebugMode$().subscribe((v) => {
     this.display = v ? 'inherit' : 'none';
     this.color = v ? 'red' : 'inherit';
   });
@@ -16,7 +16,7 @@ export class DevModeDirective extends BaseComponent implements OnDestroy {
 
   constructor(private appStateServ: AppStateService) {
     super();
-    this.registerSubscriptions([this.appDevModeSub$]);
+    this.registerSubscriptions([this.appDebugModeSub$]);
   }
 
   ngOnDestroy(): void {

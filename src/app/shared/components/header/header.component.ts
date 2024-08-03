@@ -4,6 +4,7 @@ import { AppStateService } from '../../services/app-state.service';
 import { BaseComponent } from '../../abstracts/base-component.abstract';
 import { GameStateService } from '../../services/game-state.service';
 import { CommonGameState, GameStartType } from '../../services/game-state.types';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -15,7 +16,6 @@ export class HeaderComponent extends BaseComponent implements OnInit, OnDestroy 
   @Input() showThemes: boolean = false;
   @Input() showPause: boolean = false;
   @Input() showBack: boolean = false;
-  @Input() showDevMode: boolean = false;
   @Input() backPath: string = '';
   @Input() parentPath: string = '';
   @Input() title: string = '';
@@ -27,17 +27,24 @@ export class HeaderComponent extends BaseComponent implements OnInit, OnDestroy 
 
   @Input() isPaused: boolean = false;
   @Input() isThemesMenuVisible: boolean = false;
-  isOptionsMenuVisible: boolean = false;
-  private appDevMode: boolean = false;
+  private _showDebugMode: boolean = false;
+  private appDevModeSub$: Subscription = this.appStateServ.getAppDevMode$().subscribe((v) => (this._showDebugMode = v));
+  private appDebugModeSub$ = this.appStateServ.getAppDebugMode$().subscribe((v) => (this.appDebugMode = v));
 
-  private readonly appDevModeSub$ = this.appStateServ.getAppDevMode$().subscribe((v) => (this.appDevMode = v));
+  get showDebugMode(): boolean {
+    return this._showDebugMode;
+  }
+
+  isOptionsMenuVisible: boolean = false;
+  private appDebugMode: boolean = false;
+
   constructor(
     private navCtrl: NavController,
     private appStateServ: AppStateService,
     private readonly gameStateServ: GameStateService
   ) {
     super();
-    this.registerSubscriptions([this.appDevModeSub$]);
+    this.registerSubscriptions([this.appDebugModeSub$, this.appDevModeSub$]);
   }
 
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
@@ -89,9 +96,9 @@ export class HeaderComponent extends BaseComponent implements OnInit, OnDestroy 
     this.navCtrl.navigateForward('options', { queryParams: { parent: this.parentPath } });
   }
 
-  onAppDevModeToggle(): void {
+  onAppDebugModeToggle(): void {
     this.appStateServ.onHeaderButtonClick();
-    this.appStateServ.setAppDevMode(!this.appDevMode);
+    this.appStateServ.setAppDebugMode(!this.appDebugMode);
   }
 
   private async getGameState(): Promise<CommonGameState> {

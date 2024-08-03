@@ -38,7 +38,7 @@
     </ion-item>
     <ion-item>
       <ion-label
-        >Compilation number
+        ><span [appHoldTouch]="debugModeHoldTime" (holdTouch)="runDevMode()">Com</span>pilation number
         <p>{{ (buildVersion | async)?.compilationNumber}}</p></ion-label
       >
     </ion-item>

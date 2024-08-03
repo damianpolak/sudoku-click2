@@ -5,6 +5,6 @@
   @for (item of field.notes; track item) {
   <div class="notes-grid-field">{{ item.active ? item.value : '' }}</div>
   } @empty {}
-  <div appDevMode class="field-value-debug">{{ field.finalValue }}</div>
+  <div appDebugMode class="field-value-debug">{{ field.finalValue }}</div>
 </div>
 }
