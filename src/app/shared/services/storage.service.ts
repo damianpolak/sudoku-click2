@@ -39,6 +39,10 @@ export class StorageService {
     await this._storage?.remove(key);
   }
 
+  async clearStorage(): Promise<void> {
+    this.storage.clear();
+  }
+
   private isKeyRegistered(key: KeyName): true | never {
     if (REGISTERED_KEYS.includes(key)) {
       return true;
