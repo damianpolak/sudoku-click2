@@ -55,6 +55,7 @@ export class OptionsService extends Menu<Option> {
       display: true,
     },
     { id: ToggleOption.HAPTICS, title: 'Haptics', defaultValue: true, value: true, display: true },
+    { id: ToggleOption.SHOW_DIFFICULTY, title: 'Show difficulty', defaultValue: true, value: true, display: true },
     { id: ToggleOption.SHOW_TIMER, title: 'Show timer', defaultValue: true, value: true, display: true },
     { id: ToggleOption.SHOW_SCORE, title: 'Show score', defaultValue: true, value: true, display: true },
     { id: ToggleOption.SHOW_MISTAKES, title: 'Show mistakes', defaultValue: true, value: true, display: true },
