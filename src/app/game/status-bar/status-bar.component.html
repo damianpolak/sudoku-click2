@@ -1,18 +1,18 @@
-<div class="score-object">
+<div class="score-object" [ngStyle]="{ visibility: canShowDifficulty ? 'visible' : 'hidden' }">
   <span>Difficulty</span>
   <span>{{ levelName }}</span>
 </div>
-<div class="score-object">
+<div class="score-object" [ngStyle]="{ visibility: canShowTimer ? 'visible' : 'hidden' }">
   <span>Time</span>
   <span>{{ timestring | async }}</span>
 </div>
 @if(visibleScore) {
-  <div class="score-object">
-    <span>Score</span>
-    <span>{{ score | async }}</span>
-  </div>
+<div class="score-object" [ngStyle]="{ visibility: canShowScore ? 'visible' : 'hidden' }">
+  <span>Score</span>
+  <span>{{ score | async }}</span>
+</div>
 }
-<div class="score-object">
+<div class="score-object" [ngStyle]="{ visibility: canShowMistakes ? 'visible' : 'hidden' }">
   <span>Mistakes</span>
   <span
     >{{ (mistakes | async)?.value }}{{ (mistakes | async)?.limit !== 0 ? '/' + (mistakes | async)?.limit : '' }}</span

@@ -1,4 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostBinding, Input } from '@angular/core';
+import { OptionsService } from 'src/app/options/options.service';
+import { ToggleOption } from 'src/app/options/options.types';
 import { BaseComponent } from 'src/app/shared/abstracts/base-component.abstract';
 import { GameStateService } from 'src/app/shared/services/game-state.service';
 import { MistakeService } from 'src/app/shared/services/mistake.service';
@@ -13,6 +15,12 @@ import { ConversionUtil } from 'src/app/shared/utils/conversion.util';
 })
 export class StatusBarComponent extends BaseComponent {
   @Input() visibleScore: boolean = false;
+
+  @HostBinding('style.display') get display() {
+    return !this.canShowDifficulty && !this.canShowTimer && !this.canShowScore && !this.canShowMistakes
+      ? 'none'
+      : 'flex';
+  }
 
   get levelName() {
     return ConversionUtil.firstUpper(this.gameStateServ.selectedLevel.name);
@@ -30,11 +38,28 @@ export class StatusBarComponent extends BaseComponent {
     return this.scoreServ.getPresentScore();
   }
 
+  get canShowDifficulty(): boolean {
+    return this.optionsServ.getValueById(ToggleOption.SHOW_DIFFICULTY);
+  }
+
+  get canShowTimer(): boolean {
+    return this.optionsServ.getValueById(ToggleOption.SHOW_TIMER);
+  }
+
+  get canShowScore(): boolean {
+    return this.optionsServ.getValueById(ToggleOption.SHOW_SCORE);
+  }
+
+  get canShowMistakes(): boolean {
+    return this.optionsServ.getValueById(ToggleOption.SHOW_MISTAKES);
+  }
+
   constructor(
     private readonly gameStateServ: GameStateService,
     private readonly timerServ: TimerService,
     private readonly mistakeServ: MistakeService,
-    private readonly scoreServ: ScoreService
+    private readonly scoreServ: ScoreService,
+    private readonly optionsServ: OptionsService
   ) {
     super();
   }
