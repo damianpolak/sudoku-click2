@@ -87,7 +87,7 @@ export class BoardService extends BaseService implements OnDestroy {
     });
 
   private statusRecognize(presentMistake: PresentMistake, board: Board): GameStatusType {
-    if (presentMistake.value >= presentMistake.limit) {
+    if (presentMistake.limit !== 0 && presentMistake.value >= presentMistake.limit) {
       return GameStatusType.LOSS;
     } else if (board.flat().every((x) => x.isCorrectValue)) {
       return GameStatusType.VICTORY;
