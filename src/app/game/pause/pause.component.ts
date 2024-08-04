@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { PauseModalActionType } from './pause.types';
 import { DynamicModalComponent } from 'src/app/shared/abstracts/modal.abstract';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { ScoreService } from 'src/app/shared/services/score.service';
 import { AppStateService } from 'src/app/shared/services/app-state.service';
+import { OptionsService } from 'src/app/options/options.service';
+import { ToggleOption } from 'src/app/options/options.types';
 
 @Component({
   selector: 'app-pause',
@@ -14,7 +16,15 @@ export class PauseComponent extends DynamicModalComponent<PauseModalActionType> 
   buttonsSize: 'small' | 'default' | 'large' = 'default';
   score: Observable<number> = this.scoreServ.getPresentScore();
 
-  constructor(private readonly scoreServ: ScoreService, private readonly appStateServ: AppStateService) {
+  get pauseBackdropDismissOption(): Observable<boolean> {
+    return of(this.optionsService.getValueById(ToggleOption.CLICK_BACKDROP_TO_UNPAUSE));
+  }
+
+  constructor(
+    private readonly scoreServ: ScoreService,
+    private readonly appStateServ: AppStateService,
+    private readonly optionsService: OptionsService
+  ) {
     super();
   }
 
