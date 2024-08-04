@@ -7,6 +7,7 @@ import { FirstUpperPipe } from './pipes/first-upper.pipe';
 import { BannerComponent } from './components/banner/banner.component';
 import { FullscreenViewComponent } from './components/fullscreen-view/fullscreen-view.component';
 import { HoldTouchDirective } from './directives/hold-touch.directive';
+import { HiddenDirective } from './directives/hidden.directive';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { HoldTouchDirective } from './directives/hold-touch.directive';
     FullscreenViewComponent,
     FirstUpperPipe,
     HoldTouchDirective,
+    HiddenDirective,
   ],
   imports: [CommonModule, IonicModule],
   exports: [
@@ -25,6 +27,7 @@ import { HoldTouchDirective } from './directives/hold-touch.directive';
     FullscreenViewComponent,
     FirstUpperPipe,
     HoldTouchDirective,
+    HiddenDirective,
   ],
 })
 export class SharedModule {}
