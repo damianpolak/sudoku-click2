@@ -7,6 +7,7 @@ import { AppStateService } from '../shared/services/app-state.service';
 import { Observable, Subscription } from 'rxjs';
 import { Build } from '../shared/interfaces/core.interface';
 import { BaseComponent } from '../shared/abstracts/base-component.abstract';
+import { StorageService } from '../shared/services/storage.service';
 
 @Component({
   selector: 'app-options',
@@ -37,7 +38,8 @@ export class OptionsPage extends BaseComponent implements OnInit, OnDestroy {
     private readonly route: ActivatedRoute,
     private readonly navCtrl: NavController,
     private readonly optionsServ: OptionsService,
-    private readonly appStateServ: AppStateService
+    private readonly appStateServ: AppStateService,
+    private readonly storageServ: StorageService
   ) {
     super();
     this._options = this.optionsServ.options;
@@ -68,5 +70,16 @@ export class OptionsPage extends BaseComponent implements OnInit, OnDestroy {
   runDevMode(): void {
     this.appStateServ.setAppDevMode(!this.devMode);
     console.info(`%c [SudokuClick][AppDevMode] now is ${this.devMode ? 'ON' : 'OFF'}`, 'color:green');
+  }
+
+  async restartApp(): Promise<void> {
+    location.reload();
+  }
+
+  async restoreDefaults(): Promise<void> {
+    await this.storageServ.clearStorage();
+    setTimeout(() => {
+      location.reload();
+    }, 1000);
   }
 }
