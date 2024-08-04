@@ -28,6 +28,10 @@ export class MistakeService extends ServiceStore<Mistake> {
     return this._limitEnabled;
   }
 
+  constructor() {
+    super();
+  }
+
   getPresentMistakes(): Observable<PresentMistake> {
     return this.emitter$.pipe(
       map((x) => {
@@ -46,10 +50,6 @@ export class MistakeService extends ServiceStore<Mistake> {
         return x.value >= x.limit && x.secondChanceUsed === true;
       })
     );
-  }
-
-  constructor() {
-    super();
   }
 
   secondChance(): void {
