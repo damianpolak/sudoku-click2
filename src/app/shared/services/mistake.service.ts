@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { Address } from 'src/app/game/board/field/field.types';
 import { ServiceStore } from '../abstracts/service-store.abstract';
+import { OptionsService } from 'src/app/options/options.service';
+import { ToggleOption } from 'src/app/options/options.types';
 
 export type Mistake = {
   address: Address;
@@ -22,13 +24,12 @@ export type PresentMistake = {
 export class MistakeService extends ServiceStore<Mistake> {
   private static readonly MISTAKE_LIMIT = 3;
   private static readonly MISTAKE_CHANCES = 1;
-  private _limitEnabled: boolean = true;
 
   get limitEnabled(): boolean {
-    return this._limitEnabled;
+    return !this.optionsService.getValueById(ToggleOption.UNLIMITTED_MISTAKES);
   }
 
-  constructor() {
+  constructor(private readonly optionsService: OptionsService) {
     super();
   }
 
