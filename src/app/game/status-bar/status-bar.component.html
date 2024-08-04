@@ -15,6 +15,6 @@
 <div class="score-object" [ngStyle]="{ visibility: canShowMistakes ? 'visible' : 'hidden' }">
   <span>Mistakes</span>
   <span
-    >{{ (mistakes | async)?.value }}{{ (mistakes | async)?.limit !== 0 ? '/' + (mistakes | async)?.limit : '' }}</span
+    >{{ (mistakes | async)?.limit !== 0 ? (mistakes | async)?.value : 'no limit' }}{{ (mistakes | async)?.limit !== 0 ? '/' + (mistakes | async)?.limit : '' }}</span
   >
 </div>
