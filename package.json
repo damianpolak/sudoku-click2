@@ -60,7 +60,7 @@
     "@capacitor/cli": "5.7.4",
     "@commitlint/cli": "^19.2.1",
     "@commitlint/config-conventional": "^19.1.0",
-    "@/angular-toolkit": "^11.0.1",
+    "@ionic/angular-toolkit": "^11.0.1",
     "@types/jasmine": "~5.1.4",
     "@types/node": "^22.0.2",
     "@typescript-eslint/eslint-plugin": "^7.4.0",
