@@ -93,13 +93,13 @@ npx cap sync
 - Option for enable/disable opacity or hidden/visible numbered button when all available numbers have been used
 - fieldAnimation ON/OFF (field.component)
 - boardAnimation ON/OFF
-- pause backdropDismiss ON/OFF (pause.component)
-- mistakes limit to 3 ON/OFF
-- sounds ON/OFF
-- haptics ON/OFF
-- timer ON/OFF
-- score ON/OFF
-- mistakes ON/OFF
+- ~~pause backdropDismiss ON/OFF (pause.component)~~
+- ~~mistakes limit to 3 ON/OFF~~
+- ~~sounds ON/OFF~~
+- ~~haptics ON/OFF~~
+- ~~timer ON/OFF~~
+- ~~score ON/OFF~~
+- ~~mistakes ON/OFF~~
 
 ### Author
 
