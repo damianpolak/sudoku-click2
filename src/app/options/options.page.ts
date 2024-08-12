@@ -17,14 +17,18 @@ import { StorageService } from '../shared/services/storage.service';
 export class OptionsPage extends BaseComponent implements OnInit, OnDestroy {
   backPath!: string;
   private _options: Option[] = [];
-  private devMode: boolean = false;
-  private devModeSub$: Subscription = this.appStateServ.getAppDevMode$().subscribe((v) => (this.devMode = v));
+  private _devMode: boolean = false;
+  private devModeSub$: Subscription = this.appStateServ.getAppDevMode$().subscribe((v) => (this._devMode = v));
+
+  get devMode(): boolean {
+    return this._devMode;
+  }
 
   get options(): Option[] {
     return this._options;
   }
 
-  private readonly _debugModeHoldTime = 1000;
+  private readonly _debugModeHoldTime = 10000;
 
   get debugModeHoldTime(): number {
     return this._debugModeHoldTime;
@@ -61,6 +65,11 @@ export class OptionsPage extends BaseComponent implements OnInit, OnDestroy {
     this.appStateServ.onOptionButtonClick();
   }
 
+  async onDeveloperMenuItemClick(): Promise<void> {
+    await this.navCtrl.navigateForward('options/developer', { queryParams: { parent: 'options' } });
+    this.appStateServ.onOptionButtonClick();
+  }
+
   onToggleChange(event: number): void {
     this.optionsServ.toggleOption(event);
     this.optionsServ.save(this.options);
@@ -68,8 +77,8 @@ export class OptionsPage extends BaseComponent implements OnInit, OnDestroy {
   }
 
   runDevMode(): void {
-    this.appStateServ.setAppDevMode(!this.devMode);
-    console.info(`%c [SudokuClick][AppDevMode] now is ${this.devMode ? 'ON' : 'OFF'}`, 'color:green');
+    this.appStateServ.setAppDevMode(!this._devMode);
+    console.info(`%c [SudokuClick][AppDevMode] now is ${this._devMode ? 'ON' : 'OFF'}`, 'color:green');
   }
 
   async restartApp(): Promise<void> {

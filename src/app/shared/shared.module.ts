@@ -8,6 +8,7 @@ import { BannerComponent } from './components/banner/banner.component';
 import { FullscreenViewComponent } from './components/fullscreen-view/fullscreen-view.component';
 import { HoldTouchDirective } from './directives/hold-touch.directive';
 import { HiddenDirective } from './directives/hidden.directive';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,7 @@ import { HiddenDirective } from './directives/hidden.directive';
     HoldTouchDirective,
     HiddenDirective,
   ],
-  imports: [CommonModule, IonicModule],
+  imports: [CommonModule, IonicModule, FormsModule],
   exports: [
     HeaderComponent,
     NumberButtonComponent,

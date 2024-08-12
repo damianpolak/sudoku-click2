@@ -7,6 +7,13 @@
       <ion-label>Statistics</ion-label>
       <ion-icon slot="end" name="chevron-forward-outline" size="small"></ion-icon>
     </ion-item>
+    @if(devMode) {
+    <ion-item [button]="true" (click)="onDeveloperMenuItemClick()">
+      <ion-icon slot="start" name="bug-outline" size="large"></ion-icon>
+      <ion-label>Developer</ion-label>
+      <ion-icon slot="end" name="chevron-forward-outline" size="small"></ion-icon>
+    </ion-item>
+    }
   </ion-list>
 
   <ion-list [inset]="true">
@@ -51,10 +58,16 @@
   </ion-list>
   <ion-list [inset]="true">
     <ion-item [button]="true" [appHoldTouch]="3000" (holdTouch)="restartApp()">
-      <ion-label>Restart application <p>Press for 3 seconds</p></ion-label>
+      <ion-label
+        >Restart application
+        <p>Press for 3 seconds</p></ion-label
+      >
     </ion-item>
     <ion-item [button]="true" [appHoldTouch]="10000" (holdTouch)="restoreDefaults()">
-      <ion-label (click)="restoreDefaults()">Restore defaults <p>Press for 10 seconds</p></ion-label>
+      <ion-label (click)="restoreDefaults()"
+        >Restore defaults
+        <p>Press for 10 seconds</p></ion-label
+      >
     </ion-item>
   </ion-list>
 </ion-content>

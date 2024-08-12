@@ -31,6 +31,12 @@ const routes: Routes = [
     canActivate: [isNavigatedGuard],
   },
   {
+    path: 'options/developer',
+    loadChildren: () => import('./options/developer/developer.module').then((m) => m.DeveloperPageModule),
+    pathMatch: 'full',
+    canActivate: [isNavigatedGuard],
+  },
+  {
     path: '**',
     redirectTo: 'home',
   },

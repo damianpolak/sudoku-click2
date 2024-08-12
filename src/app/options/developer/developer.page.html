@@ -1,0 +1,43 @@
+<app-header [showBack]="true" [backPath]="backPath" title="Developer"></app-header>
+<ion-content [fullscreen]="true">
+  <h1>Status bar</h1>
+  <ion-list [inset]="true">
+    <ion-item [button]="true" (click)="toggleStatusBarVisible()" [disabled]="!statusBarFeaturesEnabled">
+      <ion-label>Show/hide</ion-label>
+    </ion-item>
+    <ion-item [button]="true" (click)="toggleStatusBarOverlaysWebView()" [disabled]="!statusBarFeaturesEnabled">
+      <ion-label>SetOverlaysWebView </ion-label>
+    </ion-item>
+    <ion-item [button]="true" (click)="toggleStatusBarStyle()" [disabled]="!statusBarFeaturesEnabled">
+      <ion-label
+        >SetStyle
+        <p>Light/Dark</p></ion-label
+      >
+    </ion-item>
+    <ion-item [disabled]="!statusBarFeaturesEnabled" (change)="inputColor()">
+      <ion-input label="Color" labelPlacement="stacked" placeholder="Hex color" [(ngModel)]="color"></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <ion-list [inset]="true">
+    @if(statusBarInfo) {
+    <ion-item>
+      <ion-label
+        >StatusBarInfo
+        <p>Visible: {{ statusBarInfo.visible }}</p>
+        <p>Style: {{ statusBarInfo.style }}</p>
+        <p>Color: {{ statusBarInfo.color }}</p>
+        <p>Overlays: {{ statusBarInfo.overlays }}</p>
+      </ion-label>
+    </ion-item>
+
+    } @else {
+    <ion-item>
+      <ion-label
+        >StatusBarInfo
+        <p>Not available</p></ion-label
+      >
+    </ion-item>
+    }
+  </ion-list>
+</ion-content>
