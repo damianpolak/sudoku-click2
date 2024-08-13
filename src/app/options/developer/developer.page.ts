@@ -2,6 +2,7 @@ import { style } from '@angular/animations';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { StatusBar, StatusBarInfo, Style } from '@capacitor/status-bar';
+import { NavigationBar, NavigationBarPluginEvents } from '@hugotomazi/capacitor-navigation-bar';
 import { from, interval, map, of, Subscription, take, timer, zip } from 'rxjs';
 import { BaseComponent } from 'src/app/shared/abstracts/base-component.abstract';
 
@@ -13,9 +14,15 @@ import { BaseComponent } from 'src/app/shared/abstracts/base-component.abstract'
 export class DeveloperPage extends BaseComponent {
   backPath!: string;
   color!: string;
+  colorNavigationBar!: string;
 
+  // StatusBar
   private _statusBarInfo!: StatusBarInfo | undefined;
   private _statusBarFeaturesEnabled: boolean = false;
+  private _statusBarVisible!: boolean | undefined;
+  private _statusBarOverlay!: boolean | undefined;
+  private _statusBarStyle!: Style | undefined;
+  private _statusBarBackgroundColor!: string | undefined;
 
   get statusBarFeaturesEnabled(): boolean {
     return this._statusBarFeaturesEnabled;
@@ -25,16 +32,26 @@ export class DeveloperPage extends BaseComponent {
     return this._statusBarInfo;
   }
 
-  private _visible!: boolean | undefined;
-  private _overlaysWebView!: boolean | undefined;
-  private _style!: Style | undefined;
-  private _backgroundColor!: string | undefined;
+  // NavigationBar
+  private _navigationBarInfo!: undefined;
+  // private _navigationBarVisible: boolean = true;
+
+  showOrHide: 'show' | 'hide' = 'show';
 
   constructor(private readonly route: ActivatedRoute) {
     super();
   }
 
   async ionViewDidEnter(): Promise<void> {
+    const asd = await NavigationBar.addListener(NavigationBarPluginEvents.SHOW, () => {
+      console.log('=> navbar is show!');
+      this.showOrHide = 'show';
+    });
+
+    await NavigationBar.addListener(NavigationBarPluginEvents.HIDE, () => {
+      this.showOrHide = 'hide';
+    });
+
     this.registerSubscriptions([
       this.route.queryParams.subscribe((params) => {
         this.backPath = params['parent'] ? params['parent'] : '/home';
@@ -45,10 +62,10 @@ export class DeveloperPage extends BaseComponent {
           const statusBarInfo = await v;
           this._statusBarFeaturesEnabled = statusBarInfo !== undefined;
           this._statusBarInfo = statusBarInfo;
-          this._visible = statusBarInfo?.visible;
-          this._overlaysWebView = statusBarInfo?.overlays;
-          this._style = statusBarInfo?.style;
-          this._backgroundColor = statusBarInfo?.color;
+          this._statusBarVisible = statusBarInfo?.visible;
+          this._statusBarOverlay = statusBarInfo?.overlays;
+          this._statusBarStyle = statusBarInfo?.style;
+          this._statusBarBackgroundColor = statusBarInfo?.color;
         }),
     ]);
   }
@@ -58,22 +75,30 @@ export class DeveloperPage extends BaseComponent {
   }
 
   async toggleStatusBarVisible(): Promise<void> {
-    this._visible ? await StatusBar.hide() : await StatusBar.show();
+    this._statusBarVisible ? await StatusBar.hide() : await StatusBar.show();
   }
 
   async toggleStatusBarOverlaysWebView(): Promise<void> {
-    this._overlaysWebView
+    this._statusBarOverlay
       ? await StatusBar.setOverlaysWebView({ overlay: false })
       : await StatusBar.setOverlaysWebView({ overlay: true });
   }
 
   async toggleStatusBarStyle(): Promise<void> {
-    this._style === Style.Dark
+    this._statusBarStyle === Style.Dark
       ? await StatusBar.setStyle({ style: Style.Light })
       : await StatusBar.setStyle({ style: Style.Dark });
   }
 
   async inputColor(): Promise<void> {
     await StatusBar.setBackgroundColor({ color: this.color });
+  }
+
+  async setNavigationBar(mode: 'show' | 'hide'): Promise<void> {
+    mode === 'show' ? await NavigationBar.show() : await NavigationBar.hide();
+  }
+
+  async inputColorNavigationBar(): Promise<void> {
+    await NavigationBar.setColor({ color: this.colorNavigationBar });
   }
 }
