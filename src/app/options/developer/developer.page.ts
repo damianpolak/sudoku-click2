@@ -1,6 +1,7 @@
 import { style } from '@angular/animations';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ScreenOrientation } from '@capacitor/screen-orientation';
 import { StatusBar, StatusBarInfo, Style } from '@capacitor/status-bar';
 import { NavigationBar, NavigationBarPluginEvents } from '@hugotomazi/capacitor-navigation-bar';
 import { from, interval, map, of, Subscription, take, timer, zip } from 'rxjs';
@@ -100,5 +101,9 @@ export class DeveloperPage extends BaseComponent {
 
   async inputColorNavigationBar(): Promise<void> {
     await NavigationBar.setColor({ color: this.colorNavigationBar });
+  }
+
+  async setScreenOrientation(mode: 'lock' | 'unlock'): Promise<void> {
+    mode === 'lock' ? await ScreenOrientation.lock({ orientation: 'portrait' }) : await ScreenOrientation.unlock();
   }
 }

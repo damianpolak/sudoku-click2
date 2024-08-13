@@ -1,5 +1,5 @@
 <app-header [showBack]="true" [backPath]="backPath" title="Developer"></app-header>
-<ion-content [fullscreen]="true">
+<ion-content>
   <h1>Status bar</h1>
   <ion-list [inset]="true">
     <ion-item [button]="true" (click)="toggleStatusBarVisible()" [disabled]="!statusBarFeaturesEnabled">
@@ -38,26 +38,40 @@
         <p>Not available</p></ion-label
       >
     </ion-item>
-  }
-</ion-list>
+    }
+  </ion-list>
 
-<h1>Navigation bar</h1>
-<ion-list [inset]="true">
-  <ion-item [button]="true" (click)="setNavigationBar('show')" [disabled]="!statusBarFeaturesEnabled">
-    <ion-label>Show navbar</ion-label>
-  </ion-item>
-  <ion-item [button]="true" (click)="setNavigationBar('hide')" [disabled]="!statusBarFeaturesEnabled">
-    <ion-label>Hide navbar</ion-label>
-  </ion-item>
-  <ion-item [disabled]="!statusBarFeaturesEnabled" (change)="inputColorNavigationBar()">
-    <ion-input label="Color" labelPlacement="stacked" placeholder="Hex color" [(ngModel)]="colorNavigationBar"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label
-      >NavigationBarStatus
-      <p>{{ showOrHide }}</p></ion-label
-    >
-  </ion-item>
+  <h1>Navigation bar</h1>
+  <ion-list [inset]="true">
+    <ion-item [button]="true" (click)="setNavigationBar('show')" [disabled]="!statusBarFeaturesEnabled">
+      <ion-label>Show navbar</ion-label>
+    </ion-item>
+    <ion-item [button]="true" (click)="setNavigationBar('hide')" [disabled]="!statusBarFeaturesEnabled">
+      <ion-label>Hide navbar</ion-label>
+    </ion-item>
+    <ion-item [disabled]="!statusBarFeaturesEnabled" (change)="inputColorNavigationBar()">
+      <ion-input
+        label="Color"
+        labelPlacement="stacked"
+        placeholder="Hex color"
+        [(ngModel)]="colorNavigationBar"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label
+        >NavigationBarStatus
+        <p>{{ showOrHide }}</p></ion-label
+      >
+    </ion-item>
+  </ion-list>
 
+  <h1>Screen orientation</h1>
+  <ion-list [inset]="true">
+    <ion-item [button]="true" (click)="setScreenOrientation('lock')" [disabled]="!statusBarFeaturesEnabled">
+      <ion-label>Lock</ion-label>
+    </ion-item>
+    <ion-item [button]="true" (click)="setScreenOrientation('unlock')" [disabled]="!statusBarFeaturesEnabled">
+      <ion-label>Unlock</ion-label>
+    </ion-item>
   </ion-list>
 </ion-content>
