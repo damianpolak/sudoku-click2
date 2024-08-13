@@ -8,6 +8,7 @@ import { AppSettings } from './shared/services/app-state.types';
 import { OptionsService } from './options/options.service';
 import { EffectHandlerService } from './shared/services/effect-handler.service';
 import { environment } from 'src/environments/environment';
+import { ScreenOrientation } from '@capacitor/screen-orientation';
 
 @Component({
   selector: 'app-root',
@@ -47,6 +48,10 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     this.setHeaderSize(screen.orientation.type, '0px', '44px');
     await StatusBar.hide().catch((e) => {
       console.info(`%c [SudokuClick][Capacitor]`, 'color:yellow', (e as Error).message);
+    });
+
+    await ScreenOrientation.lock({ orientation: 'portrait' }).catch((e) => {
+      console.log(`%c [SudokuClick][Capacitor]`, 'color:yellow', (e as Error).message);
     });
 
     const appSettings: AppSettings | undefined = await this.appStateServ.loadStorageSettings();
