@@ -156,7 +156,6 @@ export class BoardService extends BaseService implements OnDestroy {
     private readonly scoreServ: ScoreService
   ) {
     super();
-    console.log('BoardService Constructor');
     this.registerSubscriptions([
       this.boardSub$,
       this.inputInterractionSub$,
@@ -173,7 +172,6 @@ export class BoardService extends BaseService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('BoardService Destroy');
     this.unsubscribeSubscriptions();
     this.historyServ.destroy();
     this.mistakeServ.destroy();
@@ -382,7 +380,6 @@ export class BoardService extends BaseService implements OnDestroy {
   }
 
   private onContinueGame(mode: GameStartMode): void {
-    console.log('=== Continue');
     this.defaultBaseBoard = new BoardBuilder({
       board: mode.gameState?.board,
       level: mode.gameState?.level,
@@ -396,7 +393,6 @@ export class BoardService extends BaseService implements OnDestroy {
   }
 
   private onNewGame(_mode: GameStartMode): void {
-    console.log('=== New game');
     this.defaultBaseBoard = new BoardBuilder({
       level: this.gameStateServ.selectedLevel,
     }).setDefaultSelectedField();
@@ -407,7 +403,6 @@ export class BoardService extends BaseService implements OnDestroy {
   }
 
   private onRestartGame(mode: GameStartMode): void {
-    console.log('=== Restart game');
     this.timerServ.start('00:00:00');
     this.historyServ.clear();
     this.mistakeServ.clear();

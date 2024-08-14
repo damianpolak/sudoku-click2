@@ -46,7 +46,7 @@ export class GamePage extends BaseComponent {
   }
 
   ionViewDidEnter(): void {
-    console.log('GamePage DidEnter');
+    ('GamePage DidEnter');
     this.gameStateSub$ = this.gameStateServ
       .getGameState$()
       .subscribe((gameState) => this.gameStateServ.saveGameState(gameState));
@@ -127,7 +127,6 @@ export class GamePage extends BaseComponent {
   }
 
   ionViewDidLeave(): void {
-    console.log('GamePage DidLeave');
     this.unsubscribeSubscriptions();
     this.mistakeServ.clear();
     this.historyServ.clear();

@@ -45,7 +45,6 @@ export class DeveloperPage extends BaseComponent {
 
   async ionViewDidEnter(): Promise<void> {
     const asd = await NavigationBar.addListener(NavigationBarPluginEvents.SHOW, () => {
-      console.log('=> navbar is show!');
       this.showOrHide = 'show';
     });
 

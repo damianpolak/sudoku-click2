@@ -50,23 +50,10 @@ export class HomePage extends BaseComponent {
   }
 
   async ionViewDidEnter(): Promise<void> {
-    // Randomize stats data
-    // for (let i = 0; i <= 10000; i++) {
-    //   await this.statsServ.save({
-    //     level: Object.keys(Level)[Math.floor(Math.random() * Object.keys(Level).length)] as Level,
-    //     status: Object.keys(GameStatusType)[Math.floor(Math.random() * Object.keys(Level).length)] as GameStatusType,
-    //     score: Number(Math.floor(Math.random() * 100000).toFixed()),
-    //     time: '00:34',
-    //     mistakes: Math.floor(Math.random() * 3),
-    //     statsable: true,
-    //   });
-    // }
-    console.log('=== HomePageDidEnter');
     this.gameStateSub$ = combineLatest([
       this.gameStateServ.getPauseState$(),
       this.gameStateServ.getGameState$(),
     ]).subscribe(([pauseState, gameState]) => {
-      console.log('=== ionViewDidEnter');
       this.canContinue = true;
       this._gameState = gameState;
       this.setContinueOptions(gameState);
@@ -82,7 +69,6 @@ export class HomePage extends BaseComponent {
   }
 
   ionViewDidLeave(): void {
-    console.log('=== HomePageDidLeave');
     this.unsubscribeSubscriptions();
   }
 
