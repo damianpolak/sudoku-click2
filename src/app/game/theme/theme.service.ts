@@ -6,7 +6,9 @@ export type Theme = string;
 export type ThemeDefinition = {
   name: Theme;
   active?: boolean;
-  background: string;
+  backgroundScssVar: string;
+  deviceBarBackgroundScssVar: string;
+  style: 'LIGHT' | 'DARK';
 };
 
 @Injectable({
@@ -19,21 +21,35 @@ export class ThemeService extends ServiceStore<ThemeDefinition> {
     super();
   }
 
-  register(themes: ThemeDefinition[], active?: Theme): void {
+  register(themes: ThemeDefinition[], active?: ThemeDefinition): void {
     const isPrefersDark = this.isPrefersDark();
-    const activeTheme = active || (isPrefersDark ? 'dark' : 'light');
+    const activeTheme: ThemeDefinition =
+      active ||
+      (isPrefersDark
+        ? {
+            name: 'dark',
+            backgroundScssVar: '#212433',
+            deviceBarBackgroundScssVar: '#F5F5F5',
+            style: 'DARK',
+          }
+        : {
+            name: 'apricot',
+            backgroundScssVar: '#f4f5f8',
+            deviceBarBackgroundScssVar: '#f5f5f5',
+            style: 'LIGHT',
+          });
     this.set(
       themes.map((t) => {
-        return { ...t, active: t.name === activeTheme };
+        return { ...t, active: t.name === activeTheme.name };
       })
     );
     this.setTheme(activeTheme);
   }
 
-  setTheme(themeName: Theme): void {
-    const classesToRemove = this.store.filter((f) => f.name !== themeName).map((m) => m.name);
+  setTheme(themeName: ThemeDefinition): void {
+    const classesToRemove = this.store.filter((f) => f.name !== themeName.name).map((m) => m.name);
     document.body.classList.remove(...classesToRemove);
-    document.body.classList.add(themeName);
+    document.body.classList.add(themeName.name);
     this.appStateServ.setAppSettings({ theme: themeName });
   }
 
