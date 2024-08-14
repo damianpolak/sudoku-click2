@@ -58,9 +58,24 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
 
     this.themeServ.register(
       [
-        { name: 'light', background: 'var(--ion-theme-light-presentable)' },
-        { name: 'dark', background: 'var(--ion-theme-dark-presentable)' },
-        { name: 'apricot', background: 'var(--ion-theme-apricot-presentable)' },
+        {
+          name: 'light',
+          backgroundScssVar: '--ion-theme-light-presentable',
+          deviceBarBackgroundScssVar: '--ion-theme-light-device-bar',
+          style: 'LIGHT',
+        },
+        {
+          name: 'dark',
+          backgroundScssVar: '--ion-theme-dark-presentable',
+          deviceBarBackgroundScssVar: '--ion-theme-dark-device-bar',
+          style: 'DARK',
+        },
+        {
+          name: 'apricot',
+          backgroundScssVar: '--ion-theme-apricot-presentable',
+          deviceBarBackgroundScssVar: '--ion-theme-apricot-device-bar',
+          style: 'LIGHT',
+        },
       ],
       appSettings ? appSettings.theme : undefined
     );
