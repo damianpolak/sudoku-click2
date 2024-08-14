@@ -1,14 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription, fromEvent, lastValueFrom } from 'rxjs';
+import { Subscription, fromEvent, lastValueFrom, map } from 'rxjs';
 import { AppStateService } from './shared/services/app-state.service';
 import { BaseComponent } from './shared/abstracts/base-component.abstract';
-import { StatusBar } from '@capacitor/status-bar';
+import { StatusBar, Style } from '@capacitor/status-bar';
 import { ThemeService } from './game/theme/theme.service';
 import { AppSettings } from './shared/services/app-state.types';
 import { OptionsService } from './options/options.service';
 import { EffectHandlerService } from './shared/services/effect-handler.service';
 import { environment } from 'src/environments/environment';
 import { ScreenOrientation } from '@capacitor/screen-orientation';
+import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +26,29 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     .getAppDevMode$()
     .subscribe((v) => this.appStateServ.setAppSettings({ devMode: v }));
 
+  private adjustBarColorSub$: Subscription = this.themeServ
+    .get$()
+    .pipe(map((v) => v.find((f) => f.active)))
+    .subscribe(async (activeTheme) => {
+      if (activeTheme) {
+        const deviceHexColor = getComputedStyle(document.documentElement).getPropertyValue(
+          activeTheme?.deviceBarBackgroundScssVar
+        );
+        // Brzydki fix, ale z jakiegoś powodu nie za każdym razem zmienia
+        // kolor paska nawigacji przy starcie. Timeout pomaga.
+        setTimeout(async () => {
+          try {
+            await StatusBar.show();
+            await StatusBar.setBackgroundColor({ color: deviceHexColor });
+            await StatusBar.setStyle({ style: activeTheme.style as Style });
+            await NavigationBar.setColor({ color: deviceHexColor, darkButtons: activeTheme.style === 'LIGHT' });
+          } catch (e) {
+            console.error(`%c [SudokuClick][Capacitor]`, 'color:yellow', (e as Error).message);
+          }
+        }, 300);
+      }
+    });
+
   constructor(
     private readonly appStateServ: AppStateService,
     private readonly themeServ: ThemeService,
@@ -39,20 +63,25 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
       this.appStateServ.setScreenOrientation(orientation);
       this.setHeaderSize(orientation, '0px', '44px');
     });
-    this.registerSubscriptions([this.screenOrientationSubs$, this.appSettingsSub$, this.appDevModeSub$]);
+    this.registerSubscriptions([
+      this.screenOrientationSubs$,
+      this.appSettingsSub$,
+      this.appDevModeSub$,
+      this.adjustBarColorSub$,
+    ]);
     this.themeServ.create();
   }
 
   async ngOnInit(): Promise<void> {
     await this.appStateServ.storageInit();
     this.setHeaderSize(screen.orientation.type, '0px', '44px');
-    await StatusBar.hide().catch((e) => {
-      console.info(`%c [SudokuClick][Capacitor]`, 'color:yellow', (e as Error).message);
-    });
 
-    await ScreenOrientation.lock({ orientation: 'portrait' }).catch((e) => {
-      console.log(`%c [SudokuClick][Capacitor]`, 'color:yellow', (e as Error).message);
-    });
+    try {
+      await ScreenOrientation.lock({ orientation: 'portrait' });
+      await NavigationBar.hide();
+    } catch (e) {
+      console.info(`%c [SudokuClick][Capacitor]`, 'color:yellow', (e as Error).message);
+    }
 
     const appSettings: AppSettings | undefined = await this.appStateServ.loadStorageSettings();
 
@@ -117,5 +146,9 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     } catch (e) {
       console.warn(e);
     }
+  }
+
+  async hideNavigationBar(): Promise<void> {
+    await NavigationBar.hide();
   }
 }
