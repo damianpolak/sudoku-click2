@@ -189,7 +189,7 @@ export class GameStateService {
 
   async saveGameState(gamestate: GameState): Promise<void> {
     try {
-      await this.storageServ.set(GameStateService.GAME_STATE_KEY, JSON.stringify(gamestate));
+      await this.storageServ.set(GameStateService.GAME_STATE_KEY, gamestate);
     } catch (e) {
       console.log('Cannot save the game state');
     }
@@ -198,7 +198,7 @@ export class GameStateService {
   async loadGameState(): Promise<CommonGameState | undefined> {
     try {
       const data = await this.storageServ.get(GameStateService.GAME_STATE_KEY);
-      const gameState = data !== null ? JSON.parse(data) : undefined;
+      const gameState = data !== null ? data : undefined;
       if (gameState && this.isGamePlayable(gameState)) {
         return {
           gameState,
