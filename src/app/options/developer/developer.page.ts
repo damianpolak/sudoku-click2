@@ -6,6 +6,7 @@ import { StatusBar, StatusBarInfo, Style } from '@capacitor/status-bar';
 import { NavigationBar, NavigationBarPluginEvents } from '@hugotomazi/capacitor-navigation-bar';
 import { from, interval, map, of, Subscription, take, timer, zip } from 'rxjs';
 import { BaseComponent } from 'src/app/shared/abstracts/base-component.abstract';
+import { StorageService } from 'src/app/shared/services/storage.service';
 
 @Component({
   selector: 'app-developer',
@@ -16,6 +17,12 @@ export class DeveloperPage extends BaseComponent {
   backPath!: string;
   color!: string;
   colorNavigationBar!: string;
+
+  private _sudokuAppSettings!: string;
+
+  get sudokuAppSettings(): string {
+    return this._sudokuAppSettings;
+  }
 
   // StatusBar
   private _statusBarInfo!: StatusBarInfo | undefined;
@@ -39,11 +46,13 @@ export class DeveloperPage extends BaseComponent {
 
   showOrHide: 'show' | 'hide' = 'show';
 
-  constructor(private readonly route: ActivatedRoute) {
+  constructor(private readonly route: ActivatedRoute, private readonly storageService: StorageService) {
     super();
   }
 
   async ionViewDidEnter(): Promise<void> {
+    this._sudokuAppSettings = JSON.stringify(await this.storageService.get('SUDOKU_APP_SETTINGS'));
+
     const asd = await NavigationBar.addListener(NavigationBarPluginEvents.SHOW, () => {
       this.showOrHide = 'show';
     });
