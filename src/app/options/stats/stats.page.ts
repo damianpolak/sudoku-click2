@@ -3,9 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { Level } from 'src/app/shared/services/game-state.service';
 import { StatsService } from './stats.service';
 import { BaseComponent } from 'src/app/shared/abstracts/base-component.abstract';
-import { Subscription } from 'rxjs';
+import { combineLatest, last, map, of, Subscription } from 'rxjs';
 import { CurrentItem, Stat, SummaryGames, SummaryStats } from './stats.types';
 import { LoadingController } from '@ionic/angular';
+import { AppStateService } from 'src/app/shared/services/app-state.service';
 
 type MenuLevelOption = {
   id: number;
@@ -21,25 +22,44 @@ export class StatsPage extends BaseComponent {
   backPath!: string;
   summarizedStats!: SummaryStats[];
   summarizedGames!: SummaryGames[];
-  currentTabValue: string = Object.values(Level)[0];
+  currentTabValue!: string;
   currentItem!: CurrentItem;
+  loading!: HTMLIonLoadingElement;
   private _commonStatistics: Stat[] = [];
   private queryParamsSub$!: Subscription;
+
+  private _devMode: boolean = false;
+  private devModeSub$: Subscription = this.appStateServ.getAppDevMode$().subscribe((v) => (this._devMode = v));
+  private tabValueSub$: Subscription = combineLatest([of(Object.values(Level)), this.appStateServ.getAppDevMode$()])
+    .pipe(map(([level, devMode]) => level.filter((v) => (devMode ? true : !v.includes('DEV')))))
+    .subscribe((v) => (this.currentTabValue = v[0]));
+
+  get devMode(): boolean {
+    return this._devMode;
+  }
+
+  get levels(): MenuLevelOption[] {
+    return Object.values(Level)
+      .filter((v) => (this.devMode ? true : !v.includes('DEV')))
+      .map((item, index) => ({
+        id: index,
+        value: item,
+      }));
+  }
 
   constructor(
     private readonly route: ActivatedRoute,
     private readonly statsServ: StatsService,
-    private readonly loadingCtrl: LoadingController
+    private readonly loadingCtrl: LoadingController,
+    private readonly appStateServ: AppStateService
   ) {
     super();
   }
 
-  loading!: HTMLIonLoadingElement;
   async showLoading() {
     this.loading = await this.loadingCtrl.create({
       message: 'Loading statistics...',
     });
-
     this.loading.present();
   }
 
@@ -51,7 +71,7 @@ export class StatsPage extends BaseComponent {
     this.queryParamsSub$ = this.route.queryParams.subscribe((params) => {
       this.backPath = params['parent'] ? params['parent'] : '/home';
     });
-    this.registerSubscriptions([this.queryParamsSub$]);
+    this.registerSubscriptions([this.queryParamsSub$, this.devModeSub$, this.tabValueSub$]);
     await this.showLoading();
     await this.loadStats();
     await this.hideLoading();
@@ -59,15 +79,6 @@ export class StatsPage extends BaseComponent {
 
   async ionViewDidLeave(): Promise<void> {
     this.unsubscribeSubscriptions();
-  }
-
-  get levels(): MenuLevelOption[] {
-    return Object.values(Level).map((item, index) => {
-      return {
-        id: index,
-        value: item,
-      };
-    });
   }
 
   async loadStats(): Promise<void> {
