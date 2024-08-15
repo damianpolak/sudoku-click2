@@ -3,7 +3,7 @@
     <ng-template>
       <div class="block">
         <h1>Pause</h1>
-        <app-status-bar [style.width]="'55%'"></app-status-bar>
+        <app-status-bar [style.width]="'55%'" [ignoreOptions]="true"></app-status-bar>
         <h1 class="score">Score {{ score | async }}</h1>
         <div class="pause-buttons">
           <ion-button [size]="buttonsSize" expand="block" (click)="onContinueClick()">Continue</ion-button>
