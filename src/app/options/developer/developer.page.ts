@@ -19,9 +19,14 @@ export class DeveloperPage extends BaseComponent {
   colorNavigationBar!: string;
 
   private _sudokuAppSettings!: string;
+  private _sudokuGameOptions!: string;
 
   get sudokuAppSettings(): string {
     return this._sudokuAppSettings;
+  }
+
+  get sudokuGameOptions(): string {
+    return this._sudokuGameOptions;
   }
 
   // StatusBar
@@ -52,6 +57,7 @@ export class DeveloperPage extends BaseComponent {
 
   async ionViewDidEnter(): Promise<void> {
     this._sudokuAppSettings = JSON.stringify(await this.storageService.get('SUDOKU_APP_SETTINGS'));
+    this._sudokuGameOptions = JSON.stringify(await this.storageService.get('SUDOKU_GAME_OPTIONS'));
 
     const asd = await NavigationBar.addListener(NavigationBarPluginEvents.SHOW, () => {
       this.showOrHide = 'show';
