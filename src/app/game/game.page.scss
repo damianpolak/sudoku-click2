@@ -26,7 +26,6 @@ $vwDiff: 10vw;
   @media (orientation: portrait) {
     .controls {
       height: auto;
-      max-height: $height;
       width: $width;
       padding-top: 1vh;
     }
@@ -66,45 +65,48 @@ $vwDiff: 10vw;
 .container {
   flex-direction: column;
 
-  @media (orientation: portrait) and (max-aspect-ratio: '0.67/1') {
+  /* Extra small devices (phones, 600px and down) */
+  @media only screen and (max-width: 600px) {
+    @include board($vwidth, $vwidth, 5vw);
+    @include controls(calc($vheight - $vwidth), $vwidth);
     app-status-bar {
-      width: $vwidth;
-    }
-  }
-
-  @media (orientation: portrait) and (min-aspect-ratio: '0.68/1') and (max-aspect-ratio: '1/1') {
-      app-status-bar {
       width: calc($vwidth - $vwDiff);
     }
   }
 
-  @media (orientation: landscape) {
-      app-status-bar {
-      width: 100%;
+  /* Small devices (portrait tablets and large phones, 600px and up) */
+  @media only screen and (min-width: 600px) {
+    @include board($vwidth, $vwidth, 5vw);
+    @include controls(calc($vheight - $vwidth), $vwidth);
+    app-status-bar {
+      width: calc($vwidth - $vwDiff);
     }
   }
 
-  .container-wrap {
-    flex-wrap: wrap;
-
-    @media (orientation: landscape) and (min-aspect-ratio: 1.51/1) {
-      @include board($vheight, $vheight, 4vh);
-      @include controls($vheight, calc($vwidth - $vheight));
+  /* Medium devices (landscape tablets, 768px and up) */
+  @media only screen and (min-width: 768px) {
+    @include board(calc($vwidth - $vwDiff - 10vw), calc($vwidth - $vwDiff - 10vw), 4vw);
+    @include controls(calc($vheight - $vwidth - 500px), calc($vwidth - 100px));
+    app-status-bar {
+      width: calc($vwidth - $vwDiff - 10vw);
     }
+  }
 
-    @media (orientation: landscape) and (min-aspect-ratio: '1.33/1') and (max-aspect-ratio: '1.5/1') {
-      @include board(calc($vheight - $vhDiff), calc($vheight - $vhDiff), 3.7vh);
-      @include controls(calc($vheight - $vhDiff), calc($vwidth - $vheight + $vhDiff));
+  /* Large devices (laptops/desktops, 992px and up) */
+  @media only screen and (min-width: 992px) {
+    @include board(calc(($vwidth - $vwDiff) - 20vw), calc(($vwidth - $vwDiff) - 20vw), 4vw);
+    @include controls(calc($vheight - $vwidth), $vwidth);
+    app-status-bar {
+      width: calc($vwidth - $vwDiff - 20vw);
     }
+  }
 
-    @media (orientation: portrait) and (max-aspect-ratio: '0.67/1') {
-      @include board($vwidth, $vwidth, 5vw);
-      @include controls(calc($vheight - $vwidth), $vwidth);
-    }
-
-    @media (orientation: portrait) and (min-aspect-ratio: '0.68/1') and (max-aspect-ratio: '1/1') {
-      @include board(calc($vwidth - $vwDiff), calc($vwidth - $vwDiff), 4vw);
-      @include controls(calc($vheight - $vwidth + $vwDiff), $vwidth);
+  /* Extra large devices (large laptops and desktops, 1200px and up) */
+  @media only screen and (min-width: 1200px) {
+    @include board(calc($vwidth - $vwDiff - 30vw), calc($vwidth - $vwDiff - 30vw), 4vw);
+    @include controls(calc($vheight - $vwidth), $vwidth);
+    app-status-bar {
+      width: calc($vwidth - $vwDiff - 30vw);
     }
   }
 }
@@ -119,5 +121,4 @@ $vwDiff: 10vw;
     color: black;
     padding: 5px;
   }
-
 }

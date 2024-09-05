@@ -14,21 +14,12 @@
 
 <ion-content [fullscreen]="true">
   <div class="container" [ngStyle]="{'filter':isPaused ? 'blur(10px)' : 'blur(0px)' }">
-    @if((orientation$ | async) === 'portrait') {
-    <div class="status-bar-wrapper">
-      <app-status-bar [visibleScore]="true" ></app-status-bar>
+    <app-status-bar [visibleScore]="true"></app-status-bar>
+    <div class="board">
+      <app-board></app-board>
     </div>
-    }
-    <div class="container-wrap">
-      <div class="board">
-        <app-board></app-board>
-      </div>
-      <div class="controls">
-        @if((orientation$ | async) === 'landscape') {
-        <app-status-bar [visibleScore]="true"></app-status-bar>
-        }
-        <app-controls></app-controls>
-      </div>
+    <div class="controls">
+      <app-controls></app-controls>
     </div>
   </div>
 </ion-content>
