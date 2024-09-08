@@ -5,6 +5,7 @@ import { ConversionUtil } from '../utils/conversion.util';
 import { StorageService } from './storage.service';
 import { HttpClient } from '@angular/common/http';
 import { Build } from '../interfaces/core.interface';
+import { Platform } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +26,11 @@ export class AppStateService {
     })
   );
 
-  constructor(private readonly storageServ: StorageService, private readonly httpClient: HttpClient) {}
+  constructor(
+    private readonly storageServ: StorageService,
+    private readonly httpClient: HttpClient,
+    private platform: Platform
+  ) {}
 
   setScreenOrientation(orientation: OrientationType): void {
     this.screenOrientation$.next(orientation);
@@ -37,6 +42,13 @@ export class AppStateService {
         return ConversionUtil.basicOrientationType(i);
       })
     );
+  }
+
+  getIsPlatformDesktop$(): Observable<boolean> {
+    return new Observable((observer) => {
+      observer.next(this.platform.is('desktop'));
+      observer.complete();
+    });
   }
 
   getAppDebugMode$(): Observable<boolean> {
