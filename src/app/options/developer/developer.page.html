@@ -74,6 +74,42 @@
       <ion-label>Unlock</ion-label>
     </ion-item>
   </ion-list>
+
+  <h1>Platform</h1>
+  <ion-list [inset]="true">
+    <ion-item>
+      <ion-label>Ipad: {{ platformIs('ipad')}}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Iphone: {{ platformIs('iphone')}}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Ios: {{ platformIs('ios')}}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Android: {{ platformIs('android')}}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Tablet: {{ platformIs('tablet')}}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Capacitor: {{ platformIs('capacitor')}}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Mobile: {{ platformIs('mobile')}}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Mobileweb: {{ platformIs('mobileweb')}}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Desktop: {{ platformIs('desktop')}}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>PWA: {{ platformIs('pwa')}}</ion-label>
+    </ion-item>
+  </ion-list>
+
+
   <h1>Data storage</h1>
   <h5>SUDOKU_APP_SETTINGS</h5>
   <ion-list [inset]="true">

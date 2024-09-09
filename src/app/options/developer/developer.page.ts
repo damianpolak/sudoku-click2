@@ -4,9 +4,26 @@ import { ActivatedRoute } from '@angular/router';
 import { ScreenOrientation } from '@capacitor/screen-orientation';
 import { StatusBar, StatusBarInfo, Style } from '@capacitor/status-bar';
 import { NavigationBar, NavigationBarPluginEvents } from '@hugotomazi/capacitor-navigation-bar';
+import { Platform } from '@ionic/angular';
 import { from, interval, map, of, Subscription, take, timer, zip } from 'rxjs';
 import { BaseComponent } from 'src/app/shared/abstracts/base-component.abstract';
 import { StorageService } from 'src/app/shared/services/storage.service';
+
+export type Platforms =
+  | 'ipad'
+  | 'iphone'
+  | 'ios'
+  | 'android'
+  | 'phablet'
+  | 'tablet'
+  | 'cordova'
+  | 'capacitor'
+  | 'electron'
+  | 'pwa'
+  | 'mobile'
+  | 'mobileweb'
+  | 'desktop'
+  | 'hybrid';
 
 @Component({
   selector: 'app-developer',
@@ -45,13 +62,21 @@ export class DeveloperPage extends BaseComponent {
     return this._statusBarInfo;
   }
 
+  platformIs(value: Platforms): boolean {
+    return this.platform.is(value);
+  }
+
   // NavigationBar
   private _navigationBarInfo!: undefined;
   // private _navigationBarVisible: boolean = true;
 
   showOrHide: 'show' | 'hide' = 'show';
 
-  constructor(private readonly route: ActivatedRoute, private readonly storageService: StorageService) {
+  constructor(
+    private readonly route: ActivatedRoute,
+    private readonly storageService: StorageService,
+    private readonly platform: Platform
+  ) {
     super();
   }
 
