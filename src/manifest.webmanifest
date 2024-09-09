@@ -1,9 +1,10 @@
 {
-  "name": "app",
-  "short_name": "app",
-  "theme_color": "#1976d2",
-  "background_color": "#fafafa",
+  "name": "Sudoku.click",
+  "short_name": "Sudoku",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
   "display": "standalone",
+  "orientation": "portrait",
   "scope": "./",
   "start_url": "./",
   "icons": [
