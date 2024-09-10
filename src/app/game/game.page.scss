@@ -1,124 +1,90 @@
-$header: var(--header-size);
-$vheight: calc(95vh - $header);
-$vwidth: calc(95vw - $header);
-$vhDiff: 20.3vh;
-$vwDiff: 10vw;
-
-@mixin grid($size, $unit) {
-  display: grid;
-  grid-template-rows: repeat($size, $unit);
-  grid-template-columns: repeat($size, $unit);
-}
-
-@mixin controls($height, $width) {
-  .controls {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    flex-direction: column;
-
-    app-status-bar {
-      padding-bottom: 2vh;
-      border-bottom: 2px solid var(--ion-color-primary-tint);
-    }
-  }
-
-  @media (orientation: portrait) {
-    .controls {
-      height: auto;
-      width: $width;
-      padding-top: 1vh;
-    }
-  }
-
-  @media (orientation: landscape) {
-    .controls {
-      height: auto;
-      width: $width;
-      padding-top: 1vw;
-      padding-left: 2vw;
-    }
-  }
-}
-
 @mixin board($boardWidth, $boardHeight, $boardFontSize) {
   .board {
     width: $boardWidth;
     height: $boardHeight;
-    font-size: clamp(0em, $boardFontSize, 3em);
+    font-size: $boardFontSize;
   }
 }
 
-.container,
-.container-wrap {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.3rem;
-}
-
-.container {
-  height: 100%;
-  width: 100%;
-}
-
-.container {
-  flex-direction: column;
-
-  /* Extra small devices (phones, 600px and down) */
-  @media only screen and (max-width: 600px) {
-    @include board($vwidth, $vwidth, 5vw);
-    @include controls(calc($vheight - $vwidth), $vwidth);
-    app-status-bar {
-      width: calc($vwidth - $vwDiff);
-    }
-  }
-
-  /* Small devices (portrait tablets and large phones, 600px and up) */
-  @media only screen and (min-width: 600px) {
-    @include board($vwidth, $vwidth, 5vw);
-    @include controls(calc($vheight - $vwidth), $vwidth);
-    app-status-bar {
-      width: calc($vwidth - $vwDiff);
-    }
-  }
-
-  /* Medium devices (landscape tablets, 768px and up) */
-  @media only screen and (min-width: 768px) {
-    @include board(calc($vwidth - $vwDiff - 10vw), calc($vwidth - $vwDiff - 10vw), 4vw);
-    @include controls(calc($vheight - $vwidth - 500px), calc($vwidth - 100px));
-    app-status-bar {
-      width: calc($vwidth - $vwDiff - 10vw);
-    }
-  }
-
-  /* Large devices (laptops/desktops, 992px and up) */
-  @media only screen and (min-width: 992px) {
-    @include board(calc(($vwidth - $vwDiff) - 20vw), calc(($vwidth - $vwDiff) - 20vw), 4vw);
-    @include controls(calc($vheight - $vwidth), $vwidth);
-    app-status-bar {
-      width: calc($vwidth - $vwDiff - 20vw);
-    }
-  }
-
-  /* Extra large devices (large laptops and desktops, 1200px and up) */
-  @media only screen and (min-width: 1200px) {
-    @include board(calc($vwidth - $vwDiff - 30vw), calc($vwidth - $vwDiff - 30vw), 4vw);
-    @include controls(calc($vheight - $vwidth), $vwidth);
-    app-status-bar {
-      width: calc($vwidth - $vwDiff - 30vw);
-    }
+@mixin controls($width) {
+  .controls {
+    width: $width;
   }
 }
 
-.debug {
-  display: flex;
+ion-content {
+  @media (orientation: landscape) {
+    app-header,
+    .container {
+      display: none;
+    }
+  }
 
-  div.dbgbtn {
-    margin: 1px;
-    font-size: 0.65em;
-    background-color: lightgreen;
-    color: black;
-    padding: 5px;
+  @media (orientation: portrait) {
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 0.3rem;
+      height: 100%;
+
+      /* Extra small devices (phones, 600px and down) */
+      @media only screen and (max-width: 600px) {
+        @include board(calc(100vw - 2rem), calc(100vw - 2rem), 5vw);
+        @include controls(calc(100vw - 2rem));
+        app-status-bar {
+          width: calc(100vw - 2rem);
+        }
+      }
+
+      /* Small devices (portrait tablets and large phones, 600px and up) */
+      @media only screen and (min-width: 600px) {
+        @include board(calc(100vw - 5rem), calc(100vw - 5rem), 5vw);
+        @include controls(calc(100vw - 5rem));
+        app-status-bar {
+          width: calc(100vw - 5rem);
+        }
+      }
+
+      /* Medium devices (landscape tablets, 768px and up) */
+      @media only screen and (min-width: 768px) {
+        @include board(calc(90vw - 8rem), calc(90vw - 8rem), 3vw);
+        @include controls(calc(90vw - 8rem));
+        app-status-bar {
+          width: calc(90vw - 8rem);
+        }
+      }
+
+      /* Large devices (laptops/desktops, 992px and up) */
+      @media only screen and (min-width: 992px) {
+        @include board(calc(80vw - 8rem), calc(80vw - 8rem), 3vw);
+        @include controls(calc(80vw - 8rem));
+        app-status-bar {
+          width: calc(80vw - 8rem);
+        }
+      }
+
+      /* Extra large devices (large laptops and desktops, 1200px and up) */
+      @media only screen and (min-width: 1200px) {
+        @include board(calc(80vw - 8rem), calc(80vw - 8rem), 3vw);
+        @include controls(calc(80vw - 8rem));
+        app-status-bar {
+          width: calc(80vw - 8rem);
+        }
+      }
+    }
+  }
+
+  .message {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    .logo {
+      font-family: 'Pacifico';
+      font-size: 3.5rem;
+    }
   }
 }

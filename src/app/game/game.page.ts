@@ -12,6 +12,7 @@ import { BaseComponent } from '../shared/abstracts/base-component.abstract';
 import { ScoreService } from '../shared/services/score.service';
 import { ThemeModalActionType } from './theme/theme.types';
 import { StatsService } from '../options/stats/stats.service';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-game',
@@ -40,7 +41,8 @@ export class GamePage extends BaseComponent {
     private readonly scoreServ: ScoreService,
     private readonly historyServ: HistoryService,
     private readonly mistakeServ: MistakeService,
-    private readonly statsServ: StatsService
+    private readonly statsServ: StatsService,
+    private readonly platform: Platform
   ) {
     super();
   }
@@ -132,6 +134,10 @@ export class GamePage extends BaseComponent {
     this.historyServ.clear();
     this.scoreServ.clear();
     this.timerServ.stop();
+  }
+
+  platformIs(value: string): boolean {
+    return this.platform.is(value as any);
   }
 
   back(event: void): void {

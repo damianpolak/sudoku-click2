@@ -1,10 +1,8 @@
+@if((platformIs('capacitor')) || platformIs('pwa') && (platformIs('android') || platformIs('ios'))) {
 <app-header [showOptions]="true" parentPath="home"></app-header>
-
 <ion-content>
   <div class="container">
-    <div class="logo">
-      Sudoku.click
-    </div>
+    <div class="logo">Sudoku.click</div>
     <div class="buttons-section">
       @if(canContinue) {
       <div class="continue-info">
@@ -27,3 +25,13 @@
   [buttons]="menuLevelButtons"
   (didDismiss)="onMenuLevelDismiss($event)"
 ></ion-action-sheet>
+} @else {
+<ion-content>
+  <div class="container">
+    <div class="logo">
+      Sudoku.click
+      <div class="description">Available on Android and PWA iOS</div>
+    </div>
+  </div>
+</ion-content>
+}

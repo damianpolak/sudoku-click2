@@ -1,15 +1,13 @@
 import { AfterViewInit, Component } from '@angular/core';
-import { ActionSheetButton, NavController } from '@ionic/angular';
+import { ActionSheetButton, NavController, Platform } from '@ionic/angular';
 import { GameStateService, Level } from '../shared/services/game-state.service';
 import { ConversionUtil } from '../shared/utils/conversion.util';
 import { Observable, Subscription, combineLatest } from 'rxjs';
 import { GameStartType, GameState, GameStatusType } from '../shared/services/game-state.types';
 import { BaseComponent } from '../shared/abstracts/base-component.abstract';
 import { Timestring } from '../shared/services/timer.types';
-import { StatsService } from '../options/stats/stats.service';
 import { AppStateService } from '../shared/services/app-state.service';
 import { Build } from '../shared/interfaces/core.interface';
-import { Action } from 'rxjs/internal/scheduler/Action';
 
 type ContinueOptions = {
   level: string;
@@ -44,7 +42,8 @@ export class HomePage extends BaseComponent {
   constructor(
     private readonly navCtrl: NavController,
     private readonly gameStateServ: GameStateService,
-    private readonly appStateServ: AppStateService
+    private readonly appStateServ: AppStateService,
+    private readonly platform: Platform
   ) {
     super();
   }
@@ -70,6 +69,10 @@ export class HomePage extends BaseComponent {
 
   ionViewDidLeave(): void {
     this.unsubscribeSubscriptions();
+  }
+
+  platformIs(value: string): boolean {
+    return this.platform.is(value as any);
   }
 
   private async loadGameState(): Promise<void> {

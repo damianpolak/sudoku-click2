@@ -1,3 +1,5 @@
+@if(((platformIs('capacitor')) || platformIs('pwa') || platformIs('mobile') && (platformIs('android') || platformIs('ios'))) && (orientation$ |
+async) === 'portrait') {
 <app-header
   [showPause]="true"
   [showBack]="true"
@@ -18,6 +20,7 @@
     <div class="board">
       <app-board></app-board>
     </div>
+
     <div class="controls">
       <app-controls></app-controls>
     </div>
@@ -33,3 +36,11 @@
   [description]="gameFinished.description"
   [finishType]="gameFinished.finishType"
 ></app-fullscreen-view>
+} @else if((orientation$ | async) === 'landscape') {
+<ion-content>
+  <div class="message">
+    <div class="logo">Sudoku.click</div>
+    <div class="msg">Whoopsy! Play game in portrait mode!</div>
+  </div>
+</ion-content>
+}
